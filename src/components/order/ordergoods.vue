@@ -2,32 +2,21 @@
   <div class="shopList">
     <!-- 头部部分 -->
     <div class="BanNer_top">
-      <p><span></span>系统设置  门店管理</p>
+      <p><span></span>订单管理  订单列表</p>
       <!-- <div @click="chuangjian">创建Banner</div> -->
       <div class="BanNer_top_p">
-        <span>门店名称：</span>
+        <span>创建时间：</span>
+        <el-date-picker
+          v-model="value1"
+          type="daterange"
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期">
+        </el-date-picker>
+        <span>订单号：</span>
         <el-input v-model="input" placeholder="请输入内容"></el-input>
-        <span>手机号：</span>
-        <el-input v-model="input" placeholder="请输入内容"></el-input>
-        <span>所属网点：</span>
-        <el-select v-model="value" placeholder="请选择">
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-          </el-option>
-        </el-select>
-        <span>门店状态：</span>
-        <el-select v-model="value" placeholder="请选择">
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-          </el-option>
-        </el-select>
         <div>
+          <span>重置</span>
           <span>搜索</span>
           <span>批量导出</span>
         </div>
@@ -43,66 +32,54 @@
           <el-table-column
             prop="ID"
             align="center"
-            label="店铺编号">
+            label="订单编号">
           </el-table-column>
           <el-table-column
             prop="shop"
             align="center"
-            label="门店名称">
+            label="下单时间">
           </el-table-column>
           <el-table-column
             prop="phone"
             align="center"
-            label="店主姓名"
-            width="100">
+            label="收件人信息">
           </el-table-column>
           <el-table-column
             prop="time"
             align="center"
-            label="手机号码"
-            width="120">
+            label="门店名称">
           </el-table-column>
           <el-table-column
             prop="number"
             align="center"
-            width="50"
-            label="状态">
+            label="实付金额">
           </el-table-column>
           <el-table-column
             prop="out"
             align="center"
-            label="门店地址">
-          </el-table-column>
-          <el-table-column
-            prop="weizhi"
-            align="center"
-            width="90"
-            label="门店配送费">
+            label="订单状态">
           </el-table-column>
           <el-table-column
             prop="shopH"
             align="center"
-            width="100"
-            label="经纬度">
+            label="所属网点">
           </el-table-column>
           <el-table-column
             prop="time"
             align="center"
-            width="100"
-            label="创建时间">
+            label="所属中心">
           </el-table-column>
           <el-table-column
             prop="shopH"
             align="center"
-            width="100"
-            label="所属中心">
+            label="门店手机号">
           </el-table-column>
           <el-table-column
             align="center"
-            label="操作"
+            label="查看详情"
             width="80">
             <template slot-scope="scope">
-              <span class="sdreg" @click="bianji(scope.row)"><i class="el-icon-edit"></i>编辑</span>
+              <span class="sdreg" @click="bianji(scope.row)"><i class="el-icon-edit"></i>详情</span>
             </template>
           </el-table-column>
         </el-table>
@@ -110,9 +87,6 @@
     </div>
     <!-- 分页 -->
     <div class="bottom_bottom">
-      <span class="bottom_q" @click="news"><i class="el-icon-circle-plus-outline"></i>新增门店</span>
-      <span class="bottom_q"><i class="el-icon-download"></i>批量导出</span>
-      <span class="bottom_q"><i class="el-icon-upload2"></i>批量导入</span>
       <div class="block">
         <el-pagination
           @size-change="handleSizeChange"
@@ -128,51 +102,51 @@
     <div class="mendian_diagio">
       <el-dialog
         :visible.sync="dialogVisible">
-        <p class="sdsd">{{biaotiname}}</p>
-        <div class="chuangjian_dialog">
-          <div class="gialog_tu">
-            <el-form ref="form" :model="form" label-width="100px">
-              <el-form-item label="门店名称：">
-                <el-input v-model="form.mendianname"></el-input>
-              </el-form-item>
-              <el-form-item label="店主姓名：">
-                <el-input v-model="form.name"></el-input>
-              </el-form-item>
-              <el-form-item label="手机号码：">
-                <el-input v-model="form.name"></el-input>
-              </el-form-item>
-              <el-form-item label="门店地址：">
-                <el-input v-model="form.name"></el-input>
-              </el-form-item>
-              <el-form-item label="状态：">
-                <el-switch v-model="form.delivery"></el-switch>
-              </el-form-item>
-              <el-form-item label="经纬度：">
-                <el-input v-model="form.name"></el-input>
-              </el-form-item>
-              <el-form-item label="所属中心：">
-                <el-select v-model="form.region" placeholder="请选择所属中心">
-                  <el-option label="区域一" value="shanghai"></el-option>
-                  <el-option label="区域二" value="beijing"></el-option>
-                </el-select>
-              </el-form-item>
-              <p class="sdferg">
-                <span @click="dialogVisible = false">取消</span>
-                <span @click="over">提交</span>
-              </p>
-            </el-form>
+        <p class="sdsd">订单详情</p>
+        <div class="uers_dialog">
+          <p class="uers_p">
+            <span></span>
+            <span>订单信息</span>
+          </p>
+          <p class="uers_p1">
+            <span>订单号：319641524981727232</span>
+            <span>订单状态：订单完成</span>
+            <span>实付金额：100.00元</span>
+          </p>
+          <p class="uers_p">
+            <span></span>
+            <span>订单信息</span>
+          </p>
+          <p class="uers_p1">
+            <span>收货人姓名：凡高高</span>
+            <span>手机号：15812345678</span>
+            <span>详细地址：中通快递一号门.00元</span>
+            <span>物流方式：自提</span>
+          </p>
+          <p class="uers_p">
+            <span></span>
+            <span>订单信息</span>
+          </p>
+          <div>
+            <ul class="uers_log">
+              <li>商品ID</li>
+              <li>图片</li>
+              <li>名称</li>
+              <li>价格</li>
+              <li>数量</li>
+            </ul>
+            <ul class="uers_logs">
+              <li>
+                <span>001</span>
+                <span><img src="../../assets/编组 19@3x@2x.png" alt=""></span>
+                <span>香菇</span>
+                <span>20</span>
+                <span>1</span>
+              </li>
+            </ul>
           </div>
         </div>
       </el-dialog>
-        <el-dialog
-          width="20%"
-          :visible.sync="dialogVisible1">
-          <p class="dkfber">是否保存你所做的修改？</p>
-          <p class="sdferg">
-            <span @click="dialogVisible1 = false">取消</span>
-            <span @click="tijiao">提交</span>
-          </p>
-        </el-dialog>
     </div>
   </div>
 </template>
@@ -194,9 +168,7 @@ export default {
       ],
       dialogVisible: false,
       dialogVisible1: false,
-      biaotiname: '',
       currentPage1: 1,
-      sdbgg: '',
 
       form: {
         mendianname: '',
@@ -226,21 +198,6 @@ export default {
     },
     // 编辑按钮
     bianji () {
-      this.biaotiname = '编辑门店'
-      this.dialogVisible = !this.dialogVisible
-    },
-    // 提交操作
-    over () {
-      if (this.biaotiname === '编辑门店') {
-        this.dialogVisible1 = !this.dialogVisible1
-      } else {}
-    },
-    tijiao () {
-      this.dialogVisible1 = !this.dialogVisible1
-    },
-    // 新增按钮
-    news () {
-      this.biaotiname = '新增门店'
       this.dialogVisible = !this.dialogVisible
     }
   }
@@ -386,6 +343,12 @@ export default {
             background: #FF8C14;
             margin-left: 40px;
           }
+          span:first-child {
+            background: #ffffff;
+            color: #2B80FD;
+            border: 1px solid #2B80FD;
+            margin-right: 40px;
+          }
         }
       }
       p {
@@ -425,71 +388,70 @@ export default {
         display: inline-block;
         float: right;
       }
-      .bottom_q {
-        font-size: 13px;
-        font-family: MicrosoftYaHei;
-        color: #2B80FD;
-        line-height: 17px;
-        margin-right: 45px;
-        line-height: 40px;
-        i {
-          margin-right: 10px;
-        }
-      }
     }
     .mendian_diagio {
-      .dkfber {
-        font-size: 14px;
-        font-family: MicrosoftYaHei;
-        color: #333333;
-        line-height: 70px;
-        text-align: center;
-      }
-      .sdferg {
-        text-align: center;
-        margin-bottom: 30px;
-        span {
-          display: inline-block;
-          width: 100px;
-          height: 35px;
-          border-radius: 18px;
-          border: 1px solid #2B80FD;
-          font-size: 14px;
-          font-family: MicrosoftYaHei;
-          color: #2B80FD;
-          line-height: 35px;
-          margin-right: 20px;
-        }
-        span:last-child {
-          color: #FFFFFF;
-          background: #2B80FD;
-          margin-right: 0px;
-        }
-      }
-      .chuangjian_dialog {
-        line-height: 0;
-        text-align: left;
-        padding: 20px;
+      .uers_dialog {
+        padding: 10px;
         box-sizing: border-box;
-        .gialog_tu {
-          .sdferg {
-            text-align: center;
-            span {
-              display: inline-block;
-              width: 100px;
-              height: 35px;
-              border-radius: 18px;
-              border: 1px solid #2B80FD;
-              font-size: 14px;
-              font-family: MicrosoftYaHei;
-              color: #2B80FD;
-              line-height: 35px;
-              margin-right: 20px;
-            }
-            span:last-child {
+        .uers_p {
+          line-height: 37px;
+          span {
+            font-size: 13px;
+            font-family: MicrosoftYaHei-Bold, MicrosoftYaHei;
+            font-weight: bold;
+            color: #2B80FD;
+            margin-left: 5px;
+          }
+          span:first-child {
+            display: inline-block;
+            width: 4px;
+            height: 4px;
+            border-radius: 2px;
+            background: #2B80FD;
+          }
+        }
+        .uers_p1 {
+          padding: 0 10px;
+          box-sizing: border-box;
+          span {
+            display: inline-block;
+            width: 50%;
+            line-height: 25px;
+          }
+        }
+        div {
+          .uers_log {
+            display: flex;
+            line-height: 30px;
+            background: #163D70;
+            border-radius: 6px 6px 0px 0px;
+            li {
+              flex: 1;
+              text-align: center;
+              list-style: none;
+              font-size: 13px;
+              font-family: PingFangSC-Semibold, PingFang SC;
+              font-weight: 600;
               color: #FFFFFF;
-              background: #2B80FD;
-              margin-right: 0px;
+            }
+          }
+          .uers_logs {
+            li {
+              display: flex;
+              background: #F2F6FF;
+              height: 30px;
+              span {
+                flex: 1;
+                text-align: center;
+                line-height: 30px;
+                font-size: 13px;
+                font-family: MicrosoftYaHei;
+                color: #333333;
+                img {
+                  height: 30px;
+                  width: 45px;
+                }
+              }
             }
           }
         }

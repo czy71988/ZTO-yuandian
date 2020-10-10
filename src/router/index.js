@@ -1,11 +1,16 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import index from '../views/index.vue'
-import BANNER from '../components/banner.vue'
+import BANNER from '../components/AdvertisingSettings/banner.vue'
+import advertising from '../components/AdvertisingSettings/advertising.vue'
 import shopList from '../components/shop/shopList.vue'
 import shopType from '@/components/shop/shopType.vue'
 import uers from '@/components/uers/uers.vue'
 import mendian from '@/components/xitongshezhi/mendian.vue'
+import wangidan from '@/components/xitongshezhi/wangidan.vue'
+import zhongxin from '@/components/xitongshezhi/zhongxin.vue'
+import uersorder from '@/components/order/uersorder.vue'
+import ordergoods from '@/components/order/ordergoods.vue'
 
 Vue.use(VueRouter)
 
@@ -34,6 +39,26 @@ const routes = [
       {
         path: 'mendian',
         component: mendian
+      },
+      {
+        path: 'wangidan',
+        component: wangidan
+      },
+      {
+        path: 'zhongxin',
+        component: zhongxin
+      },
+      {
+        path: 'uersorder',
+        component: uersorder
+      },
+      {
+        path: 'ordergoods',
+        component: ordergoods
+      },
+      {
+        path: 'advertising',
+        component: advertising
       }
     ]
   }

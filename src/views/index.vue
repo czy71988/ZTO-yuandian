@@ -34,6 +34,7 @@
                   </template>
                   <el-menu-item-group>
                     <el-menu-item index="BANNER">Banner配置</el-menu-item>
+                    <el-menu-item index="advertising">类目ICON配置</el-menu-item>
                   </el-menu-item-group>
                 </el-submenu>
 
@@ -53,10 +54,16 @@
                   <span slot="title">后台角色</span>
                 </el-menu-item>
 
-                <el-menu-item index="5">
-                  <i class="el-icon-setting"></i>
-                  <span slot="title">订单管理</span>
-                </el-menu-item>
+                <el-submenu index="5">
+                  <template slot="title">
+                    <i class="el-icon-location"></i>
+                    <span>订单管理</span>
+                  </template>
+                  <el-menu-item-group>
+                    <el-menu-item index="uersorder">用户订单</el-menu-item>
+                    <el-menu-item index="ordergoods">订货订单</el-menu-item>
+                  </el-menu-item-group>
+                </el-submenu>
 
                 <el-submenu index="6">
                   <template slot="title">
@@ -65,6 +72,8 @@
                   </template>
                   <el-menu-item-group>
                     <el-menu-item index="mendian">门店管理</el-menu-item>
+                    <el-menu-item index="wangidan">网点管理</el-menu-item>
+                    <el-menu-item index="zhongxin">中心仓管理</el-menu-item>
                   </el-menu-item-group>
                 </el-submenu>
               </el-menu>

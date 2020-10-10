@@ -2,31 +2,13 @@
   <div class="shopList">
     <!-- 头部部分 -->
     <div class="BanNer_top">
-      <p><span></span>系统设置  门店管理</p>
+      <p><span></span>系统设置  网点管理</p>
       <!-- <div @click="chuangjian">创建Banner</div> -->
       <div class="BanNer_top_p">
-        <span>门店名称：</span>
+        <span>网点名称：</span>
         <el-input v-model="input" placeholder="请输入内容"></el-input>
-        <span>手机号：</span>
+        <span>网点编号：</span>
         <el-input v-model="input" placeholder="请输入内容"></el-input>
-        <span>所属网点：</span>
-        <el-select v-model="value" placeholder="请选择">
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-          </el-option>
-        </el-select>
-        <span>门店状态：</span>
-        <el-select v-model="value" placeholder="请选择">
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-          </el-option>
-        </el-select>
         <div>
           <span>搜索</span>
           <span>批量导出</span>
@@ -43,59 +25,37 @@
           <el-table-column
             prop="ID"
             align="center"
-            label="店铺编号">
+            label="网点编号">
           </el-table-column>
           <el-table-column
             prop="shop"
             align="center"
-            label="门店名称">
+            label="网点名称">
           </el-table-column>
           <el-table-column
             prop="phone"
             align="center"
-            label="店主姓名"
-            width="100">
+            label="网点负责人">
           </el-table-column>
           <el-table-column
             prop="time"
             align="center"
-            label="手机号码"
-            width="120">
-          </el-table-column>
-          <el-table-column
-            prop="number"
-            align="center"
-            width="50"
-            label="状态">
+            label="联系方式">
           </el-table-column>
           <el-table-column
             prop="out"
             align="center"
-            label="门店地址">
-          </el-table-column>
-          <el-table-column
-            prop="weizhi"
-            align="center"
-            width="90"
-            label="门店配送费">
+            label="网点地址">
           </el-table-column>
           <el-table-column
             prop="shopH"
             align="center"
-            width="100"
-            label="经纬度">
-          </el-table-column>
-          <el-table-column
-            prop="time"
-            align="center"
-            width="100"
-            label="创建时间">
-          </el-table-column>
-          <el-table-column
-            prop="shopH"
-            align="center"
-            width="100"
             label="所属中心">
+          </el-table-column>
+          <el-table-column
+            prop="shopH"
+            align="center"
+            label="状态">
           </el-table-column>
           <el-table-column
             align="center"
@@ -110,7 +70,7 @@
     </div>
     <!-- 分页 -->
     <div class="bottom_bottom">
-      <span class="bottom_q" @click="news"><i class="el-icon-circle-plus-outline"></i>新增门店</span>
+      <span class="bottom_q" @click="news"><i class="el-icon-circle-plus-outline"></i>新增网点</span>
       <span class="bottom_q"><i class="el-icon-download"></i>批量导出</span>
       <span class="bottom_q"><i class="el-icon-upload2"></i>批量导入</span>
       <div class="block">
@@ -132,23 +92,20 @@
         <div class="chuangjian_dialog">
           <div class="gialog_tu">
             <el-form ref="form" :model="form" label-width="100px">
-              <el-form-item label="门店名称：">
+              <el-form-item label="网点名称：">
                 <el-input v-model="form.mendianname"></el-input>
               </el-form-item>
-              <el-form-item label="店主姓名：">
+              <el-form-item label="网点负责人：">
                 <el-input v-model="form.name"></el-input>
               </el-form-item>
               <el-form-item label="手机号码：">
                 <el-input v-model="form.name"></el-input>
               </el-form-item>
-              <el-form-item label="门店地址：">
+              <el-form-item label="网点地址：">
                 <el-input v-model="form.name"></el-input>
               </el-form-item>
               <el-form-item label="状态：">
                 <el-switch v-model="form.delivery"></el-switch>
-              </el-form-item>
-              <el-form-item label="经纬度：">
-                <el-input v-model="form.name"></el-input>
               </el-form-item>
               <el-form-item label="所属中心：">
                 <el-select v-model="form.region" placeholder="请选择所属中心">
@@ -226,12 +183,12 @@ export default {
     },
     // 编辑按钮
     bianji () {
-      this.biaotiname = '编辑门店'
+      this.biaotiname = '编辑网点'
       this.dialogVisible = !this.dialogVisible
     },
     // 提交操作
     over () {
-      if (this.biaotiname === '编辑门店') {
+      if (this.biaotiname === '编辑网点') {
         this.dialogVisible1 = !this.dialogVisible1
       } else {}
     },
@@ -240,7 +197,7 @@ export default {
     },
     // 新增按钮
     news () {
-      this.biaotiname = '新增门店'
+      this.biaotiname = '新增网点'
       this.dialogVisible = !this.dialogVisible
     }
   }
