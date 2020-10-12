@@ -1,6 +1,8 @@
 import axios from 'axios'
-import baseURL from '../../vue.config'
+// import baseURL from '../../vue.config'
 // import { MessageBox } from 'element-ui'
+
+const baseURL = ''
 
 // 创建axios实例
 const service = axios.create({

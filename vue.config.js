@@ -1,10 +1,10 @@
-const baseURL = ''
+// const baseURL = 'fgdf'
 
 module.exports = {
   devServer: {
     proxy: {
       '/zkurtg-red-api': {
-        target: baseURL,
+        target: '',
         changeOrigin: true // 是否改变源地址
         // pathRewrite: {
         //   // '^/temp1': ''
@@ -14,4 +14,4 @@ module.exports = {
   }
 }
 
-export default baseURL
+// export default baseURL
