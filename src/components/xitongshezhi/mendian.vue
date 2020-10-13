@@ -33,6 +33,7 @@
         </div>
       </div>
     </div>
+    <!-- <button @click="showMapSelector = true">选取地图</button> -->
     <!-- 内容部分 -->
     <div class="BanNer_content">
       <template>
@@ -174,11 +175,16 @@
           </p>
         </el-dialog>
     </div>
+    <map-selector v-model="showMapSelector"></map-selector>
   </div>
 </template>
 
 <script>
+import MapSelector from '../../components/map-selector/MapSelector'
 export default {
+  components: {
+    MapSelector
+  },
   data () {
     return {
       tableData: [
@@ -196,6 +202,7 @@ export default {
       dialogVisible1: false,
       biaotiname: '',
       currentPage1: 1,
+      showMapSelector: false,
       sdbgg: '',
 
       form: {
@@ -214,7 +221,10 @@ export default {
       ]
     }
   },
-  mounted: {
+  mounted () {
+    setTimeout(() => {
+      this.showMapSelector = true
+    }, 1000)
   },
   methods: {
     // 分页

@@ -1,4 +1,4 @@
-const baseURL = ''
+const baseURL = 'https'
 
 module.exports = {
   devServer: {
@@ -11,7 +11,10 @@ module.exports = {
         // }
       }
     }
+  },
+  configureWebpack: {
+    externals: {
+      TMap: 'TMap'
+    }
   }
 }
-
-export default baseURL
