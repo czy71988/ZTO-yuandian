@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import index from '../views/index.vue'
+import Login from '../views/Login.vue'
 import BANNER from '../components/AdvertisingSettings/banner.vue'
 import advertising from '../components/AdvertisingSettings/advertising.vue'
 import shopList from '../components/shop/shopList.vue'
@@ -16,53 +17,57 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/',
+    path: '/index',
     name: 'index',
     component: index,
     children: [
       {
-        path: 'BANNER',
+        path: '/BANNER',
         component: BANNER
       },
       {
-        path: 'shopList',
+        path: '/shopList',
         component: shopList
       },
       {
-        path: 'shopType',
+        path: '/shopType',
         component: shopType
       },
       {
-        path: 'uers',
+        path: '/uers',
         component: uers
       },
       {
-        path: 'mendian',
+        path: '/mendian',
         component: mendian
       },
       {
-        path: 'wangidan',
+        path: '/wangidan',
         component: wangidan
       },
       {
-        path: 'zhongxin',
+        path: '/zhongxin',
         component: zhongxin
       },
       {
-        path: 'uersorder',
+        path: '/uersorder',
         component: uersorder
       },
       {
-        path: 'ordergoods',
+        path: '/ordergoods',
         component: ordergoods
       },
       {
-        path: 'advertising',
+        path: '/advertising',
         component: advertising
       }
     ]
+  },
+  {
+    path: '/',
+    name: 'Login',
+    component: Login
   }
-
 ]
 
 const router = new VueRouter({

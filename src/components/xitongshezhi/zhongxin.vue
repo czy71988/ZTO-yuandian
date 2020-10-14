@@ -2,15 +2,15 @@
   <div class="shopList">
     <!-- 头部部分 -->
     <div class="BanNer_top">
-      <p><span></span>系统设置  中心仓管理</p>
+      <p>· 系统设置  中心仓管理</p>
       <!-- <div @click="chuangjian">创建Banner</div> -->
       <div class="BanNer_top_p">
         <span>中心名称：</span>
-        <el-input v-model="input" placeholder="请输入内容"></el-input>
+        <el-input v-model="form.title" placeholder="请输入内容"></el-input>
         <span>中心编号：</span>
-        <el-input v-model="input" placeholder="请输入内容"></el-input>
+        <el-input v-model="form.id" placeholder="请输入内容"></el-input>
         <div>
-          <span>搜索</span>
+          <span @click="sousuo">搜索</span>
           <span>批量导出</span>
         </div>
       </div>
@@ -23,34 +23,36 @@
           stripe
           style="width: 100%">
           <el-table-column
-            prop="ID"
+            prop="id"
             align="center"
             label="中心仓编号">
           </el-table-column>
           <el-table-column
-            prop="shop"
+            prop="title"
             align="center"
             label="中心仓名称">
           </el-table-column>
           <el-table-column
-            prop="phone"
+            prop="managerName"
             align="center"
             label="负责人">
           </el-table-column>
           <el-table-column
-            prop="time"
+            prop="phone"
             align="center"
             label="手机号">
           </el-table-column>
           <el-table-column
-            prop="out"
+            prop="address"
             align="center"
             label="中心仓位置">
           </el-table-column>
           <el-table-column
-            prop="shopH"
             align="center"
             label="中心仓状态">
+            <template slot-scope="scope">
+              <span>{{scope.row.state === 1 ? '启用' : '禁用'}}</span>
+            </template>
           </el-table-column>
           <el-table-column
             align="center"
@@ -75,7 +77,7 @@
           :current-page.sync="currentPage1"
           :page-size="100"
           layout="total, prev, pager, next"
-          :total="1000">
+          :total="total">
         </el-pagination>
       </div>
     </div>
@@ -86,21 +88,21 @@
         <p class="sdsd">{{biaotiname}}</p>
         <div class="chuangjian_dialog">
           <div class="gialog_tu">
-            <el-form ref="form" :model="form" label-width="100px">
+            <el-form ref="form" :model="from" label-width="100px">
               <el-form-item label="中心仓名称：">
-                <el-input v-model="form.mendianname"></el-input>
+                <el-input v-model="from.title"></el-input>
               </el-form-item>
               <el-form-item label="负责人：">
-                <el-input v-model="form.name"></el-input>
+                <el-input v-model="from.managerName"></el-input>
               </el-form-item>
               <el-form-item label="手机号码：">
-                <el-input v-model="form.name"></el-input>
+                <el-input v-model="from.phone"></el-input>
               </el-form-item>
               <el-form-item label="中心仓位置：">
-                <el-input v-model="form.name"></el-input>
+                <el-input v-model="from.address"></el-input>
               </el-form-item>
               <el-form-item label="状态：">
-                <el-switch v-model="form.delivery"></el-switch>
+                <el-switch active-value='1' inactive-value='0' v-model="from.state"></el-switch>
               </el-form-item>
               <p class="sdferg">
                 <span @click="dialogVisible = false">取消</span>
@@ -124,65 +126,99 @@
 </template>
 
 <script>
+import { InterfaceAddShop, InterfaceShop, InterfaceUpShop } from '../../api/system'
 export default {
   data () {
     return {
-      tableData: [
-        { ID: '123', shop: '否', phone: '陈志英', time: '2020/09/12', number: '启用', out: '3000', weizhi: '中通快递一号门', shopH: '中通快递一号门', ying: '0' },
-        { ID: '234', shop: '否', phone: '陈志英', time: '2020/09/12', number: '9', out: '3000', weizhi: '中通快递一号门', shopH: '中通快递一号门', ying: '1' },
-        { ID: '345', shop: '否', phone: '陈志英', time: '2020/09/12', number: '9', out: '3000', weizhi: '中通快递一号门', shopH: '中通快递一号门', ying: '1' },
-        { ID: '456', shop: '否', phone: '陈志英', time: '2020/09/12', number: '9', out: '3000', weizhi: '中通快递一号门', shopH: '中通快递一号门', ying: '1' },
-        { ID: '567', shop: '否', phone: '陈志英', time: '2020/09/12', number: '9', out: '3000', weizhi: '中通快递一号门', shopH: '中通快递一号门', ying: '0' },
-        { ID: '678', shop: '否', phone: '陈志英', time: '2020/09/12', number: '9', out: '3000', weizhi: '中通快递一号门', shopH: '中通快递一号门', ying: '0' },
-        { ID: '789', shop: '否', phone: '陈志英', time: '2020/09/12', number: '9', out: '3000', weizhi: '中通快递一号门', shopH: '中通快递一号门', ying: '1' },
-        { ID: '444', shop: '否', phone: '陈志英', time: '2020/09/12', number: '9', out: '3000', weizhi: '中通快递一号门', shopH: '中通快递一号门', ying: '0' },
-        { ID: '555', shop: '否', phone: '陈志英', time: '2020/09/12', number: '9', out: '3000', weizhi: '中通快递一号门', shopH: '中通快递一号门', ying: '0' }
-      ],
+      tableData: [],
       dialogVisible: false,
       dialogVisible1: false,
       biaotiname: '',
       currentPage1: 1,
       sdbgg: '',
-
-      form: {
-        mendianname: '',
-        region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
+      // 新建表单
+      from: {
+        title: '',
+        managerName: '',
+        phone: '',
+        address: '',
+        state: '',
+        longitude: '',
+        latitude: '',
+        parentTitle: '',
+        type: 1
       },
-      options: [
-        { value: 1, label: '是' },
-        { value: 2, label: '否' }
-      ]
+      // 获取列表表单
+      form: {
+        pageNo: '1',
+        pageSize: '10',
+        type: 1,
+        title: '',
+        id: '',
+        phone: '',
+        parentId: '',
+        state: ''
+      },
+      total: 0
     }
   },
-  mounted: {
+  mounted () {
+    this.getlist()
   },
   methods: {
+    getlist () {
+      InterfaceShop(this.form).then(data => {
+        this.tableData = data.records
+        this.total = data.total
+        console.log(data)
+      })
+    },
+    // 搜索
+    sousuo () {
+      this.getlist()
+    },
     // 分页
     handleSizeChange (val) {
-      console.log(`每页 ${val} 条`)
+      this.form.pageSize = val
+      this.getlist()
     },
     handleCurrentChange (val) {
-      console.log(`当前页: ${val}`)
+      this.form.pageNo = val
+      this.getlist()
     },
     // 编辑按钮
-    bianji () {
+    bianji (item) {
       this.biaotiname = '编辑网点'
       this.dialogVisible = !this.dialogVisible
+      this.from = item
     },
     // 提交操作
     over () {
-      if (this.biaotiname === '编辑网点') {
+      if (this.biaotiname === '新增网点') {
+        InterfaceAddShop(this.from).then(data => {
+          console.log(data)
+          this.dialogVisible = !this.dialogVisible
+          this.$message({
+            message: '新建成功',
+            type: 'success'
+          })
+          this.getlist()
+        })
+      } else {
         this.dialogVisible1 = !this.dialogVisible1
-      } else {}
+      }
     },
+    // 编辑提交
     tijiao () {
-      this.dialogVisible1 = !this.dialogVisible1
+      InterfaceUpShop(this.from).then(data => {
+        this.$message({
+          message: '编辑成功',
+          type: 'success'
+        })
+        this.dialogVisible = !this.dialogVisible
+        this.dialogVisible1 = !this.dialogVisible1
+        this.getlist()
+      })
     },
     // 新增按钮
     news () {

@@ -2,7 +2,7 @@
   <div class="BanNer">
     <!-- 头部部分 -->
     <div class="BanNer_top">
-      <p><span></span>广告位配置  类目ICON配置</p>
+      <p>· 广告位配置  <span class="dkfbgirgasd">类目ICON配置</span></p>
       <div @click="chuangjian">创建新类目</div>
     </div>
     <!-- 内容部分 -->
@@ -231,13 +231,12 @@ export default {
         font-family: MicrosoftYaHei-Bold, MicrosoftYaHei;
         font-weight: bold;
         color: #2B80FD;
-        span {
-          display: inline-block;
-          width: 7px;
-          height: 7px;
-          border-radius: 4px;
-          background: #2B80FD;
-          margin: 0 10px;
+        .dkfbgirgasd {
+          font-size: 18px;
+          font-family: MicrosoftYaHei;
+          color: #2B80FD;
+          margin-left: 32px;
+          font-weight: 400;
         }
       }
       div {

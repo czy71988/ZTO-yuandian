@@ -7,6 +7,7 @@
         <el-aside width="200px">
           <el-row class="tac">
             <el-col :span="12">
+            <div class="index_top">skjshgkh</div>
               <el-menu
                 default-active="2"
                 class="el-menu-vertical-demo"
@@ -102,7 +103,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="less">
   .el-header {
     height: 120px !important;
     background-color: #202020;
@@ -118,6 +119,14 @@ export default {
     color: #333;
     /* text-align: center; */
     line-height: 200px;
+    .index_top {
+      height: 89px;
+      background: #0D0C0C;
+      font-size: 14px;
+      font-family: MicrosoftYaHei;
+      color: #FFFFFF;
+      line-height: 19px;
+    }
   }
 
   .el-container {
@@ -147,4 +156,7 @@ export default {
     background-color: none !important;
     /* height: calc(100vh - 120px); */
   }
+</style>
+
+<style lang="less" scoped>
 </style>

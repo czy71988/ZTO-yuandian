@@ -2,7 +2,7 @@
   <div class="shopList">
     <!-- 头部部分 -->
     <div class="BanNer_top">
-      <p><span></span>订单管理  订单列表</p>
+      <p>· 订单管理  订单列表</p>
       <!-- <div @click="chuangjian">创建Banner</div> -->
       <div class="BanNer_top_p">
         <span>创建时间：</span>

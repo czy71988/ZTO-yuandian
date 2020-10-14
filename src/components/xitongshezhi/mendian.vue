@@ -2,13 +2,13 @@
   <div class="shopList">
     <!-- 头部部分 -->
     <div class="BanNer_top">
-      <p><span></span>系统设置  门店管理</p>
+      <p>· 系统设置  门店管理</p>
       <!-- <div @click="chuangjian">创建Banner</div> -->
       <div class="BanNer_top_p">
         <span>门店名称：</span>
-        <el-input v-model="input" placeholder="请输入内容"></el-input>
+        <el-input v-model="from.title" placeholder="请输入内容"></el-input>
         <span>手机号：</span>
-        <el-input v-model="input" placeholder="请输入内容"></el-input>
+        <el-input v-model="from.phone" placeholder="请输入内容"></el-input>
         <span>所属网点：</span>
         <el-select v-model="value" placeholder="请选择">
           <el-option
@@ -41,35 +41,38 @@
           stripe
           style="width: 100%">
           <el-table-column
-            prop="ID"
+            prop="id"
             align="center"
             label="店铺编号">
           </el-table-column>
           <el-table-column
-            prop="shop"
+            prop="title"
             align="center"
             label="门店名称">
           </el-table-column>
           <el-table-column
-            prop="phone"
+            prop="managerName"
             align="center"
             label="店主姓名"
             width="100">
           </el-table-column>
           <el-table-column
-            prop="time"
+            prop="phone"
             align="center"
             label="手机号码"
             width="120">
           </el-table-column>
           <el-table-column
-            prop="number"
+            prop="state"
             align="center"
             width="50"
             label="状态">
+            <template slot-scope="scope">
+              <span>{{scope.row.state === '0' ? '停用' : '启用'}}</span>
+            </template>
           </el-table-column>
           <el-table-column
-            prop="out"
+            prop="address"
             align="center"
             label="门店地址">
           </el-table-column>
@@ -84,15 +87,19 @@
             align="center"
             width="100"
             label="经纬度">
+            <template slot-scope="scope">
+              <span>经度：{{scope.row.longitude}}</span>
+              <span>纬度：{{scope.row.latitude}}</span>
+            </template>
           </el-table-column>
           <el-table-column
-            prop="time"
+            prop="gmtCreate"
             align="center"
             width="100"
             label="创建时间">
           </el-table-column>
           <el-table-column
-            prop="shopH"
+            prop="parentTitle"
             align="center"
             width="100"
             label="所属中心">
@@ -133,25 +140,31 @@
           <div class="gialog_tu">
             <el-form ref="form" :model="form" label-width="100px">
               <el-form-item label="门店名称：">
-                <el-input v-model="form.mendianname"></el-input>
+                <el-input v-model="form.title"></el-input>
               </el-form-item>
               <el-form-item label="店主姓名：">
-                <el-input v-model="form.name"></el-input>
+                <el-input v-model="form.managerName"></el-input>
               </el-form-item>
               <el-form-item label="手机号码：">
-                <el-input v-model="form.name"></el-input>
+                <el-input v-model="form.phone"></el-input>
               </el-form-item>
               <el-form-item label="门店地址：">
-                <el-input v-model="form.name"></el-input>
+                <!-- <el-input v-model="form.address"></el-input> -->
+                <el-input placeholder="请输入内容" v-model="form.address" class="input-with-select">
+                  <el-button @click="ditu" slot="append" icon="el-icon-search"></el-button>
+                </el-input>
               </el-form-item>
               <el-form-item label="状态：">
-                <el-switch v-model="form.delivery"></el-switch>
+                <el-switch active-value='1' inactive-value="0"  v-model="form.state"></el-switch>
               </el-form-item>
-              <el-form-item label="经纬度：">
-                <el-input v-model="form.name"></el-input>
+              <el-form-item label="经度：">
+                <el-input v-model="form.longitude"></el-input>
+              </el-form-item>
+              <el-form-item label="纬度：">
+                <el-input v-model="form.latitude"></el-input>
               </el-form-item>
               <el-form-item label="所属中心：">
-                <el-select v-model="form.region" placeholder="请选择所属中心">
+                <el-select v-model="form.parentTitle" placeholder="请选择所属中心">
                   <el-option label="区域一" value="shanghai"></el-option>
                   <el-option label="区域二" value="beijing"></el-option>
                 </el-select>
@@ -178,6 +191,7 @@
 </template>
 
 <script>
+import { InterfaceShop, InterfaceDropdownList, InterfaceAddShop } from '../../api/system'
 export default {
   data () {
     return {
@@ -197,31 +211,63 @@ export default {
       biaotiname: '',
       currentPage1: 1,
       sdbgg: '',
-
       form: {
-        mendianname: '',
-        region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
+        title: '',
+        managerName: '',
+        phone: '',
+        address: '',
+        state: '',
+        longitude: '',
+        latitude: '',
+        parentTitle: '',
+        type: 3
+      },
+      from: {
+        pageNo: '1',
+        pageSize: '10',
+        type: 3,
+        title: '',
+        id: '',
+        phone: '',
+        parentId: '',
+        state: ''
       },
       options: [
-        { value: 1, label: '是' },
-        { value: 2, label: '否' }
+        { value: '1', label: '启用' },
+        { value: '0', label: '禁用' }
       ]
     }
   },
-  mounted: {
+  mounted () {
+    this.getlist()
+    this.getType()
   },
   methods: {
+    // 列表
+    getlist () {
+      InterfaceShop(this.from).then(data => {
+        console.log(data)
+      })
+    },
+    // 拉取地图
+    // ditu () {
+
+    // },
+    // 获取下拉列表所属网点选项
+    getType () {
+      InterfaceDropdownList({
+        type: '3'
+      }).then(data => {
+        console.log('11111', data)
+      })
+    },
     // 分页
     handleSizeChange (val) {
+      this.from.pageSize = val
       console.log(`每页 ${val} 条`)
     },
     handleCurrentChange (val) {
+      this.from.pageNo = val
       console.log(`当前页: ${val}`)
     },
     // 编辑按钮
@@ -231,8 +277,11 @@ export default {
     },
     // 提交操作
     over () {
-      if (this.biaotiname === '编辑门店') {
+      if (this.biaotiname === '新增门店') {
         this.dialogVisible1 = !this.dialogVisible1
+        InterfaceAddShop(this.form).then(data => {
+          console.log(data)
+        })
       } else {}
     },
     tijiao () {
@@ -240,6 +289,7 @@ export default {
     },
     // 新增按钮
     news () {
+      // this.form = {}
       this.biaotiname = '新增门店'
       this.dialogVisible = !this.dialogVisible
     }

@@ -2,7 +2,7 @@
   <div class="shopList">
     <!-- 头部部分 -->
     <div class="BanNer_top">
-      <p><span></span>用户管理  用户列表</p>
+      <p>· 用户管理  用户列表</p>
       <!-- <div @click="chuangjian">创建Banner</div> -->
       <div class="BanNer_top_p">
         <span>手机号：</span>

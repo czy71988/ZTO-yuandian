@@ -2,15 +2,14 @@
   <div class="shopType">
     <!-- 商品类目创建头部 -->
     <div class="shopType_top">
-      <span></span>
-      <span>商品管理</span>
+      <span>· 商品管理</span>
       <span>商品类目创建</span>
     </div>
     <!-- 表格部分 -->
     <div class="shopType_content">
       <template>
         <el-table
-          :data="tableData"
+          :data="list"
           stripe
           style="width: 100%"
           @selection-change="handleSelectionChange">
@@ -34,13 +33,15 @@
             label="类目图标">
             <template slot-scope="scope">
             <!-- <template> -->
-              <img class="sdfsgerg" :src="scope.row.icon" alt="">
+              <img class="sdfsgerg" :src="scope.row.imageUrl" alt="">
             </template>
           </el-table-column>
           <el-table-column
-            prop="time"
             align="center"
             label="添加日期">
+            <template slot-scope="scope">
+              <span>{{scope.row.gmtCreate}}</span>
+            </template>
           </el-table-column>
           <el-table-column
             align="center"
@@ -48,7 +49,7 @@
             width="300">
             <template slot-scope="scope">
               <span class="shopType_span1" @click="bianji(scope.row)"><i class="el-icon-edit"></i>编辑</span>
-              <span class="shopType_span2" @click="xiajia(scope.row)"><i class="el-icon-sort"></i>下架</span>
+              <!-- <span class="shopType_span2" @click="xiajia(scope.row.id)"><i class="el-icon-sort"></i>下架</span> -->
             </template>
           </el-table-column>
         </el-table>
@@ -65,7 +66,7 @@
           :current-page.sync="currentPage1"
           :page-size="100"
           layout="total, prev, pager, next"
-          :total="1000">
+          :total="total">
         </el-pagination>
       </div>
     </div>
@@ -84,7 +85,7 @@
             <el-form-item label="类目图标：">
               <el-upload
                 class="avatar-uploader"
-                action="https://jsonplaceholder.typicode.com/posts/"
+                action="https://bee.zk020.cn/bee-admin/admin/systemIndex/doUploadFile"
                 :show-file-list="false"
                 :on-success="handleAvatarSuccess"
                 :before-upload="beforeAvatarUpload">
@@ -104,57 +105,129 @@
 </template>
 
 <script>
+import { InterfaceCommodity, InterfaceAddCategory, InterfaceUpCategory } from '../../api/shop'
 export default {
   data () {
     return {
-      tableData: [
-        { name: '香菇', id: '789456123', icon: '', time: '2020/05/6/14:00' },
-        { name: '香菇', id: '789456123', icon: '', time: '2020/05/6/14:00' },
-        { name: '香菇', id: '789456123', icon: '', time: '2020/05/6/14:00' },
-        { name: '香菇', id: '789456123', icon: '', time: '2020/05/6/14:00' },
-        { name: '香菇', id: '789456123', icon: '', time: '2020/05/6/14:00' },
-        { name: '香菇', id: '789456123', icon: '', time: '2020/05/6/14:00' },
-        { name: '香菇', id: '789456123', icon: '', time: '2020/05/6/14:00' }
-      ],
       form: {
         name: '',
-        icon: ''
+        imageUrl: ''
       },
+      currentPage1: 1,
       shopShow: false,
       biaotiname: '',
-      sdbgg: ''
+      sdbgg: '',
+      page: '1',
+      size: '10',
+      total: 0,
+      list: [],
+      imageUrl: ''
     }
   },
+  mounted () {
+    this.getlist()
+  },
   methods: {
+    // 获取列表
+    getlist () {
+      InterfaceCommodity({
+        pageNo: this.page,
+        pageSize: this.size
+      }).then(data => {
+        this.total = data.total
+        this.list = data.records
+        console.log(data)
+      })
+    },
     // 表格选择框
     handleSelectionChange (val) {
-      this.multipleSelection = val
+      const multipleSelection = val
+      console.log(multipleSelection)
+      multipleSelection.forEach(item => {
+        this.ids.push(item.id)
+      })
     },
     // 分页
     handleSizeChange (val) {
-      console.log(`每页 ${val} 条`)
+      this.size = val
+      this.getlist()
     },
     handleCurrentChange (val) {
-      console.log(`当前页: ${val}`)
+      this.page = val
+      this.getlist()
     },
     // 编辑按钮
     bianji (row) {
       this.shopShow = !this.shopShow
       this.biaotiname = '类目编辑'
       this.sdbgg = '确定'
+      this.form = row
+      this.imageUrl = this.form.imageUrl
     },
     // 添加商品按钮
     chuanjianshagpin () {
+      this.form = {}
+      this.imageUrl = ''
       this.shopShow = !this.shopShow
       this.biaotiname = '类目创建'
       this.sdbgg = '添加'
     },
     // 确定添加商品或是编辑商品
-    chuangjianOver () {},
+    chuangjianOver () {
+      if (this.biaotiname === '类目创建') {
+        InterfaceAddCategory(this.form).then(data => {
+          this.$message({
+            showClose: true,
+            message: '添加成功',
+            type: 'success'
+          })
+          this.getlist()
+          this.shopShow = !this.shopShow
+        })
+      } else {
+        InterfaceUpCategory(this.form).then(data => {
+          this.$message({
+            showClose: true,
+            message: '修改成功',
+            type: 'success'
+          })
+          this.getlist()
+          this.shopShow = !this.shopShow
+        })
+      }
+    },
     // 下架按纽
-    xiajia () {},
+    // xiajia (item) {
+    //   InterfaceUpCategory({
+    //     id: item.id,
+    //     state: '1'
+    //   }).then(data => {
+    //     this.$message({
+    //       showClose: true,
+    //       message: '下架成功',
+    //       type: 'success'
+    //     })
+    //   })
+    // },
     // 导出按钮
-    shujudaochu () {}
+    shujudaochu () {},
+    // 分页
+    handleAvatarSuccess (res, file) {
+      this.form.imageUrl = res.data
+      this.imageUrl = URL.createObjectURL(file.raw)
+    },
+    beforeAvatarUpload (file) {
+      const isJPG = file.type === 'image/jpeg'
+      const isLt2M = file.size / 1024 / 1024 < 2
+
+      if (!isJPG) {
+        this.$message.error('上传头像图片只能是 JPG 格式!')
+      }
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 2MB!')
+      }
+      return isJPG && isLt2M
+    }
   }
 }
 </script>
@@ -326,15 +399,6 @@ export default {
         font-family: MicrosoftYaHei-Bold, MicrosoftYaHei;
         font-weight: bold;
         color: #2B80FD;
-      }
-      span:first-child {
-        display: inline-block;
-        width: 7px;
-        height: 7px;
-        border-radius: 4px;
-        background: #2B80FD;
-        margin-right: 10px;
-        margin-left: 20px;
       }
       span:last-child {
         font-size: 18px;

@@ -1,8 +1,10 @@
 import axios from 'axios'
+import { Message } from 'element-ui'
+import baseURL from './khg'
 // import baseURL from '../../vue.config'
 // import { MessageBox } from 'element-ui'
 
-const baseURL = ''
+// const baseURL = 'http://test.bee.zk020.cn/youmi-fresh'
 
 // 创建axios实例
 const service = axios.create({
@@ -21,9 +23,50 @@ service.interceptors.request.use(config => {
 
 // 响应拦截
 service.interceptors.response.use(res => {
-  console.log(res)
   const data = res.data
-  return data.success ? data.data : Promise.reject(new Error(data.msg))
+  if (data.code !== 200) {
+    Message({
+      showClose: true,
+      message: data.message,
+      type: 'error'
+    })
+  }
+  return data.data
 }, err => {
   return Promise.reject(err)
 })
+
+// 统一请求的数据封装在config的data项
+// 对post请求头默认添加token(若存在token且authToken为true)
+// 第二参数catchConfig：[boolean, object]
+//    类型为boolean,默认为true开启错误提示，false关闭
+//    类型为object, 则根据配置项开启提示
+// 开发环境不是以url中api/开头的，需要再url前加temp/，进行代理，解决跨域问题
+// const IS_DEVLOPMENT_ENV = process.env.NODE_ENV === 'development'
+const request = (config = {}, catchConfig) => {
+  // 开发环境不是以url中api/开头的，需要再url前加temp/，进行代理，解决跨域问题
+  // if (IS_DEVLOPMENT_ENV && config.url.indexOf('api/') < 0 && config.url.indexOf('temp/') < 0) {
+  //   config.url = 'temp/' + config.url
+  // }
+
+  const method = config.method || 'post'
+  // if (!config.header.token && config.authToken === true) {
+  //   if (method.toLowerCase() === 'post') { // 给post请求默认添加token
+  //     if (token) {
+  //       config.header.token = token
+  //     }
+  //   }
+  // }
+  if (method.toLowerCase() === 'get' && !config.params) { // 将get请求的data赋值给params
+    config.params = config.data
+    config.data = {}
+  }
+  const promise = new Promise((resolve, reject) => {
+    service(config).then(data => {
+      resolve(data)
+    })
+  })
+  return promise
+}
+
+export default request

@@ -2,7 +2,7 @@
   <div class="shopList">
     <!-- 头部部分 -->
     <div class="BanNer_top">
-      <p><span></span>系统设置  网点管理</p>
+      <p>· 系统设置  网点管理</p>
       <!-- <div @click="chuangjian">创建Banner</div> -->
       <div class="BanNer_top_p">
         <span>网点名称：</span>
@@ -93,19 +93,19 @@
           <div class="gialog_tu">
             <el-form ref="form" :model="form" label-width="100px">
               <el-form-item label="网点名称：">
-                <el-input v-model="form.mendianname"></el-input>
+                <el-input v-model="form.title"></el-input>
               </el-form-item>
               <el-form-item label="网点负责人：">
-                <el-input v-model="form.name"></el-input>
+                <el-input v-model="form.managerName"></el-input>
               </el-form-item>
               <el-form-item label="手机号码：">
-                <el-input v-model="form.name"></el-input>
+                <el-input v-model="form.phone"></el-input>
               </el-form-item>
               <el-form-item label="网点地址：">
-                <el-input v-model="form.name"></el-input>
+                <el-input v-model="form.address"></el-input>
               </el-form-item>
               <el-form-item label="状态：">
-                <el-switch v-model="form.delivery"></el-switch>
+                <el-switch v-model="form.state"></el-switch>
               </el-form-item>
               <el-form-item label="所属中心：">
                 <el-select v-model="form.region" placeholder="请选择所属中心">
@@ -135,9 +135,12 @@
 </template>
 
 <script>
+// import { InterfaceAddShop, InterfaceShop, InterfaceUpShop, InterfaceDropdownList } from '../../api/system'
 export default {
   data () {
     return {
+      // InterfaceShop,
+      // InterfaceUpShop,
       tableData: [
         { ID: '123', shop: '否', phone: '陈志英', time: '2020/09/12', number: '启用', out: '3000', weizhi: '中通快递一号门', shopH: '中通快递一号门', ying: '0' },
         { ID: '234', shop: '否', phone: '陈志英', time: '2020/09/12', number: '9', out: '3000', weizhi: '中通快递一号门', shopH: '中通快递一号门', ying: '1' },
@@ -154,16 +157,28 @@ export default {
       biaotiname: '',
       currentPage1: 1,
       sdbgg: '',
-
-      form: {
-        mendianname: '',
-        region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
+      // 新建表单
+      ixnijan: {
+        title: '',
+        managerName: '',
+        phone: '',
+        address: '',
+        state: '',
+        longitude: '',
+        latitude: '',
+        parentTitle: '',
+        type: 1
+      },
+      // 获取列表表单
+      listform: {
+        pageNo: '1',
+        pageSize: '10',
+        type: 1,
+        title: '',
+        id: '',
+        phone: '',
+        parentId: '',
+        state: ''
       },
       options: [
         { value: 1, label: '是' },
@@ -171,9 +186,19 @@ export default {
       ]
     }
   },
-  mounted: {
+  mounted () {
+    this.getType()
   },
   methods: {
+
+    // 获取下拉列表所属网点选项
+    getType () {
+      // InterfaceDropdownList({
+      //   type: 2
+      // }).then(data => {
+      //   console.log('11111', data)
+      // })
+    },
     // 分页
     handleSizeChange (val) {
       console.log(`每页 ${val} 条`)
@@ -190,7 +215,11 @@ export default {
     over () {
       if (this.biaotiname === '编辑网点') {
         this.dialogVisible1 = !this.dialogVisible1
-      } else {}
+      } else {
+        // InterfaceAddShop({}).then(data => {
+
+        // })
+      }
     },
     tijiao () {
       this.dialogVisible1 = !this.dialogVisible1
