@@ -50,11 +50,6 @@
             label="门店名称">
           </el-table-column>
           <el-table-column
-            prop="number"
-            align="center"
-            label="实付金额">
-          </el-table-column>
-          <el-table-column
             prop="out"
             align="center"
             label="订单状态">
@@ -111,7 +106,6 @@
           <p class="uers_p1">
             <span>订单号：319641524981727232</span>
             <span>订单状态：订单完成</span>
-            <span>实付金额：100.00元</span>
           </p>
           <p class="uers_p">
             <span></span>
@@ -121,7 +115,6 @@
             <span>收货人姓名：凡高高</span>
             <span>手机号：15812345678</span>
             <span>详细地址：中通快递一号门.00元</span>
-            <span>物流方式：自提</span>
           </p>
           <p class="uers_p">
             <span></span>
@@ -152,6 +145,7 @@
 </template>
 
 <script>
+import { InterfaceOrderList } from '../../api/order'
 export default {
   data () {
     return {
@@ -171,14 +165,11 @@ export default {
       currentPage1: 1,
 
       form: {
-        mendianname: '',
-        region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
+        orderType: '2',
+        orderStatus: '',
+        pageNo: '1',
+        pageSize: '10',
+        Authorization: ''
       },
       options: [
         { value: 1, label: '是' },
@@ -186,15 +177,23 @@ export default {
       ]
     }
   },
-  mounted: {
+  mounted () {
+    this.getlist()
   },
   methods: {
+    getlist () {
+      InterfaceOrderList(this.form).then(data => {
+        console.log(data)
+      })
+    },
     // 分页
     handleSizeChange (val) {
-      console.log(`每页 ${val} 条`)
+      this.form.pageSize = val
+      this.getlist()
     },
     handleCurrentChange (val) {
-      console.log(`当前页: ${val}`)
+      this.form.pageNo = val
+      this.getlist()
     },
     // 编辑按钮
     bianji () {

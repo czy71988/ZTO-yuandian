@@ -30,12 +30,12 @@
           stripe
           style="width: 100%">
           <el-table-column
-            prop="date"
+            prop="id"
             align="center"
             label="商品ID">
           </el-table-column>
           <el-table-column
-            prop="time"
+            prop="itemId"
             align="center"
             label="商品编号">
           </el-table-column>
@@ -44,26 +44,29 @@
             label="主图">
             <template slot-scope="scope">
             <!-- <template> -->
-              <img class="sdfsgerg" :src="scope.row.address" alt="">
+              <img class="sdfsgerg" :src="scope.row.mainPic" alt="">
             </template>
           </el-table-column>
           <el-table-column
-            prop="addressds"
+            prop="title"
             align="center"
             label="商品标题">
           </el-table-column>
           <el-table-column
-            prop="addressgh"
+            prop="label"
             align="center"
             label="商品标签">
           </el-table-column>
           <el-table-column
-            prop="addressgh"
+            prop="storeHouse"
             align="center"
             label="所在仓位置">
+            <template slot-scope="scope">
+              <span>{{scope.row.storeHouse === 1 ? '门店' : (scope.row.storeHouse === 2 ? '网点' : '中心仓库')}}</span>
+            </template>
           </el-table-column>
           <el-table-column
-            prop="addressgh"
+            prop="price"
             align="center"
             label="销售价">
           </el-table-column>
@@ -74,7 +77,7 @@
             <template slot-scope="scope">
               <span class="Banner_span1" @click="bianji(scope.row)"><i class="el-icon-edit"></i>编辑</span>
               <span class="Banner_span3" @click="chakanxiangqing(scope.row)"><i class="el-icon-zoom-in"></i>查看详情</span>
-              <span class="Banner_span2" @click="xiajia(scope.row)"><i class="el-icon-sort"></i>{{scope.row.state !== '1' ? '下架' : '上架'}}</span>
+              <span class="Banner_span2" @click="xiajia(scope.row)"><i class="el-icon-sort"></i>{{scope.row.state !== 1 ? '下架' : '上架'}}</span>
             </template>
           </el-table-column>
         </el-table>
@@ -114,7 +117,7 @@
               </li>
             </ul>
             <p>
-              <span>销售价：<i>{{list.sellPrice}}</i></span>
+              <span>销售价：<i>{{list.price}}</i></span>
             </p>
             <p>
               <span>库存数量：<i>{{list.amount}}</i></span>
@@ -127,6 +130,7 @@
     <!-- 弹窗部分 -- 商品创建编辑 -->
     <div class="BanNer_diagio">
       <el-dialog
+        :before-close="jdhigjheirg"
         :visible.sync="shopShow">
         <p class="sdsd">{{biaotiname}}</p>
         <div class="chuangjian_shop_dialog">
@@ -151,6 +155,7 @@
               <el-upload
                 action="https://bee.zk020.cn/bee-admin/admin/systemIndex/doUploadFile"
                 list-type="picture-card"
+                :file-list="dialogImageUrl"
                 :on-preview="handlePictureCardPreview"
                 :on-success="dbfbiebibkfjbrgdfg"
                 :on-remove="handleRemove">
@@ -159,7 +164,7 @@
                 </div>
               </el-upload>
               <el-dialog :visible.sync="dialogVisible">
-                <img width="100%" :src="dialogImageUrl" alt="">
+                <img width="100%" :src="dialogImageUrl.url" alt="">
               </el-dialog>
             </el-form-item>
             <el-form-item label="商品标签：">
@@ -189,14 +194,14 @@
               </el-select>
             </el-form-item>
             <el-form-item label="销售价：">
-              <el-input v-model="form.sellPrice"></el-input>
+              <el-input v-model="form.price"></el-input>
             </el-form-item>
             <el-form-item label="库存数量：">
               <el-input v-model="form.amount"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="onSubmit">{{sdbgg}}</el-button>
-              <el-button>取消</el-button>
+              <el-button @click="jdhigjheirg">取消</el-button>
             </el-form-item>
           </el-form>
         </div>
@@ -225,7 +230,7 @@ export default {
         label: '',
         storeHouse: '',
         categoryId: '',
-        sellPrice: '',
+        price: '',
         amount: ''
       },
       // 请求列表参数
@@ -254,10 +259,28 @@ export default {
     this.getlist()
   },
   methods: {
+    // dialog关闭回调
+    jdhigjheirg () {
+      console.log('清除')
+      this.form = {
+        title: '',
+        mainPic: '', // 商品主图
+        imageContent: [], // 商品详情图
+        label: '',
+        storeHouse: '',
+        categoryId: '',
+        price: '',
+        amount: ''
+      }
+      this.urls = []
+      this.imageUrl = ''
+      this.dialogImageUrl = []
+      this.shopShow = !this.shopShow
+    },
     // 获取列表
     getlist () {
       InterfaceshopSohp(this.getform).then(data => {
-        this.tableData = data.tableData
+        this.tableData = data.records
         this.total = data.total
         console.log(data)
       })
@@ -284,10 +307,21 @@ export default {
     },
     // 商品编辑
     bianji (item) {
-      this.shopShow = !this.shopShow
+      // this.shopShow = !this.shopShow
       this.biaotiname = '商品编辑'
       this.sdbgg = '确定'
-      this.form = item
+      const id = item.id
+      this.jdhigjheirg()
+      Interfaceshopdetails({
+        id: id
+      }).then(data => {
+        this.form = data
+        this.imageUrl = data.mainPic
+        data.imageContent.forEach(item => { item.url = item.imageUrl })
+        this.dialogImageUrl = data.imageContent
+        console.log('1111', this.dialogImageUrl)
+        // console.log('1111', imgs)
+      })
     },
     // 分页
     handleSizeChange (val) {
@@ -306,12 +340,12 @@ export default {
         })
         InterfaceAddshopdetails(this.form).then(data => {
           console.log(data)
-          this.shopShow = !this.shopShow
           this.$message({
             message: '创建商品成功',
             type: 'success'
           })
           this.getlist()
+          this.jdhigjheirg()
         })
       } else {
         // 编辑操作
@@ -322,6 +356,7 @@ export default {
             type: 'success'
           })
           this.getlist()
+          this.jdhigjheirg()
         })
       }
     },
@@ -347,6 +382,7 @@ export default {
     },
     handlePictureCardPreview (file) {
       this.dialogImageUrl = file.url
+      console.log('1', this.dialogImageUrl)
       this.dialogVisible = true
     },
     dbfbiebibkfjbrgdfg (res, file) {
@@ -354,11 +390,11 @@ export default {
     },
     // 上下架操作
     xiajia (item) {
-      if (item.state === '1') {
+      if (item.state === 1) {
         // 下架操作
         InterfaceGoodsShelves({
           id: item.id,
-          state: '2'
+          state: 2
         }).then(data => {
           this.$message({
             message: '下架成功',
@@ -370,7 +406,7 @@ export default {
         // 上架操作
         InterfaceGoodsShelves({
           id: item.id,
-          state: '1'
+          state: 1
         }).then(data => {
           this.$message({
             message: '上架成功',

@@ -102,7 +102,15 @@
                 <el-input v-model="from.address"></el-input>
               </el-form-item>
               <el-form-item label="状态：">
-                <el-switch active-value='1' inactive-value='0' v-model="from.state"></el-switch>
+                <el-tooltip :content="'Switch value: ' + from.state" placement="top">
+                  <el-switch
+                    v-model="from.state"
+                    active-color="#13ce66"
+                    inactive-color="#ff4949"
+                    :active-value="1"
+                    :inactive-value="0">
+                  </el-switch>
+                </el-tooltip>
               </el-form-item>
               <p class="sdferg">
                 <span @click="dialogVisible = false">取消</span>
@@ -166,6 +174,20 @@ export default {
     this.getlist()
   },
   methods: {
+    // 清空
+    dkjfg () {
+      this.from = {
+        title: '',
+        managerName: '',
+        phone: '',
+        address: '',
+        state: '',
+        longitude: '',
+        latitude: '',
+        parentTitle: '',
+        type: 1
+      }
+    },
     getlist () {
       InterfaceShop(this.form).then(data => {
         this.tableData = data.records
@@ -222,6 +244,7 @@ export default {
     },
     // 新增按钮
     news () {
+      this.dkjfg()
       this.biaotiname = '新增网点'
       this.dialogVisible = !this.dialogVisible
     }

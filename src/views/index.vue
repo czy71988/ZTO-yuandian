@@ -20,7 +20,8 @@
 
                 <el-submenu index="1">
                   <template slot="title">
-                    <i class="el-icon-location"></i>
+                    <!-- <i class="el-icon-location"></i> -->
+                    <img class="dsfg" src="../assets/编组 3@2x(1).png" alt="">
                     <span>用户管理</span>
                   </template>
                   <el-menu-item-group>
@@ -30,7 +31,8 @@
 
                 <el-submenu index="2">
                   <template slot="title">
-                    <i class="el-icon-location"></i>
+                    <!-- <i class="el-icon-location"></i> -->
+                    <img class="dsfg" src="../assets/编组 4@2x.png" alt="">
                     <span>广告配置</span>
                   </template>
                   <el-menu-item-group>
@@ -41,7 +43,8 @@
 
                 <el-submenu index="3">
                   <template slot="title">
-                    <i class="el-icon-location"></i>
+                    <!-- <i class="el-icon-location"></i> -->
+                    <img class="dsfg" src="../assets/编组 5@2x.png" alt="">
                     <span>商品管理</span>
                   </template>
                   <el-menu-item-group>
@@ -57,7 +60,8 @@
 
                 <el-submenu index="5">
                   <template slot="title">
-                    <i class="el-icon-location"></i>
+                    <!-- <i class="el-icon-location"></i> -->
+                    <img class="dsfg" src="../assets/编组 7@2x.png" alt="">
                     <span>订单管理</span>
                   </template>
                   <el-menu-item-group>
@@ -68,7 +72,8 @@
 
                 <el-submenu index="6">
                   <template slot="title">
-                    <i class="el-icon-location"></i>
+                    <!-- <i class="el-icon-location"></i> -->
+                    <img class="dsfg" src="../assets/编组 8@2x.png" alt="">
                     <span>系统设置</span>
                   </template>
                   <el-menu-item-group>
@@ -159,4 +164,9 @@ export default {
 </style>
 
 <style lang="less" scoped>
+.dsfg {
+  width: 15px;
+  height: 15px;
+  margin-right: 5px;
+}
 </style>

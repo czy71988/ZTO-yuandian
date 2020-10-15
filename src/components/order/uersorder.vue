@@ -7,17 +7,18 @@
       <div class="BanNer_top_p">
         <span>创建时间：</span>
         <el-date-picker
-          v-model="value1"
+          v-model="dkjfg"
           type="daterange"
+          value-format="timestamp"
           range-separator="至"
           start-placeholder="开始日期"
           end-placeholder="结束日期">
         </el-date-picker>
         <span>订单号：</span>
-        <el-input v-model="input" placeholder="请输入内容"></el-input>
+        <el-input v-model="form.orderId" placeholder="请输入内容"></el-input>
         <div>
-          <span>重置</span>
-          <span>搜索</span>
+          <span @click="qingkong">重置</span>
+          <span @click="sousuo">搜索</span>
           <span>批量导出</span>
         </div>
       </div>
@@ -30,52 +31,47 @@
           stripe
           style="width: 100%">
           <el-table-column
-            prop="ID"
+            prop="id"
             align="center"
             label="订单编号">
           </el-table-column>
           <el-table-column
-            prop="shop"
+            prop="gmtCreate"
             align="center"
             label="下单时间">
           </el-table-column>
           <el-table-column
-            prop="phone"
+            prop="userName"
             align="center"
             label="收件人信息">
           </el-table-column>
           <el-table-column
-            prop="time"
+            prop="logisticsType"
             align="center"
             label="物流方式">
           </el-table-column>
           <el-table-column
-            prop="number"
+            prop="totalGoodsPrice"
             align="center"
             label="实付金额">
           </el-table-column>
           <el-table-column
-            prop="out"
+            prop="orderStatusName"
             align="center"
             label="订单状态">
           </el-table-column>
           <el-table-column
-            prop="weizhi"
-            align="center"
-            label="所属门店">
-          </el-table-column>
-          <el-table-column
-            prop="shopH"
+            prop="utletsoName"
             align="center"
             label="所属网点">
           </el-table-column>
           <el-table-column
-            prop="time"
+            prop="coreName"
             align="center"
             label="所属中心">
           </el-table-column>
           <el-table-column
-            prop="shopH"
+            prop="buyMobile"
             align="center"
             label="买家手机号">
           </el-table-column>
@@ -84,7 +80,7 @@
             label="查看详情"
             width="80">
             <template slot-scope="scope">
-              <span class="sdreg" @click="bianji(scope.row)"><i class="el-icon-edit"></i>详情</span>
+              <span class="sdreg" @click="bianji(scope.row.tradeParentId)"><i class="el-icon-edit"></i>详情</span>
             </template>
           </el-table-column>
         </el-table>
@@ -114,19 +110,19 @@
             <span>订单信息</span>
           </p>
           <p class="uers_p1">
-            <span>订单号：319641524981727232</span>
-            <span>订单状态：订单完成</span>
-            <span>实付金额：100.00元</span>
+            <span>订单号：{{Content.tradeParentId}}</span>
+            <span>订单状态：{{Content.orderStatus | orderStatusFilter}}</span>
+            <span>实付金额：{{Content.totalGoodsPrice}}元</span>
           </p>
           <p class="uers_p">
             <span></span>
             <span>订单信息</span>
           </p>
           <p class="uers_p1">
-            <span>收货人姓名：凡高高</span>
-            <span>手机号：15812345678</span>
-            <span>详细地址：中通快递一号门.00元</span>
-            <span>物流方式：自提</span>
+            <span>收货人姓名：{{Content.userName}}</span>
+            <span>手机号：{{Content.takeMobile}}</span>
+            <span>详细地址：{{Content.takeAddress}}</span>
+            <span>物流方式：{{Content.takeAddress == 1 ? '自提' : '配送'}}</span>
           </p>
           <p class="uers_p">
             <span></span>
@@ -142,11 +138,11 @@
             </ul>
             <ul class="uers_logs">
               <li>
-                <span>001</span>
-                <span><img src="../../assets/编组 19@3x@2x.png" alt=""></span>
-                <span>香菇</span>
-                <span>20</span>
-                <span>1</span>
+                <span>{{shopxContent.itemId}}</span>
+                <span><img :src="shopxContent.itemImg" alt=""></span>
+                <span>{{shopxContent.itemTitle}}</span>
+                <span>{{shopxContent.originalPrice}}</span>
+                <span>{{shopxContent.itemNum}}</span>
               </li>
             </ul>
           </div>
@@ -157,52 +153,78 @@
 </template>
 
 <script>
+import { InterfaceOrderList, InterfaceQueryOrderList } from '../../api/order'
 export default {
   data () {
     return {
-      tableData: [
-        { ID: '123', shop: '否', phone: '陈志英', time: '2020/09/12', number: '启用', out: '3000', weizhi: '中通快递一号门', shopH: '中通快递一号门', ying: '0' },
-        { ID: '234', shop: '否', phone: '陈志英', time: '2020/09/12', number: '9', out: '3000', weizhi: '中通快递一号门', shopH: '中通快递一号门', ying: '1' },
-        { ID: '345', shop: '否', phone: '陈志英', time: '2020/09/12', number: '9', out: '3000', weizhi: '中通快递一号门', shopH: '中通快递一号门', ying: '1' },
-        { ID: '456', shop: '否', phone: '陈志英', time: '2020/09/12', number: '9', out: '3000', weizhi: '中通快递一号门', shopH: '中通快递一号门', ying: '1' },
-        { ID: '567', shop: '否', phone: '陈志英', time: '2020/09/12', number: '9', out: '3000', weizhi: '中通快递一号门', shopH: '中通快递一号门', ying: '0' },
-        { ID: '678', shop: '否', phone: '陈志英', time: '2020/09/12', number: '9', out: '3000', weizhi: '中通快递一号门', shopH: '中通快递一号门', ying: '0' },
-        { ID: '789', shop: '否', phone: '陈志英', time: '2020/09/12', number: '9', out: '3000', weizhi: '中通快递一号门', shopH: '中通快递一号门', ying: '1' },
-        { ID: '444', shop: '否', phone: '陈志英', time: '2020/09/12', number: '9', out: '3000', weizhi: '中通快递一号门', shopH: '中通快递一号门', ying: '0' },
-        { ID: '555', shop: '否', phone: '陈志英', time: '2020/09/12', number: '9', out: '3000', weizhi: '中通快递一号门', shopH: '中通快递一号门', ying: '0' }
-      ],
+      tableData: [],
       dialogVisible: false,
       dialogVisible1: false,
       currentPage1: 1,
 
       form: {
-        mendianname: '',
-        region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
+        orderType: 1,
+        orderId: '',
+        orderStatus: '',
+        beginCreTime: '',
+        endCreTime: '',
+        pageNo: '1',
+        pageSize: '10'
       },
       options: [
         { value: 1, label: '是' },
         { value: 2, label: '否' }
-      ]
+      ],
+      dkjfg: [],
+      Content: {},
+      shopxContent: {}
     }
   },
-  mounted: {
+  mounted () {
+    this.getlist()
   },
   methods: {
+    qingkong () {
+      this.form = {
+        orderType: 1,
+        orderId: '',
+        orderStatus: '',
+        beginCreTime: '',
+        endCreTime: '',
+        pageNo: '1',
+        pageSize: '10'
+      }
+      this.getlist()
+    },
+    sousuo () {
+      this.form.beginCreTime = this.dkjfg[0]
+      this.form.endCreTime = this.dkjfg[1]
+      this.getlist()
+    },
+    getlist () {
+      InterfaceOrderList(this.form).then(data => {
+        this.tableData = data
+      })
+    },
     // 分页
     handleSizeChange (val) {
-      console.log(`每页 ${val} 条`)
+      this.form.pageSize = val
+      this.getlist()
     },
     handleCurrentChange (val) {
-      console.log(`当前页: ${val}`)
+      this.form.pageNo = val
+      this.getlist()
     },
     // 编辑按钮
-    bianji () {
+    bianji (id) {
+      const orderId = id
+      InterfaceQueryOrderList({
+        orderId: orderId
+      }).then(data => {
+        this.Content = data[0]
+        this.shopxContent = this.Content.adminGoodsList
+        console.log('555', this.Content)
+      })
       this.dialogVisible = !this.dialogVisible
     }
   }

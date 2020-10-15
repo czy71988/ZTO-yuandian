@@ -44,7 +44,7 @@ export function InterfaceshopSohp (data, catchConfig) {
 // 商品详情-
 export function Interfaceshopdetails (data, catchConfig) {
   const req = request({
-    method: 'post',
+    method: 'get',
     url: '/youmi-fresh/admin/product/get',
     data
   }, catchConfig)

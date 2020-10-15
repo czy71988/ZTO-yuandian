@@ -107,7 +107,15 @@
                 <el-input v-model="ixnijan.address"></el-input>
               </el-form-item>
               <el-form-item label="状态：">
-                <el-switch  active-value="1" inactive-value="0" v-model="ixnijan.state"></el-switch>
+                <el-tooltip :content="'Switch value: ' + ixnijan.state" placement="top">
+                  <el-switch
+                    v-model="ixnijan.state"
+                    active-color="#13ce66"
+                    inactive-color="#ff4949"
+                    :active-value="1"
+                    :inactive-value="0">
+                  </el-switch>
+                </el-tooltip>
               </el-form-item>
               <el-form-item label="所属中心：">
                 <el-select v-model="ixnijan.parentId" placeholder="请选择所属中心">
@@ -136,7 +144,6 @@
 </template>
 
 <script>
-// import { InterfaceAddShop, InterfaceShop, InterfaceUpShop, InterfaceDropdownList } from '../../api/system'
 import { InterfaceAddShop, InterfaceDropdownList, InterfaceShop, InterfaceUpShop } from '../../api/system'
 export default {
   data () {
@@ -179,6 +186,20 @@ export default {
     this.getlist()
   },
   methods: {
+    // 清空
+    kjdfg () {
+      this.ixnijan = {
+        title: '',
+        managerName: '',
+        phone: '',
+        address: '',
+        state: '',
+        longitude: '',
+        latitude: '',
+        parentTitle: '',
+        type: 2
+      }
+    },
     // 获取列表
     getlist () {
       InterfaceShop(this.listform).then(data => {
@@ -243,6 +264,7 @@ export default {
     },
     // 新增按钮
     news () {
+      this.kjdfg()
       this.biaotiname = '新增网点'
       this.dialogVisible = !this.dialogVisible
     }

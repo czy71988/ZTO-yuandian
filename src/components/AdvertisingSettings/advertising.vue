@@ -60,6 +60,7 @@
     <!-- 弹窗部分 -->
     <div class="BanNer_diagio">
       <el-dialog
+        :before-close="dkjfhgioer"
         :visible.sync="dialogVisible">
         <p>{{biaotiname}}</p>
         <el-form ref="form" :model="form" label-width="100px">
@@ -87,7 +88,7 @@
           </el-form-item>
         </el-form>
         <div class="chuangjian_dialog">
-          <span @click="dialogVisible = !dialogVisible">取消</span>
+          <span @click="jdhkfgbir">取消</span>
           <span @click="chuangjianOver">{{Btnname}}</span>
         </div>
       </el-dialog>
@@ -124,6 +125,30 @@ export default {
     this.getlist()
   },
   methods: {
+    // dialog关闭前的回调函数
+    dkjfhgioer () {
+      // alert(11)
+      this.form = {
+        name: '',
+        imageUrl: '',
+        click: '',
+        sort: '',
+        method: '',
+        type: '2'
+      }
+      this.dialogVisible = !this.dialogVisible
+    },
+    jdhkfgbir () {
+      this.form = {
+        name: '',
+        imageUrl: '',
+        click: '',
+        sort: '',
+        method: '',
+        type: '2'
+      }
+      this.dialogVisible = !this.dialogVisible
+    },
     // 获取列表
     getlist () {
       InterfaceBanner({
@@ -166,7 +191,6 @@ export default {
     },
     // 创建按钮
     chuangjian () {
-      this.form = {}
       this.dialogVisible = !this.dialogVisible
       this.biaotiname = '类目创建'
       this.Btnname = '创建'

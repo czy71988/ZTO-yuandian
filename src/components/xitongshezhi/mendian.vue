@@ -12,6 +12,10 @@
         <span>所属网点：</span>
         <el-select v-model="from.parentId" placeholder="请选择">
           <el-option
+            label="全部"
+            value="">
+          </el-option>
+          <el-option
             v-for="item in sjdh"
             :key="item.id"
             :label="item.title"
@@ -28,7 +32,7 @@
           </el-option>
         </el-select>
         <div>
-          <span>搜索</span>
+          <span @click="sousupo">搜索</span>
           <span>批量导出</span>
         </div>
       </div>
@@ -68,7 +72,7 @@
             width="50"
             label="状态">
             <template slot-scope="scope">
-              <span>{{scope.row.state === '0' ? '停用' : '启用'}}</span>
+              <span>{{scope.row.state == 0 ? '停用' : '启用'}}</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -151,11 +155,20 @@
               <el-form-item label="门店地址：">
                 <!-- <el-input v-model="form.address"></el-input> -->
                 <el-input v-model="form.address" class="input-with-select">
-                  <el-button @click="ditu" slot="append" icon="el-icon-search"></el-button>
+                  <el-button @click="ditu" slot="append" icon="el-icon-location-information"></el-button>
                 </el-input>
               </el-form-item>
               <el-form-item label="状态：">
-                <el-switch active-value='1' inactive-value="0"  v-model="form.state"></el-switch>
+                <!-- <el-switch active-value='1' inactive-value="0"  v-model="form.state"></el-switch> -->
+                <el-tooltip :content="'Switch value: ' + form.state" placement="top">
+                  <el-switch
+                    v-model="form.state"
+                    active-color="#13ce66"
+                    inactive-color="#ff4949"
+                    :active-value="1"
+                    :inactive-value="0">
+                  </el-switch>
+                </el-tooltip>
               </el-form-item>
               <el-form-item label="经度：">
                 <el-input v-model="form.longitude"></el-input>
@@ -229,6 +242,7 @@ export default {
       },
       sjdh: [],
       options: [
+        { value: '', label: '全部' },
         { value: '1', label: '启用' },
         { value: '0', label: '禁用' }
       ],
@@ -240,6 +254,23 @@ export default {
     this.getType()
   },
   methods: {
+    sousupo () {
+      this.getlist()
+    },
+    // 清空
+    sjkdhg () {
+      this.form = {
+        title: '',
+        managerName: '',
+        phone: '',
+        address: '',
+        state: '',
+        longitude: '',
+        latitude: '',
+        parentId: '',
+        type: 3
+      }
+    },
     // 列表
     getlist () {
       InterfaceShop(this.from).then(data => {
@@ -277,6 +308,7 @@ export default {
     },
     // 编辑按钮
     bianji (item) {
+      this.sjkdhg()
       this.form = item
       this.biaotiname = '编辑门店'
       this.dialogVisible = !this.dialogVisible
@@ -309,6 +341,7 @@ export default {
     },
     // 新增按钮
     news () {
+      this.sjkdhg()
       this.biaotiname = '新增门店'
       this.dialogVisible = !this.dialogVisible
     }
@@ -412,10 +445,10 @@ export default {
                 text-align: left;
                 height: 30px;
                 line-height: 30px;
+                  width: 300px;
                 .el-input__inner {
                   line-height: 30px;
                   height: 30px;
-                  width: 300px;
                   background: #F4F4F4;
                 }
               }

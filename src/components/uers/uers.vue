@@ -5,7 +5,7 @@
       <p>· 用户管理  用户列表</p>
       <div class="BanNer_top_p">
         <span>手机号：</span>
-        <el-input v-model="dengluphone" placeholder="请输入内容"></el-input>
+        <el-input v-model="denglufrom.dengluphone" placeholder="请输入内容"></el-input>
         <div>
           <span>搜索</span>
           <span>批量导出</span>
@@ -20,7 +20,7 @@
           stripe
           style="width: 100%">
           <el-table-column
-            prop="ID"
+            prop="id"
             align="center"
             label="ID">
           </el-table-column>
@@ -37,7 +37,7 @@
             width="120">
           </el-table-column>
           <el-table-column
-            prop="time"
+            prop="gmtCreate"
             align="center"
             label="注册时间"
             width="120">
@@ -70,7 +70,7 @@
             width="100">
             <template slot-scope="scope">
               <el-switch
-                v-model="scope.row.ying"
+                v-model="scope.row.enable"
                 active-value="0"
                 inactive-value="1"
                 active-color="#13ce66"
@@ -102,17 +102,7 @@ import { UserList } from '../../api/uers'
 export default {
   data () {
     return {
-      tableData: [
-        { ID: '123', shop: '否', phone: '18321201141', time: '2020/09/12', number: '9', out: '3000', weizhi: '中通快递一号门', shopH: '中通快递一号门', ying: '0' },
-        { ID: '234', shop: '否', phone: '18321201141', time: '2020/09/12', number: '9', out: '3000', weizhi: '中通快递一号门', shopH: '中通快递一号门', ying: '1' },
-        { ID: '345', shop: '否', phone: '18321201141', time: '2020/09/12', number: '9', out: '3000', weizhi: '中通快递一号门', shopH: '中通快递一号门', ying: '1' },
-        { ID: '456', shop: '否', phone: '18321201141', time: '2020/09/12', number: '9', out: '3000', weizhi: '中通快递一号门', shopH: '中通快递一号门', ying: '1' },
-        { ID: '567', shop: '否', phone: '18321201141', time: '2020/09/12', number: '9', out: '3000', weizhi: '中通快递一号门', shopH: '中通快递一号门', ying: '0' },
-        { ID: '678', shop: '否', phone: '18321201141', time: '2020/09/12', number: '9', out: '3000', weizhi: '中通快递一号门', shopH: '中通快递一号门', ying: '0' },
-        { ID: '789', shop: '否', phone: '18321201141', time: '2020/09/12', number: '9', out: '3000', weizhi: '中通快递一号门', shopH: '中通快递一号门', ying: '1' },
-        { ID: '444', shop: '否', phone: '18321201141', time: '2020/09/12', number: '9', out: '3000', weizhi: '中通快递一号门', shopH: '中通快递一号门', ying: '0' },
-        { ID: '555', shop: '否', phone: '18321201141', time: '2020/09/12', number: '9', out: '3000', weizhi: '中通快递一号门', shopH: '中通快递一号门', ying: '0' }
-      ],
+      tableData: [],
       dialogVisible: false,
       shopShow: false,
       biaotiname: '',
@@ -129,30 +119,32 @@ export default {
         resource: '',
         desc: ''
       },
-      dengluform: {
-        dengluphone: ''
+      denglufrom: {
+        dengluphone: '',
+        pageNo: '1',
+        pageSize: '10'
       },
       total: 0
     }
   },
-  mounted: {
+  mounted () {
+    this.getList()
   },
   methods: {
     getList () {
-      UserList({
-        phone: this.dengluphone
-      }).then(data => {
+      UserList(this.denglufrom).then(data => {
         this.tableData = data.records
         this.total = data.total
-        console.log('用户列表', data)
       })
     },
     // 分页
     handleSizeChange (val) {
-      console.log(`每页 ${val} 条`)
+      this.denglufrom.pageSize = val
+      this.getList()
     },
     handleCurrentChange (val) {
-      console.log(`当前页: ${val}`)
+      this.denglufrom.pageNo = val
+      this.getList()
     }
   }
 }
