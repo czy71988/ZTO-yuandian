@@ -6,11 +6,11 @@
       <!-- <div @click="chuangjian">创建Banner</div> -->
       <div class="BanNer_top_p">
         <span>网点名称：</span>
-        <el-input v-model="input" placeholder="请输入内容"></el-input>
+        <el-input v-model="listform.title" placeholder="请输入内容"></el-input>
         <span>网点编号：</span>
-        <el-input v-model="input" placeholder="请输入内容"></el-input>
+        <el-input v-model="listform.id" placeholder="请输入内容"></el-input>
         <div>
-          <span>搜索</span>
+          <span @click="sousuo">搜索</span>
           <span>批量导出</span>
         </div>
       </div>
@@ -23,39 +23,41 @@
           stripe
           style="width: 100%">
           <el-table-column
-            prop="ID"
+            prop="id"
             align="center"
             label="网点编号">
           </el-table-column>
           <el-table-column
-            prop="shop"
+            prop="title"
             align="center"
             label="网点名称">
           </el-table-column>
           <el-table-column
-            prop="phone"
+            prop="managerName"
             align="center"
             label="网点负责人">
           </el-table-column>
           <el-table-column
-            prop="time"
+            prop="phone"
             align="center"
             label="联系方式">
           </el-table-column>
           <el-table-column
-            prop="out"
+            prop="address"
             align="center"
             label="网点地址">
           </el-table-column>
           <el-table-column
-            prop="shopH"
+            prop="parentTitle"
             align="center"
             label="所属中心">
           </el-table-column>
           <el-table-column
-            prop="shopH"
             align="center"
             label="状态">
+            <template slot-scope="scope">
+              <span>{{scope.row.state === 1 ? '启用' : '禁用'}}</span>
+            </template>
           </el-table-column>
           <el-table-column
             align="center"
@@ -80,7 +82,7 @@
           :current-page.sync="currentPage1"
           :page-size="100"
           layout="total, prev, pager, next"
-          :total="1000">
+          :total="total">
         </el-pagination>
       </div>
     </div>
@@ -91,26 +93,25 @@
         <p class="sdsd">{{biaotiname}}</p>
         <div class="chuangjian_dialog">
           <div class="gialog_tu">
-            <el-form ref="form" :model="form" label-width="100px">
+            <el-form ref="form" :model="ixnijan" label-width="100px">
               <el-form-item label="网点名称：">
-                <el-input v-model="form.title"></el-input>
+                <el-input v-model="ixnijan.title"></el-input>
               </el-form-item>
               <el-form-item label="网点负责人：">
-                <el-input v-model="form.managerName"></el-input>
+                <el-input v-model="ixnijan.managerName"></el-input>
               </el-form-item>
               <el-form-item label="手机号码：">
-                <el-input v-model="form.phone"></el-input>
+                <el-input v-model="ixnijan.phone"></el-input>
               </el-form-item>
               <el-form-item label="网点地址：">
-                <el-input v-model="form.address"></el-input>
+                <el-input v-model="ixnijan.address"></el-input>
               </el-form-item>
               <el-form-item label="状态：">
-                <el-switch v-model="form.state"></el-switch>
+                <el-switch  active-value="1" inactive-value="0" v-model="ixnijan.state"></el-switch>
               </el-form-item>
               <el-form-item label="所属中心：">
-                <el-select v-model="form.region" placeholder="请选择所属中心">
-                  <el-option label="区域一" value="shanghai"></el-option>
-                  <el-option label="区域二" value="beijing"></el-option>
+                <el-select v-model="ixnijan.parentId" placeholder="请选择所属中心">
+                  <el-option v-for="item in options" :key="item.id" :label="item.title" :value="item.id"></el-option>
                 </el-select>
               </el-form-item>
               <p class="sdferg">
@@ -136,22 +137,11 @@
 
 <script>
 // import { InterfaceAddShop, InterfaceShop, InterfaceUpShop, InterfaceDropdownList } from '../../api/system'
+import { InterfaceAddShop, InterfaceDropdownList, InterfaceShop, InterfaceUpShop } from '../../api/system'
 export default {
   data () {
     return {
-      // InterfaceShop,
-      // InterfaceUpShop,
-      tableData: [
-        { ID: '123', shop: '否', phone: '陈志英', time: '2020/09/12', number: '启用', out: '3000', weizhi: '中通快递一号门', shopH: '中通快递一号门', ying: '0' },
-        { ID: '234', shop: '否', phone: '陈志英', time: '2020/09/12', number: '9', out: '3000', weizhi: '中通快递一号门', shopH: '中通快递一号门', ying: '1' },
-        { ID: '345', shop: '否', phone: '陈志英', time: '2020/09/12', number: '9', out: '3000', weizhi: '中通快递一号门', shopH: '中通快递一号门', ying: '1' },
-        { ID: '456', shop: '否', phone: '陈志英', time: '2020/09/12', number: '9', out: '3000', weizhi: '中通快递一号门', shopH: '中通快递一号门', ying: '1' },
-        { ID: '567', shop: '否', phone: '陈志英', time: '2020/09/12', number: '9', out: '3000', weizhi: '中通快递一号门', shopH: '中通快递一号门', ying: '0' },
-        { ID: '678', shop: '否', phone: '陈志英', time: '2020/09/12', number: '9', out: '3000', weizhi: '中通快递一号门', shopH: '中通快递一号门', ying: '0' },
-        { ID: '789', shop: '否', phone: '陈志英', time: '2020/09/12', number: '9', out: '3000', weizhi: '中通快递一号门', shopH: '中通快递一号门', ying: '1' },
-        { ID: '444', shop: '否', phone: '陈志英', time: '2020/09/12', number: '9', out: '3000', weizhi: '中通快递一号门', shopH: '中通快递一号门', ying: '0' },
-        { ID: '555', shop: '否', phone: '陈志英', time: '2020/09/12', number: '9', out: '3000', weizhi: '中通快递一号门', shopH: '中通快递一号门', ying: '0' }
-      ],
+      tableData: [],
       dialogVisible: false,
       dialogVisible1: false,
       biaotiname: '',
@@ -167,62 +157,89 @@ export default {
         longitude: '',
         latitude: '',
         parentTitle: '',
-        type: 1
+        type: 2
       },
       // 获取列表表单
       listform: {
         pageNo: '1',
         pageSize: '10',
-        type: 1,
+        type: 2,
         title: '',
         id: '',
         phone: '',
         parentId: '',
         state: ''
       },
-      options: [
-        { value: 1, label: '是' },
-        { value: 2, label: '否' }
-      ]
+      options: [],
+      total: 0
     }
   },
   mounted () {
     this.getType()
+    this.getlist()
   },
   methods: {
-
+    // 获取列表
+    getlist () {
+      InterfaceShop(this.listform).then(data => {
+        console.log(data)
+        this.tableData = data.records
+        this.total = data.total
+      })
+    },
+    // 搜索
+    sousuo () {
+      this.getlist()
+    },
     // 获取下拉列表所属网点选项
     getType () {
-      // InterfaceDropdownList({
-      //   type: 2
-      // }).then(data => {
-      //   console.log('11111', data)
-      // })
+      InterfaceDropdownList({
+        type: 1
+      }).then(data => {
+        this.options = data
+        console.log('11111', data)
+      })
     },
     // 分页
     handleSizeChange (val) {
-      console.log(`每页 ${val} 条`)
+      this.listform.pageSize = val
+      this.getlist()
     },
     handleCurrentChange (val) {
-      console.log(`当前页: ${val}`)
+      this.listform.pageNo = val
+      this.getlist()
     },
     // 编辑按钮
-    bianji () {
+    bianji (item) {
       this.biaotiname = '编辑网点'
       this.dialogVisible = !this.dialogVisible
+      this.ixnijan = item
     },
     // 提交操作
     over () {
       if (this.biaotiname === '编辑网点') {
         this.dialogVisible1 = !this.dialogVisible1
       } else {
-        // InterfaceAddShop({}).then(data => {
-
-        // })
+        InterfaceAddShop(this.ixnijan).then(data => {
+          this.$message({
+            message: '新建成功',
+            type: 'success'
+          })
+          this.dialogVisible = !this.dialogVisible
+          this.getlist()
+        })
       }
     },
     tijiao () {
-      this.dialogVisible1 = !this.dialogVisible1
+      InterfaceUpShop(this.ixnijan).then(data => {
+        this.$message({
+          message: '编辑成功',
+          type: 'success'
+        })
+        this.getlist()
+        this.dialogVisible1 = !this.dialogVisible1
+        this.dialogVisible = !this.dialogVisible
+      })
     },
     // 新增按钮
     news () {

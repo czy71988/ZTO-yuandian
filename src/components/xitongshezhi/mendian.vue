@@ -10,16 +10,16 @@
         <span>手机号：</span>
         <el-input v-model="from.phone" placeholder="请输入内容"></el-input>
         <span>所属网点：</span>
-        <el-select v-model="value" placeholder="请选择">
+        <el-select v-model="from.parentId" placeholder="请选择">
           <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
+            v-for="item in sjdh"
+            :key="item.id"
+            :label="item.title"
+            :value="item.id">
           </el-option>
         </el-select>
         <span>门店状态：</span>
-        <el-select v-model="value" placeholder="请选择">
+        <el-select v-model="from.state" placeholder="请选择">
           <el-option
             v-for="item in options"
             :key="item.value"
@@ -85,11 +85,11 @@
           <el-table-column
             prop="shopH"
             align="center"
-            width="100"
+            width="150"
             label="经纬度">
             <template slot-scope="scope">
-              <span>经度：{{scope.row.longitude}}</span>
-              <span>纬度：{{scope.row.latitude}}</span>
+              <p>经度：{{scope.row.longitude}}</p>
+              <p>纬度：{{scope.row.latitude}}</p>
             </template>
           </el-table-column>
           <el-table-column
@@ -127,7 +127,7 @@
           :current-page.sync="currentPage1"
           :page-size="100"
           layout="total, prev, pager, next"
-          :total="1000">
+          :total="total">
         </el-pagination>
       </div>
     </div>
@@ -150,7 +150,7 @@
               </el-form-item>
               <el-form-item label="门店地址：">
                 <!-- <el-input v-model="form.address"></el-input> -->
-                <el-input placeholder="请输入内容" v-model="form.address" class="input-with-select">
+                <el-input v-model="form.address" class="input-with-select">
                   <el-button @click="ditu" slot="append" icon="el-icon-search"></el-button>
                 </el-input>
               </el-form-item>
@@ -164,9 +164,8 @@
                 <el-input v-model="form.latitude"></el-input>
               </el-form-item>
               <el-form-item label="所属中心：">
-                <el-select v-model="form.parentTitle" placeholder="请选择所属中心">
-                  <el-option label="区域一" value="shanghai"></el-option>
-                  <el-option label="区域二" value="beijing"></el-option>
+                <el-select v-model="form.parentId">
+                  <el-option v-for="item in sjdh" :key="item.id" :label="item.title" :value="item.id"></el-option>
                 </el-select>
               </el-form-item>
               <p class="sdferg">
@@ -187,29 +186,25 @@
           </p>
         </el-dialog>
     </div>
+    <map-selector v-model="showMapSelector" @ok="sdfgf"></map-selector>
   </div>
 </template>
 
 <script>
-import { InterfaceShop, InterfaceDropdownList, InterfaceAddShop } from '../../api/system'
+import { InterfaceShop, InterfaceDropdownList, InterfaceAddShop, InterfaceUpShop } from '../../api/system'
+import MapSelector from '../../components/map-selector/MapSelector'
 export default {
+  components: {
+    MapSelector
+  },
   data () {
     return {
-      tableData: [
-        { ID: '123', shop: '否', phone: '陈志英', time: '2020/09/12', number: '启用', out: '3000', weizhi: '中通快递一号门', shopH: '中通快递一号门', ying: '0' },
-        { ID: '234', shop: '否', phone: '陈志英', time: '2020/09/12', number: '9', out: '3000', weizhi: '中通快递一号门', shopH: '中通快递一号门', ying: '1' },
-        { ID: '345', shop: '否', phone: '陈志英', time: '2020/09/12', number: '9', out: '3000', weizhi: '中通快递一号门', shopH: '中通快递一号门', ying: '1' },
-        { ID: '456', shop: '否', phone: '陈志英', time: '2020/09/12', number: '9', out: '3000', weizhi: '中通快递一号门', shopH: '中通快递一号门', ying: '1' },
-        { ID: '567', shop: '否', phone: '陈志英', time: '2020/09/12', number: '9', out: '3000', weizhi: '中通快递一号门', shopH: '中通快递一号门', ying: '0' },
-        { ID: '678', shop: '否', phone: '陈志英', time: '2020/09/12', number: '9', out: '3000', weizhi: '中通快递一号门', shopH: '中通快递一号门', ying: '0' },
-        { ID: '789', shop: '否', phone: '陈志英', time: '2020/09/12', number: '9', out: '3000', weizhi: '中通快递一号门', shopH: '中通快递一号门', ying: '1' },
-        { ID: '444', shop: '否', phone: '陈志英', time: '2020/09/12', number: '9', out: '3000', weizhi: '中通快递一号门', shopH: '中通快递一号门', ying: '0' },
-        { ID: '555', shop: '否', phone: '陈志英', time: '2020/09/12', number: '9', out: '3000', weizhi: '中通快递一号门', shopH: '中通快递一号门', ying: '0' }
-      ],
+      tableData: [],
       dialogVisible: false,
       dialogVisible1: false,
       biaotiname: '',
       currentPage1: 1,
+      showMapSelector: false,
       sdbgg: '',
       form: {
         title: '',
@@ -219,7 +214,7 @@ export default {
         state: '',
         longitude: '',
         latitude: '',
-        parentTitle: '',
+        parentId: '',
         type: 3
       },
       from: {
@@ -232,10 +227,12 @@ export default {
         parentId: '',
         state: ''
       },
+      sjdh: [],
       options: [
         { value: '1', label: '启用' },
         { value: '0', label: '禁用' }
-      ]
+      ],
+      total: 0
     }
   },
   mounted () {
@@ -246,50 +243,72 @@ export default {
     // 列表
     getlist () {
       InterfaceShop(this.from).then(data => {
+        this.tableData = data.records
+        this.total = data.total
         console.log(data)
       })
     },
     // 拉取地图
-    // ditu () {
-
-    // },
+    ditu () {
+      this.showMapSelector = true
+    },
+    sdfgf (val) {
+      console.log(val)
+      this.form.address = val.address
+      this.form.longitude = val.location.lng
+      this.form.latitude = val.location.lat
+    },
     // 获取下拉列表所属网点选项
     getType () {
       InterfaceDropdownList({
-        type: '3'
+        type: 2
       }).then(data => {
-        console.log('11111', data)
+        this.sjdh = data
       })
     },
     // 分页
     handleSizeChange (val) {
       this.from.pageSize = val
-      console.log(`每页 ${val} 条`)
+      this.getlist()
     },
     handleCurrentChange (val) {
       this.from.pageNo = val
-      console.log(`当前页: ${val}`)
+      this.getlist()
     },
     // 编辑按钮
-    bianji () {
+    bianji (item) {
+      this.form = item
       this.biaotiname = '编辑门店'
       this.dialogVisible = !this.dialogVisible
     },
     // 提交操作
     over () {
       if (this.biaotiname === '新增门店') {
-        this.dialogVisible1 = !this.dialogVisible1
         InterfaceAddShop(this.form).then(data => {
-          console.log(data)
+          this.$message({
+            message: '新建成功',
+            type: 'success'
+          })
+          this.getlist()
+          this.dialogVisible = !this.dialogVisible
         })
-      } else {}
+      } else {
+        this.dialogVisible1 = !this.dialogVisible1
+      }
     },
     tijiao () {
-      this.dialogVisible1 = !this.dialogVisible1
+      InterfaceUpShop(this.form).then(data => {
+        this.$message({
+          message: '修改成功',
+          type: 'success'
+        })
+        this.getlist()
+        this.dialogVisible1 = !this.dialogVisible1
+        this.dialogVisible = !this.dialogVisible
+      })
     },
     // 新增按钮
     news () {
-      // this.form = {}
       this.biaotiname = '新增门店'
       this.dialogVisible = !this.dialogVisible
     }

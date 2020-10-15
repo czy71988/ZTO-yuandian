@@ -3,19 +3,9 @@
     <!-- 头部部分 -->
     <div class="BanNer_top">
       <p>· 用户管理  用户列表</p>
-      <!-- <div @click="chuangjian">创建Banner</div> -->
       <div class="BanNer_top_p">
         <span>手机号：</span>
-        <el-input v-model="input" placeholder="请输入内容"></el-input>
-        <span>是否是会员：</span>
-        <el-select v-model="value" placeholder="请选择">
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-          </el-option>
-        </el-select>
+        <el-input v-model="dengluphone" placeholder="请输入内容"></el-input>
         <div>
           <span>搜索</span>
           <span>批量导出</span>
@@ -100,7 +90,7 @@
           :current-page.sync="currentPage1"
           :page-size="100"
           layout="total, prev, pager, next"
-          :total="1000">
+          :total="total">
         </el-pagination>
       </div>
     </div>
@@ -108,6 +98,7 @@
 </template>
 
 <script>
+import { UserList } from '../../api/uers'
 export default {
   data () {
     return {
@@ -138,15 +129,24 @@ export default {
         resource: '',
         desc: ''
       },
-      options: [
-        { value: 1, label: '是' },
-        { value: 2, label: '否' }
-      ]
+      dengluform: {
+        dengluphone: ''
+      },
+      total: 0
     }
   },
   mounted: {
   },
   methods: {
+    getList () {
+      UserList({
+        phone: this.dengluphone
+      }).then(data => {
+        this.tableData = data.records
+        this.total = data.total
+        console.log('用户列表', data)
+      })
+    },
     // 分页
     handleSizeChange (val) {
       console.log(`每页 ${val} 条`)

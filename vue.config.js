@@ -13,5 +13,10 @@ module.exports = {
         }
       }
     }
+  },
+  configureWebpack: {
+    externals: {
+      TMap: 'TMap'
+    }
   }
 }

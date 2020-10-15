@@ -5,21 +5,19 @@
       <p>· 商品管理  商品列表</p>
       <!-- <div @click="chuangjian">创建Banner</div> -->
       <div class="BanNer_top_p">
-        <span>商品编号：</span>
-        <el-input v-model="input" placeholder="请输入内容"></el-input>
         <span>商品标题：</span>
-        <el-input v-model="input" placeholder="请输入内容"></el-input>
+        <el-input v-model="getform.title" placeholder="请输入内容"></el-input>
         <span>商品标签：</span>
-        <el-select v-model="value" placeholder="请选择">
+        <el-select v-model="getform.label" placeholder="请选择">
           <el-option
-            v-for="item in options"
+            v-for="item in dfgsdf"
             :key="item.value"
             :label="item.label"
             :value="item.value">
           </el-option>
         </el-select>
         <div>
-          <span>搜索</span>
+          <span @click="sousuo">搜索</span>
           <span>批量导出</span>
         </div>
       </div>
@@ -76,7 +74,7 @@
             <template slot-scope="scope">
               <span class="Banner_span1" @click="bianji(scope.row)"><i class="el-icon-edit"></i>编辑</span>
               <span class="Banner_span3" @click="chakanxiangqing(scope.row)"><i class="el-icon-zoom-in"></i>查看详情</span>
-              <span class="Banner_span2" @click="xiajia(scope.row)"><i class="el-icon-sort"></i>下架</span>
+              <span class="Banner_span2" @click="xiajia(scope.row)"><i class="el-icon-sort"></i>{{scope.row.state !== '1' ? '下架' : '上架'}}</span>
             </template>
           </el-table-column>
         </el-table>
@@ -92,7 +90,7 @@
           :current-page.sync="currentPage1"
           :page-size="100"
           layout="total, prev, pager, next"
-          :total="1000">
+          :total="total">
         </el-pagination>
       </div>
     </div>
@@ -100,56 +98,26 @@
     <div class="BanNer_diagio">
       <el-dialog
         :visible.sync="dialogVisible">
-        <p class="sdsd">{{biaotiname}}</p>
+        <p class="sdsd">查看详情</p>
         <div class="chuangjian_dialog">
           <div class="gialog_tu">
             <span>主图：</span>
             <ul>
               <li>
-                <img src="https://oss.zk0531.cn/banner/61a68af4-49c6-4df2-9f49-142dbb3c922f.jpg" alt="">
-              </li>
-              <li>
-                <img src="https://oss.zk0531.cn/banner/61a68af4-49c6-4df2-9f49-142dbb3c922f.jpg" alt="">
-              </li>
-              <li>
-                <img src="https://oss.zk0531.cn/banner/61a68af4-49c6-4df2-9f49-142dbb3c922f.jpg" alt="">
-              </li>
-              <li>
-                <img src="https://oss.zk0531.cn/banner/61a68af4-49c6-4df2-9f49-142dbb3c922f.jpg" alt="">
-              </li>
-              <li>
-                <img src="https://oss.zk0531.cn/banner/61a68af4-49c6-4df2-9f49-142dbb3c922f.jpg" alt="">
-              </li>
-              <li>
-                <img src="https://oss.zk0531.cn/banner/61a68af4-49c6-4df2-9f49-142dbb3c922f.jpg" alt="">
+                <img :src="list.mainPic" alt="">
               </li>
             </ul>
             <span>详情图：</span>
             <ul>
-              <li>
-                <img src="https://oss.zk0531.cn/banner/61a68af4-49c6-4df2-9f49-142dbb3c922f.jpg" alt="">
-              </li>
-              <li>
-                <img src="https://oss.zk0531.cn/banner/61a68af4-49c6-4df2-9f49-142dbb3c922f.jpg" alt="">
-              </li>
-              <li>
-                <img src="https://oss.zk0531.cn/banner/61a68af4-49c6-4df2-9f49-142dbb3c922f.jpg" alt="">
-              </li>
-              <li>
-                <img src="https://oss.zk0531.cn/banner/61a68af4-49c6-4df2-9f49-142dbb3c922f.jpg" alt="">
-              </li>
-              <li>
-                <img src="https://oss.zk0531.cn/banner/61a68af4-49c6-4df2-9f49-142dbb3c922f.jpg" alt="">
-              </li>
-              <li>
-                <img src="https://oss.zk0531.cn/banner/61a68af4-49c6-4df2-9f49-142dbb3c922f.jpg" alt="">
+              <li v-for="item in list.imageContent" :key="item.sort">
+                <img :src="item.imageUrl" alt="">
               </li>
             </ul>
             <p>
-              <span>销售价：<i>30</i></span>
+              <span>销售价：<i>{{list.sellPrice}}</i></span>
             </p>
             <p>
-              <span>库存数量：<i>30</i></span>
+              <span>库存数量：<i>{{list.amount}}</i></span>
             </p>
           </div>
           <div class="gialog_XX"></div>
@@ -163,16 +131,13 @@
         <p class="sdsd">{{biaotiname}}</p>
         <div class="chuangjian_shop_dialog">
           <el-form ref="form" :model="form" label-width="100px">
-            <el-form-item label="商品编号：">
-              <el-input v-model="form.name"></el-input>
-            </el-form-item>
             <el-form-item label="商品标题：">
-              <el-input v-model="form.name"></el-input>
+              <el-input v-model="form.title"></el-input>
             </el-form-item>
             <el-form-item label="商品主图：">
               <el-upload
                 class="avatar-uploader"
-                action="https://jsonplaceholder.typicode.com/posts/"
+                action="https://bee.zk020.cn/bee-admin/admin/systemIndex/doUploadFile"
                 :show-file-list="false"
                 :on-success="handleAvatarSuccess"
                 :before-upload="beforeAvatarUpload">
@@ -184,9 +149,10 @@
             </el-form-item>
             <el-form-item label="详情图：">
               <el-upload
-                action="https://jsonplaceholder.typicode.com/posts/"
+                action="https://bee.zk020.cn/bee-admin/admin/systemIndex/doUploadFile"
                 list-type="picture-card"
                 :on-preview="handlePictureCardPreview"
+                :on-success="dbfbiebibkfjbrgdfg"
                 :on-remove="handleRemove">
                 <div class="avatar-uploader-icon">
                   <i class="el-icon-circle-plus-outline"></i><span class="sdhfhogerg">点击或将图片拖拽到这里上传支持扩展名：png、jpg、jpeg</span>
@@ -197,44 +163,37 @@
               </el-dialog>
             </el-form-item>
             <el-form-item label="商品标签：">
-              <el-select v-model="form.region" placeholder="请选择活动区域">
-                <el-option label="区域一" value="shanghai"></el-option>
-                <el-option label="区域二" value="beijing"></el-option>
+              <el-select v-model="form.label" placeholder="请选择">
+                <el-option
+                  v-for="item in dfgsdf"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="所在仓位置：">
-              <el-select v-model="form.region" placeholder="请选择活动区域">
-                <el-option label="区域一" value="shanghai"></el-option>
-                <el-option label="区域二" value="beijing"></el-option>
+              <el-select v-model="form.storeHouse" placeholder="请选择活动区域">
+                <el-option
+                  v-for="item in fghty"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="所属类目：">
-              <el-select v-model="form.region" placeholder="请选择活动区域">
-                <el-option label="区域一" value="shanghai"></el-option>
-                <el-option label="区域二" value="beijing"></el-option>
+              <el-select v-model="form.categoryId" placeholder="请选择活动区域">
+                <el-option label="区域一" value="1"></el-option>
+                <el-option label="区域二" value="2"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="销售价：">
-              <el-input v-model="form.name"></el-input>
+              <el-input v-model="form.sellPrice"></el-input>
             </el-form-item>
-            <!-- <el-form-item label="会员价：">
-              <el-input v-model="form.name"></el-input>
-            </el-form-item>
-            <el-form-item label="门店分佣：">
-              <el-input v-model="form.name"></el-input>
-            </el-form-item>
-            <el-form-item label="网点分佣：">
-              <el-input v-model="form.name"></el-input>
-            </el-form-item>
-            <el-form-item label="中心分佣：">
-              <el-input v-model="form.name"></el-input>
-            </el-form-item> -->
             <el-form-item label="库存数量：">
-              <el-input v-model="form.name"></el-input>
+              <el-input v-model="form.amount"></el-input>
             </el-form-item>
-            <!-- <el-form-item label="单位：">
-              <el-input v-model="form.name"></el-input>
-            </el-form-item> -->
             <el-form-item>
               <el-button type="primary" @click="onSubmit">{{sdbgg}}</el-button>
               <el-button>取消</el-button>
@@ -247,73 +206,128 @@
 </template>
 
 <script>
+import { InterfaceAddshopdetails, InterfaceshopSohp, InterfaceGoodsShelves, Interfaceshopdetails, InterfaceGoodsUpdate } from '../../api/shop'
 export default {
   data () {
     return {
-      tableData: [
-        { date: '香菇', time: '2020-01-02', address: 'https://oss.zk0531.cn/banner/61a68af4-49c6-4df2-9f49-142dbb3c922f.jpg', URL: 'dfssgdhjhjkgk.jpg', addressds: '外链跳转', addressgh: 'dfgwtgeg' },
-        { date: '香菇', time: '2020-01-02', address: 'https://oss.zk0531.cn/banner/61a68af4-49c6-4df2-9f49-142dbb3c922f.jpg', URL: 'dfssgdhjhjkgk.jpg', addressds: '外链跳转', addressgh: 'dfgwtgeg' },
-        { date: '香菇', time: '2020-01-02', address: 'https://oss.zk0531.cn/banner/61a68af4-49c6-4df2-9f49-142dbb3c922f.jpg', URL: 'dfssgdhjhjkgk.jpg', addressds: '外链跳转', addressgh: 'dfgwtgeg' },
-        { date: '香菇', time: '2020-01-02', address: 'https://oss.zk0531.cn/banner/61a68af4-49c6-4df2-9f49-142dbb3c922f.jpg', URL: 'dfssgdhjhjkgk.jpg', addressds: '外链跳转', addressgh: 'dfgwtgeg' },
-        { date: '香菇', time: '2020-01-02', address: 'https://oss.zk0531.cn/banner/61a68af4-49c6-4df2-9f49-142dbb3c922f.jpg', URL: 'dfssgdhjhjkgk.jpg', addressds: '外链跳转', addressgh: 'dfgwtgeg' },
-        { date: '香菇', time: '2020-01-02', address: 'https://oss.zk0531.cn/banner/61a68af4-49c6-4df2-9f49-142dbb3c922f.jpg', URL: 'dfssgdhjhjkgk.jpg', addressds: '外链跳转', addressgh: 'dfgwtgeg' },
-        { date: '香菇', time: '2020-01-02', address: 'https://oss.zk0531.cn/banner/61a68af4-49c6-4df2-9f49-142dbb3c922f.jpg', URL: 'dfssgdhjhjkgk.jpg', addressds: '外链跳转', addressgh: 'dfgwtgeg' },
-        { date: '香菇', time: '2020-01-02', address: 'https://oss.zk0531.cn/banner/61a68af4-49c6-4df2-9f49-142dbb3c922f.jpg', URL: 'dfssgdhjhjkgk.jpg', addressds: '外链跳转', addressgh: 'dfgwtgeg' },
-        { date: '香菇', time: '2020-01-02', address: 'https://oss.zk0531.cn/banner/61a68af4-49c6-4df2-9f49-142dbb3c922f.jpg', URL: 'dfssgdhjhjkgk.jpg', addressds: '外链跳转', addressgh: 'dfgwtgeg' },
-        { date: '香菇', time: '2020-01-02', address: 'https://oss.zk0531.cn/banner/61a68af4-49c6-4df2-9f49-142dbb3c922f.jpg', URL: 'dfssgdhjhjkgk.jpg', addressds: '外链跳转', addressgh: 'dfgwtgeg' }
-      ],
+      tableData: [],
       dialogVisible: false,
       shopShow: false,
       biaotiname: '',
       currentPage1: 1,
       sdbgg: '',
-
+      imageUrl: '',
+      dialogImageUrl: '',
       form: {
-        name: '',
-        region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
-      }
+        title: '',
+        mainPic: '', // 商品主图
+        imageContent: [], // 商品详情图
+        label: '',
+        storeHouse: '',
+        categoryId: '',
+        sellPrice: '',
+        amount: ''
+      },
+      // 请求列表参数
+      getform: {
+        pageNo: '1',
+        pageSize: '10',
+        title: '',
+        label: ''
+      },
+      dfgsdf: [
+        { value: '三日达', label: '三日达' },
+        { value: '隔日达', label: '隔日达' },
+        { value: '当日达', label: '当日达' }
+      ],
+      fghty: [
+        { value: '1', label: '门店' },
+        { value: '2', label: '网点' },
+        { value: '3', label: '中心仓库' }
+      ],
+      urls: [],
+      total: 0,
+      list: ''
     }
   },
-  mounted: {
+  mounted () {
+    this.getlist()
   },
   methods: {
+    // 获取列表
+    getlist () {
+      InterfaceshopSohp(this.getform).then(data => {
+        this.tableData = data.tableData
+        this.total = data.total
+        console.log(data)
+      })
+    },
+    // 搜索操作
+    sousuo () {
+      this.getlist()
+    },
     // 查看详情
     chakanxiangqing (row) {
-      this.biaotiname = '详情'
+      const id = row.id
       this.dialogVisible = !this.dialogVisible
+      Interfaceshopdetails({
+        id: id
+      }).then(data => {
+        this.list = data
+      })
     },
     // 添加商品
     chuanjianshagpin () {
       this.shopShow = !this.shopShow
       this.biaotiname = '创建商品'
       this.sdbgg = '添加'
-      console.log('添加商品')
     },
     // 商品编辑
-    bianji () {
+    bianji (item) {
       this.shopShow = !this.shopShow
       this.biaotiname = '商品编辑'
       this.sdbgg = '确定'
+      this.form = item
     },
     // 分页
     handleSizeChange (val) {
-      console.log(`每页 ${val} 条`)
+      this.getform.pageSize = val
+      this.getlist()
     },
     handleCurrentChange (val) {
-      console.log(`当前页: ${val}`)
+      this.getform.pageNo = val
+      this.getlist()
     },
     // 添加按钮
     onSubmit () {
-      console.log('submit!')
+      if (this.biaotiname === '创建商品') {
+        this.urls.forEach((item, index) => {
+          this.form.imageContent.push({ sort: index, imageUrl: item.imageUrl })
+        })
+        InterfaceAddshopdetails(this.form).then(data => {
+          console.log(data)
+          this.shopShow = !this.shopShow
+          this.$message({
+            message: '创建商品成功',
+            type: 'success'
+          })
+          this.getlist()
+        })
+      } else {
+        // 编辑操作
+        InterfaceGoodsUpdate(this.form).then(data => {
+          this.shopShow = !this.shopShow
+          this.$message({
+            message: '修改商品成功',
+            type: 'success'
+          })
+          this.getlist()
+        })
+      }
     },
     // 图片上传
     handleAvatarSuccess (res, file) {
+      this.form.mainPic = res.data
       this.imageUrl = URL.createObjectURL(file.raw)
     },
     beforeAvatarUpload (file) {
@@ -334,6 +348,37 @@ export default {
     handlePictureCardPreview (file) {
       this.dialogImageUrl = file.url
       this.dialogVisible = true
+    },
+    dbfbiebibkfjbrgdfg (res, file) {
+      this.urls.push({ imageUrl: res.data })
+    },
+    // 上下架操作
+    xiajia (item) {
+      if (item.state === '1') {
+        // 下架操作
+        InterfaceGoodsShelves({
+          id: item.id,
+          state: '2'
+        }).then(data => {
+          this.$message({
+            message: '下架成功',
+            type: 'success'
+          })
+          this.getlist()
+        })
+      } else {
+        // 上架操作
+        InterfaceGoodsShelves({
+          id: item.id,
+          state: '1'
+        }).then(data => {
+          this.$message({
+            message: '上架成功',
+            type: 'success'
+          })
+          this.getlist()
+        })
+      }
     }
   }
 }

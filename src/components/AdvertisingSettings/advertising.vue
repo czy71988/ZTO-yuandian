@@ -13,32 +13,36 @@
           stripe
           style="width: 100%">
           <el-table-column
-            prop="date"
+            prop="name"
             align="center"
             label="类目名称">
           </el-table-column>
           <el-table-column
-            prop="time"
             align="center"
             label="创建时间">
+            <template slot-scope="scope">
+              <span>{{scope.row.createTime}}</span>
+            </template>
           </el-table-column>
           <el-table-column
-            prop="address"
+            prop="sort"
             align="center"
             label="顺序">
           </el-table-column>
           <el-table-column
-            prop="URL"
+            prop="imageUrl"
             align="center"
             label="图片URL">
           </el-table-column>
           <el-table-column
-            prop="addressds"
             align="center"
             label="跳转方式">
+            <template slot-scope="scope">
+              <span>{{scope.row.method === 1 ? '内链跳转' : '外链跳转'}}</span>
+            </template>
           </el-table-column>
           <el-table-column
-            prop="addressgh"
+            prop="click"
             align="center"
             label="落地页">
           </el-table-column>
@@ -47,7 +51,7 @@
             label="操作">
             <template slot-scope="scope">
               <span class="Banner_span1" @click="bianji(scope.row)"><i class="el-icon-edit"></i>编辑</span>
-              <span class="Banner_span2" @click="xiajia(scope.row)"><i class="el-icon-delete"></i>下架</span>
+              <span class="Banner_span2" @click="xiajia(scope.row)"><i class="el-icon-delete"></i>{{scope.row.state === 1 ? '下架' : '上架'}}</span>
             </template>
           </el-table-column>
         </el-table>
@@ -60,19 +64,26 @@
         <p>{{biaotiname}}</p>
         <el-form ref="form" :model="form" label-width="100px">
           <el-form-item label="标题：">
-            <el-input v-model="form.date"></el-input>
+            <el-input v-model="form.name"></el-input>
           </el-form-item>
           <el-form-item label="排序：">
-            <el-input v-model="form.address"></el-input>
+            <el-input v-model="form.sort"></el-input>
           </el-form-item>
           <el-form-item label="跳转方式：">
-            <el-input v-model="form.addressds"></el-input>
+            <el-select v-model="form.method" placeholder="请选择">
+              <el-option
+                v-for="item in sjdh"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
           </el-form-item>
           <el-form-item label="图片URL：">
-            <el-input v-model="form.URL"></el-input>
+            <el-input v-model="form.imageUrl"></el-input>
           </el-form-item>
           <el-form-item label="落地页URL：">
-            <el-input v-model="form.addressgh"></el-input>
+            <el-input v-model="form.click"></el-input>
           </el-form-item>
         </el-form>
         <div class="chuangjian_dialog">
@@ -85,35 +96,73 @@
 </template>
 
 <script>
+import { InterfaceAddBanner, InterfaceUpdateBanner, InterfaceBanner } from '../../api/banner'
 export default {
   data () {
     return {
-      tableData: [
-        { date: '香菇', time: '2020-01-02', address: '1', URL: 'dfssgdhjhjkgk.jpg', addressds: '外链跳转', addressgh: 'dfgwtgeg' },
-        { date: '香菇', time: '2020-01-02', address: '1', URL: 'dfssgdhjhjkgk.jpg', addressds: '外链跳转', addressgh: 'dfgwtgeg' },
-        { date: '香菇', time: '2020-01-02', address: '1', URL: 'dfssgdhjhjkgk.jpg', addressds: '外链跳转', addressgh: 'dfgwtgeg' },
-        { date: '香菇', time: '2020-01-02', address: '1', URL: 'dfssgdhjhjkgk.jpg', addressds: '外链跳转', addressgh: 'dfgwtgeg' },
-        { date: '香菇', time: '2020-01-02', address: '1', URL: 'dfssgdhjhjkgk.jpg', addressds: '外链跳转', addressgh: 'dfgwtgeg' },
-        { date: '香菇', time: '2020-01-02', address: '1', URL: 'dfssgdhjhjkgk.jpg', addressds: '外链跳转', addressgh: 'dfgwtgeg' },
-        { date: '香菇', time: '2020-01-02', address: '1', URL: 'dfssgdhjhjkgk.jpg', addressds: '外链跳转', addressgh: 'dfgwtgeg' }
-      ],
+      tableData: [],
       dialogVisible: false,
+      // 添加编辑的表单
       form: {
-        date: '',
-        address: '',
-        addressds: '',
-        URL: '',
-        addressgh: ''
+        name: '',
+        imageUrl: '',
+        click: '',
+        sort: '',
+        method: '',
+        type: '2'
       },
       biaotiname: '',
-      Btnname: ''
+      Btnname: '',
+      sjdh: [
+        { value: '1', label: '内链跳转' },
+        { value: '2', label: '外链跳转' }
+      ],
+      total: 0
     }
   },
-  mounted: {
+  mounted () {
+    this.getlist()
   },
   methods: {
-    xiajia (id) {
-      console.log(id)
+    // 获取列表
+    getlist () {
+      InterfaceBanner({
+        type: '2'
+        // pageNo: this.page,
+        // pageSize: this.size
+      }).then(data => {
+        this.tableData = data.records
+        // this.total = data.total
+        console.log(data)
+      })
+    },
+    // 上下架按钮
+    xiajia (item) {
+      if (item.state === '1') {
+        // 下架
+        InterfaceUpdateBanner({
+          id: item.id,
+          state: '2'
+        }).then(data => {
+          this.$message({
+            message: '下架成功',
+            type: 'success'
+          })
+          this.getlist()
+        })
+      } else {
+        // 上架
+        InterfaceUpdateBanner({
+          id: item.id,
+          state: '1'
+        }).then(data => {
+          this.$message({
+            message: '上架成功',
+            type: 'success'
+          })
+          this.getlist()
+        })
+      }
     },
     // 创建按钮
     chuangjian () {
@@ -124,7 +173,25 @@ export default {
     },
     // 创建完成操作
     chuangjianOver () {
-      this.dialogVisible = !this.dialogVisible
+      if (this.biaotiname === '类目创建') {
+        InterfaceAddBanner(this.form).then(data => {
+          this.$message({
+            message: '创建成功1',
+            type: 'success'
+          })
+          this.dialogVisible = !this.dialogVisible
+          this.getlist()
+        })
+      } else {
+        InterfaceUpdateBanner(this.form).then(data => {
+          this.$message({
+            message: '编辑成功',
+            type: 'success'
+          })
+          this.dialogVisible = !this.dialogVisible
+          this.getlist()
+        })
+      }
     },
     // 编辑按钮
     bianji (row) {

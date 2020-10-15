@@ -130,9 +130,6 @@ export default {
         console.log(data)
       })
     },
-    // 上下架接口
-    shangxiajia () {
-    },
     // 上下架按钮
     xiajia (item) {
       if (item.state === '1') {
