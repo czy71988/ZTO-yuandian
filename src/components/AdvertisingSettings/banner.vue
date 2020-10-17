@@ -22,7 +22,7 @@
             align="center"
             label="创建时间">
             <template slot-scope="scope">
-              <span>{{scope.row.createTime}}</span>
+              <span>{{scope.row.createTime | outtiame}}</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -43,6 +43,13 @@
             </template>
           </el-table-column>
           <el-table-column
+            align="center"
+            label="所属网点">
+            <template slot-scope="scope">
+              <span>{{capitalize(scope.row.shopId)}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
             prop="click"
             align="center"
             label="落地页">
@@ -52,7 +59,7 @@
             label="操作">
             <template slot-scope="scope">
               <span class="Banner_span1" @click="bianji(scope.row)"><i class="el-icon-edit"></i>编辑</span>
-              <span class="Banner_span2" @click="xiajia(scope.row)"><i class="el-icon-sort"></i>{{scope.row.state === 1 ? '下架' : '上架'}}</span>
+              <span :class="scope.row.state === 1 ? 'Banner_span2' : 'Banner_span22'" @click="xiajia(scope.row)"><i class="el-icon-sort"></i>{{scope.row.state === 1 ? '下架' : '上架'}}</span>
             </template>
           </el-table-column>
         </el-table>
@@ -75,8 +82,25 @@
               <el-option v-for="item in banner" :key="item.id" :label="item.label" :value="item.value"></el-option>
             </el-select>
           </el-form-item>
+          <el-form-item label="选择网点">
+            <el-select v-model="form.shopId" placeholder="请选择选择网点">
+              <el-option v-for="item in wangdianype" :key="item.id" :label="item.title" :value="item.id"></el-option>
+            </el-select>
+          </el-form-item>
           <el-form-item label="图片URL：">
-            <el-input v-model="form.imageUrl"></el-input>
+            <!-- <el-input v-model="form.imageUrl"></el-input> -->
+            <el-input placeholder="请输入内容" v-model="jhdhkgrg">
+              <template slot="append">
+                <el-upload
+                  class="avatar-uploader"
+                  action="https://bee.zk020.cn/bee-admin/admin/systemIndex/doUploadFile"
+                  :show-file-list="false"
+                  :on-success="handleAvatarSuccess"
+                  :before-upload="beforeAvatarUpload">
+                  <i class="el-icon-upload avatar-uploader-icon"></i>
+                </el-upload>
+              </template>
+            </el-input>
           </el-form-item>
           <el-form-item label="落地页URL：">
             <el-input v-model="form.click"></el-input>
@@ -93,6 +117,7 @@
 
 <script>
 import { InterfaceBanner, InterfaceAddBanner, InterfaceUpdateBanner } from '../../api/banner'
+import { InterfaceDropdownList } from '../../api/system'
 import { banner } from '../../utils/commit'
 export default {
   data () {
@@ -105,19 +130,61 @@ export default {
         sort: '',
         method: '',
         imageUrl: '',
-        click: ''
+        click: '',
+        shopId: ''
       },
       biaotiname: '',
       Btnname: '',
       page: '1',
       size: '10',
-      total: 0
+      total: 0,
+      jhdhkgrg: '',
+      wangdianype: []
     }
   },
   mounted () {
     this.getlist()
+    this.getwangdian()
   },
+  computed: {
+    capitalize () {
+      return (value) => {
+        const sdgerg = this.wangdianype
+        if (!value) return ''
+        let label = ''
+        sdgerg.some(val => {
+          if (val.id === value) {
+            label = val.title
+          }
+        })
+        return label
+      }
+    }
+  },
+  // filters: {
+  //   capitalize: function (value) {
+  //     const sdgerg = this.wangdianype
+  //     if (!value) return ''
+  //     const label = ''
+  //     value = value.toString()
+  //     sdgerg.some(val => {
+  //       if (val.id === value) {
+  //         val.title = label
+  //       }
+  //     })
+  //     return label
+  //   }
+  // },
   methods: {
+    // 获取网点
+    getwangdian () {
+      InterfaceDropdownList({
+        type: 2
+      }).then(data => {
+        this.wangdianype = data
+        console.log('获取的网点列表', data)
+      })
+    },
     // 获取列表
     getlist () {
       InterfaceBanner({
@@ -132,11 +199,11 @@ export default {
     },
     // 上下架按钮
     xiajia (item) {
-      if (item.state === '1') {
+      if (item.state === 1) {
         // 下架
         InterfaceUpdateBanner({
           id: item.id,
-          state: '2'
+          state: 2
         }).then(data => {
           this.$message({
             message: '下架成功',
@@ -148,7 +215,7 @@ export default {
         // 上架
         InterfaceUpdateBanner({
           id: item.id,
-          state: '1'
+          state: 1
         }).then(data => {
           this.$message({
             message: '上架成功',
@@ -157,6 +224,10 @@ export default {
           this.getlist()
         })
       }
+    },
+    // 上传图片
+    shangchuantupian () {
+
     },
     // 创建按钮
     chuangjian () {
@@ -175,7 +246,8 @@ export default {
           click: this.form.click,
           sort: this.form.sort,
           method: this.form.method,
-          type: '1'
+          type: '1',
+          shopId: this.form.shopId
         }).then(data => {
           this.$message({
             message: '创建成功',
@@ -202,6 +274,29 @@ export default {
       this.dialogVisible = !this.dialogVisible
       this.biaotiname = 'Banner编辑'
       this.Btnname = '确定'
+      this.jhdhkgrg = this.form.imageUrl
+    },
+
+    handleAvatarSuccess (res, file) {
+      this.$message({
+        message: '上传成功',
+        type: 'success'
+      })
+      this.form.imageUrl = res.data
+      this.jhdhkgrg = res.data
+      this.$set(this.form, 'imageUrl', res.data)
+    },
+    beforeAvatarUpload (file) {
+      const isJPG = file.type === 'image/jpeg'
+      const isLt2M = file.size / 1024 / 1024 < 2
+
+      if (!isJPG) {
+        this.$message.error('上传头像图片只能是 JPG 格式!')
+      }
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 2MB!')
+      }
+      return isJPG && isLt2M
     }
   }
 }
@@ -213,6 +308,7 @@ export default {
       .el-table {
         line-height: 40px !important;
         border-radius: 6px 6px 0px 0px;
+        overflow-y: scroll;
       }
       .el-table th, .el-table {
         background: #163D70;
@@ -233,10 +329,25 @@ export default {
     }
     .BanNer_diagio {
       .el-dialog {
+        padding-bottom: 20px;
+        box-sizing: border-box;
         width: 500px;
-        height: 430px;
+        // height: 430px;
         background: #FFFFFF;
         border-radius: 8px;
+        .avatar-uploader {
+          width: 30px;height: 30px;
+          .el-upload {
+            height: 29px;
+            width: 30px;
+            border: none;
+            line-height: 29px;
+            }
+            .el-upload--picture-card i {
+              font-size: 24px;
+              height: 29px;
+            }
+        }
         .el-dialog__header {
           display: none;
         }
@@ -275,6 +386,10 @@ export default {
                   line-height: 30px;
                   height: 30px;
                   background: #F4F4F4;
+                }
+                .el-input-group__append {
+                  height: 30px;
+                  padding: 0;
                 }
               }
             }
@@ -333,6 +448,10 @@ export default {
       }
       .Banner_span2 {
         color: #FF8C14;
+        font-size: 13px;
+      }
+      .Banner_span22 {
+        color: #2B80FD;
         font-size: 13px;
       }
     }

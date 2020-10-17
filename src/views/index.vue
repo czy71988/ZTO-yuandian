@@ -7,12 +7,15 @@
         <el-aside width="200px">
           <el-row class="tac">
             <el-col :span="12">
-            <div class="index_top">skjshgkh</div>
+            <div class="index_top"><img src="../assets/Image 1@2x.png" alt="">
+            中通云店
+            </div>
               <el-menu
-                default-active="2"
+                :default-active="$route.path"
                 class="el-menu-vertical-demo"
                 @open="handleOpen"
                 @close="handleClose"
+                unique-opened
                 background-color="#202020"
                 text-color="#666666"
                 router
@@ -22,10 +25,10 @@
                   <template slot="title">
                     <!-- <i class="el-icon-location"></i> -->
                     <img class="dsfg" src="../assets/编组 3@2x(1).png" alt="">
-                    <span>用户管理</span>
+                    <span :class="index === '1' ? 'sdawe' : ''">用户管理</span>
                   </template>
                   <el-menu-item-group>
-                    <el-menu-item index="uers">用户管理</el-menu-item>
+                    <el-menu-item index="/uers">用户管理</el-menu-item>
                   </el-menu-item-group>
                 </el-submenu>
 
@@ -33,11 +36,11 @@
                   <template slot="title">
                     <!-- <i class="el-icon-location"></i> -->
                     <img class="dsfg" src="../assets/编组 4@2x.png" alt="">
-                    <span>广告配置</span>
+                    <span :class="index === '2' ? 'sdawe' : ''">广告配置</span>
                   </template>
                   <el-menu-item-group>
-                    <el-menu-item index="BANNER">Banner配置</el-menu-item>
-                    <el-menu-item index="advertising">类目ICON配置</el-menu-item>
+                    <el-menu-item index="/BANNER">Banner配置</el-menu-item>
+                    <el-menu-item index="/advertising">类目ICON配置</el-menu-item>
                   </el-menu-item-group>
                 </el-submenu>
 
@@ -45,11 +48,11 @@
                   <template slot="title">
                     <!-- <i class="el-icon-location"></i> -->
                     <img class="dsfg" src="../assets/编组 5@2x.png" alt="">
-                    <span>商品管理</span>
+                    <span :class="index === '3' ? 'sdawe' : ''">商品管理</span>
                   </template>
                   <el-menu-item-group>
-                    <el-menu-item index="shopList">商品列表</el-menu-item>
-                    <el-menu-item index="shopType">商品类目创建</el-menu-item>
+                    <el-menu-item index="/shopList">商品列表</el-menu-item>
+                    <el-menu-item index="/shopType">商品类目创建</el-menu-item>
                   </el-menu-item-group>
                 </el-submenu>
 
@@ -58,28 +61,28 @@
                   <span slot="title">后台角色</span>
                 </el-menu-item> -->
 
-                <el-submenu index="5">
+                <el-submenu index="4">
                   <template slot="title">
                     <!-- <i class="el-icon-location"></i> -->
                     <img class="dsfg" src="../assets/编组 7@2x.png" alt="">
-                    <span>订单管理</span>
+                    <span :class="index === '4' ? 'sdawe' : ''">订单管理</span>
                   </template>
                   <el-menu-item-group>
-                    <el-menu-item index="uersorder">用户订单</el-menu-item>
-                    <el-menu-item index="ordergoods">订货订单</el-menu-item>
+                    <el-menu-item index="/uersorder">用户订单</el-menu-item>
+                    <el-menu-item index="/ordergoods">订货订单</el-menu-item>
                   </el-menu-item-group>
                 </el-submenu>
 
-                <el-submenu index="6">
+                <el-submenu index="5">
                   <template slot="title">
                     <!-- <i class="el-icon-location"></i> -->
                     <img class="dsfg" src="../assets/编组 8@2x.png" alt="">
-                    <span>系统设置</span>
+                    <span :class="index === '5' ? 'sdawe' : ''">系统设置</span>
                   </template>
                   <el-menu-item-group>
-                    <el-menu-item index="mendian">门店管理</el-menu-item>
-                    <el-menu-item index="wangidan">网点管理</el-menu-item>
-                    <el-menu-item index="zhongxin">中心仓管理</el-menu-item>
+                    <el-menu-item index="/mendian">门店管理</el-menu-item>
+                    <el-menu-item index="/wangidan">网点管理</el-menu-item>
+                    <el-menu-item index="/zhongxin">中心仓管理</el-menu-item>
                   </el-menu-item-group>
                 </el-submenu>
               </el-menu>
@@ -97,12 +100,17 @@
 
 <script>
 export default {
+  data () {
+    return {
+      index: ''
+    }
+  },
   methods: {
     handleOpen (key, keyPath) {
-      console.log(key, keyPath)
+      this.index = key
+      console.log(this.index)
     },
     handleClose (key, keyPath) {
-      console.log(key, keyPath)
     }
   }
 }
@@ -127,10 +135,17 @@ export default {
     .index_top {
       height: 89px;
       background: #0D0C0C;
-      font-size: 14px;
+      line-height: 35px;
+      font-size: 18px;
       font-family: MicrosoftYaHei;
       color: #FFFFFF;
-      line-height: 19px;
+      line-height: 89px;
+      text-align: center;
+      img {
+        width: 55px;
+        height: 35px;
+        vertical-align: middle;
+      }
     }
   }
 
@@ -168,5 +183,8 @@ export default {
   width: 15px;
   height: 15px;
   margin-right: 5px;
+}
+.sdawe {
+  color: #FFFFFF;
 }
 </style>

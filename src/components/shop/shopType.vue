@@ -40,7 +40,7 @@
             align="center"
             label="添加日期">
             <template slot-scope="scope">
-              <span>{{scope.row.gmtCreate}}</span>
+              <span>{{scope.row.gmtCreate | outtiame}}</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -49,7 +49,7 @@
             width="300">
             <template slot-scope="scope">
               <span class="shopType_span1" @click="bianji(scope.row)"><i class="el-icon-edit"></i>编辑</span>
-              <!-- <span class="shopType_span2" @click="xiajia(scope.row.id)"><i class="el-icon-sort"></i>下架</span> -->
+              <span :class="scope.row.state !== 1 ? 'shopType_span2' : 'shopType_span22'" @click="xiajia(scope.row)"><i class="el-icon-sort"></i>{{scope.row.state !== 1 ? '上架' : '下架'}}</span>
             </template>
           </el-table-column>
         </el-table>
@@ -197,18 +197,35 @@ export default {
       }
     },
     // 下架按纽
-    // xiajia (item) {
-    //   InterfaceUpCategory({
-    //     id: item.id,
-    //     state: '1'
-    //   }).then(data => {
-    //     this.$message({
-    //       showClose: true,
-    //       message: '下架成功',
-    //       type: 'success'
-    //     })
-    //   })
-    // },
+    xiajia (item) {
+      console.log(item.state)
+      console.log(item)
+      if (item.state === 1) {
+        InterfaceUpCategory({
+          id: item.id,
+          state: 2
+        }).then(data => {
+          this.$message({
+            showClose: true,
+            message: '下架成功',
+            type: 'success'
+          })
+          this.getlist()
+        })
+      } else {
+        InterfaceUpCategory({
+          id: item.id,
+          state: 1
+        }).then(data => {
+          this.$message({
+            showClose: true,
+            message: '上架成功',
+            type: 'success'
+          })
+          this.getlist()
+        })
+      }
+    },
     // 导出按钮
     shujudaochu () {},
     // 分页
@@ -421,6 +438,12 @@ export default {
         margin-right: 30px;
       }
       .shopType_span2 {
+        font-size: 13px;
+        font-family: MicrosoftYaHei;
+        color: #2B80FD;
+        line-height: 17px;
+      }
+      .shopType_span22 {
         font-size: 13px;
         font-family: MicrosoftYaHei;
         color: #FF8C14;

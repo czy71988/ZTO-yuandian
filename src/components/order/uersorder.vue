@@ -19,7 +19,7 @@
         <div>
           <span @click="qingkong">重置</span>
           <span @click="sousuo">搜索</span>
-          <span>批量导出</span>
+          <span @click="Eexport">批量导出</span>
         </div>
       </div>
     </div>
@@ -95,7 +95,7 @@
           :current-page.sync="currentPage1"
           :page-size="100"
           layout="total, prev, pager, next"
-          :total="1000">
+          :total="total">
         </el-pagination>
       </div>
     </div>
@@ -137,12 +137,12 @@
               <li>数量</li>
             </ul>
             <ul class="uers_logs">
-              <li>
-                <span>{{shopxContent.itemId}}</span>
-                <span><img :src="shopxContent.itemImg" alt=""></span>
-                <span>{{shopxContent.itemTitle}}</span>
-                <span>{{shopxContent.originalPrice}}</span>
-                <span>{{shopxContent.itemNum}}</span>
+              <li v-for="item in shopxContent" :key="item.id">
+                <span>{{item.itemId}}</span>
+                <span><img :src="item.itemImg" alt=""></span>
+                <span>{{item.itemTitle}}</span>
+                <span>{{item.originalPrice}}</span>
+                <span>{{item.itemNum}}</span>
               </li>
             </ul>
           </div>
@@ -163,7 +163,7 @@ export default {
       currentPage1: 1,
 
       form: {
-        orderType: 1,
+        orderType: 2,
         orderId: '',
         orderStatus: '',
         beginCreTime: '',
@@ -171,22 +171,22 @@ export default {
         pageNo: '1',
         pageSize: '10'
       },
-      options: [
-        { value: 1, label: '是' },
-        { value: 2, label: '否' }
-      ],
       dkjfg: [],
       Content: {},
-      shopxContent: {}
+      shopxContent: [],
+      total: 0
     }
   },
   mounted () {
     this.getlist()
   },
   methods: {
+    // 批量操作按钮弹出选择框
+    Eexport () {},
+    // 清除
     qingkong () {
       this.form = {
-        orderType: 1,
+        orderType: 2,
         orderId: '',
         orderStatus: '',
         beginCreTime: '',
@@ -196,14 +196,19 @@ export default {
       }
       this.getlist()
     },
+    // 搜索
     sousuo () {
       this.form.beginCreTime = this.dkjfg[0]
       this.form.endCreTime = this.dkjfg[1]
       this.getlist()
     },
+    // 获取列表
     getlist () {
       InterfaceOrderList(this.form).then(data => {
+        console.log(data)
         this.tableData = data
+        this.total = data.length
+        console.log(data)
       })
     },
     // 分页
@@ -223,7 +228,7 @@ export default {
       }).then(data => {
         this.Content = data[0]
         this.shopxContent = this.Content.adminGoodsList
-        console.log('555', this.Content)
+        console.log('555', this.shopxContent)
       })
       this.dialogVisible = !this.dialogVisible
     }
@@ -466,11 +471,13 @@ export default {
             li {
               display: flex;
               background: #F2F6FF;
-              height: 30px;
+              align-items: center;
+              padding: 5px 0;
+              box-sizing: border-box;
+              margin-bottom: 5px;
               span {
                 flex: 1;
                 text-align: center;
-                line-height: 30px;
                 font-size: 13px;
                 font-family: MicrosoftYaHei;
                 color: #333333;

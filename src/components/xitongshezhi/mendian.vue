@@ -80,12 +80,12 @@
             align="center"
             label="门店地址">
           </el-table-column>
-          <el-table-column
+          <!-- <el-table-column
             prop="weizhi"
             align="center"
             width="90"
             label="门店配送费">
-          </el-table-column>
+          </el-table-column> -->
           <el-table-column
             prop="shopH"
             align="center"
@@ -97,16 +97,18 @@
             </template>
           </el-table-column>
           <el-table-column
-            prop="gmtCreate"
             align="center"
             width="100"
             label="创建时间">
+            <template slot-scope="scope">
+              <p>{{scope.row.gmtCreate | outtiame}}</p>
+            </template>
           </el-table-column>
           <el-table-column
             prop="parentTitle"
             align="center"
             width="100"
-            label="所属中心">
+            label="所属网点">
           </el-table-column>
           <el-table-column
             align="center"

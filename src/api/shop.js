@@ -80,3 +80,13 @@ export function InterfaceGoodsUpdate (data, catchConfig) {
   }, catchConfig)
   return req
 }
+
+// 商品类目获取
+export function InterfaceGoodsStyle (data, catchConfig) {
+  const req = request({
+    method: 'get',
+    url: '/youmi-fresh/admin/category/getList',
+    data
+  }, catchConfig)
+  return req
+}

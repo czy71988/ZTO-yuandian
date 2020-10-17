@@ -21,7 +21,7 @@
             align="center"
             label="创建时间">
             <template slot-scope="scope">
-              <span>{{scope.row.createTime}}</span>
+              <span>{{scope.row.createTime | outtiame}}</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -81,7 +81,18 @@
             </el-select>
           </el-form-item>
           <el-form-item label="图片URL：">
-            <el-input v-model="form.imageUrl"></el-input>
+            <el-input placeholder="请输入内容" v-model="form.imageUrl">
+              <template slot="append">
+                <el-upload
+                  class="avatar-uploader"
+                  action="https://bee.zk020.cn/bee-admin/admin/systemIndex/doUploadFile"
+                  :show-file-list="false"
+                  :on-success="handleAvatarSuccess"
+                  :before-upload="beforeAvatarUpload">
+                  <i class="el-icon-upload avatar-uploader-icon"></i>
+                </el-upload>
+              </template>
+            </el-input>
           </el-form-item>
           <el-form-item label="落地页URL：">
             <el-input v-model="form.click"></el-input>
@@ -163,11 +174,11 @@ export default {
     },
     // 上下架按钮
     xiajia (item) {
-      if (item.state === '1') {
+      if (item.state === 1) {
         // 下架
         InterfaceUpdateBanner({
           id: item.id,
-          state: '2'
+          state: 2
         }).then(data => {
           this.$message({
             message: '下架成功',
@@ -179,7 +190,7 @@ export default {
         // 上架
         InterfaceUpdateBanner({
           id: item.id,
-          state: '1'
+          state: 1
         }).then(data => {
           this.$message({
             message: '上架成功',
@@ -224,6 +235,26 @@ export default {
       this.dialogVisible = !this.dialogVisible
       this.biaotiname = '类目编辑'
       this.Btnname = '确定'
+    },
+
+    handleAvatarSuccess (res, file) {
+      this.$message({
+        message: '上传成功',
+        type: 'success'
+      })
+      this.form.imageUrl = res.data
+    },
+    beforeAvatarUpload (file) {
+      const isJPG = file.type === 'image/jpeg'
+      const isLt2M = file.size / 1024 / 1024 < 2
+
+      if (!isJPG) {
+        this.$message.error('上传头像图片只能是 JPG 格式!')
+      }
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 2MB!')
+      }
+      return isJPG && isLt2M
     }
   }
 }
@@ -235,6 +266,7 @@ export default {
       .el-table {
         line-height: 40px !important;
         border-radius: 6px 6px 0px 0px;
+        overflow-y: scroll;
       }
       .el-table th, .el-table {
         background: #163D70;
@@ -255,8 +287,10 @@ export default {
     }
     .BanNer_diagio {
       .el-dialog {
+        padding-bottom: 20px;
+        box-sizing: border-box;
         width: 500px;
-        height: 430px;
+        // height: 430px;
         background: #FFFFFF;
         border-radius: 8px;
         .el-dialog__header {

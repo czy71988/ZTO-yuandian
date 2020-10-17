@@ -25,10 +25,12 @@
             label="ID">
           </el-table-column>
           <el-table-column
-            prop="shop"
             align="center"
             width="100"
             label="是否商家">
+            <template slot-scope="scope">
+              {{scope.row.role === 0 ? '否' : '是'}}
+            </template>
           </el-table-column>
           <el-table-column
             prop="phone"
@@ -37,42 +39,40 @@
             width="120">
           </el-table-column>
           <el-table-column
-            prop="gmtCreate"
             align="center"
             label="注册时间"
             width="120">
+            <template slot-scope="scope">
+              {{scope.row.gmtCreate | outtiame}}
+            </template>
           </el-table-column>
           <el-table-column
-            prop="number"
+            prop="orderNum"
             align="center"
             width="120"
             label="购买单数">
           </el-table-column>
           <el-table-column
-            prop="out"
+            prop="totalPrice"
             align="center"
             width="120"
             label="购买总金额">
           </el-table-column>
           <el-table-column
-            prop="weizhi"
-            align="center"
-            label="所在位置">
-          </el-table-column>
-          <el-table-column
-            prop="shopH"
+            prop="shopName"
             align="center"
             label="所属门店">
           </el-table-column>
           <el-table-column
             align="center"
-            label="启用/禁用"
+            label="禁用/启用"
             width="100">
             <template slot-scope="scope">
               <el-switch
                 v-model="scope.row.enable"
-                active-value="0"
-                inactive-value="1"
+                @change="jinyongqiyong(scope.row)"
+                :active-value="1"
+                :inactive-value="0"
                 active-color="#13ce66"
                 inactive-color="#ff4949">
               </el-switch>
@@ -98,7 +98,7 @@
 </template>
 
 <script>
-import { UserList } from '../../api/uers'
+import { UserList, UserListDisable } from '../../api/uers'
 export default {
   data () {
     return {
@@ -131,6 +131,23 @@ export default {
     this.getList()
   },
   methods: {
+    jinyongqiyong (item) {
+      if (item.enable === 0) {
+        UserListDisable({
+          id: item.id,
+          enable: 1
+        }).then(data => {
+          this.getList()
+        })
+      } else {
+        UserListDisable({
+          id: item.id,
+          enable: 0
+        }).then(data => {
+          this.getList()
+        })
+      }
+    },
     getList () {
       UserList(this.denglufrom).then(data => {
         this.tableData = data.records

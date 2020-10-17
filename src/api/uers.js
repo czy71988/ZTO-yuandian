@@ -11,7 +11,7 @@ export function UserList (data, catchConfig) {
   return req
 }
 
-// 用户列表
+// 启用禁用
 export function UserListDisable (data, catchConfig) {
   const req = request({
     method: 'POST',

@@ -52,11 +52,11 @@
             align="center"
             label="商品标题">
           </el-table-column>
-          <el-table-column
+          <!-- <el-table-column
             prop="label"
             align="center"
             label="商品标签">
-          </el-table-column>
+          </el-table-column> -->
           <el-table-column
             prop="storeHouse"
             align="center"
@@ -71,13 +71,21 @@
             label="销售价">
           </el-table-column>
           <el-table-column
+            prop="price"
+            align="center"
+            label="商品类目">
+            <template slot-scope="scope">
+              <span>{{scope.row.categoryName}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
             align="center"
             label="操作"
             width="300">
             <template slot-scope="scope">
               <span class="Banner_span1" @click="bianji(scope.row)"><i class="el-icon-edit"></i>编辑</span>
               <span class="Banner_span3" @click="chakanxiangqing(scope.row)"><i class="el-icon-zoom-in"></i>查看详情</span>
-              <span class="Banner_span2" @click="xiajia(scope.row)"><i class="el-icon-sort"></i>{{scope.row.state !== 1 ? '下架' : '上架'}}</span>
+              <span :class="scope.row.state !== 1 ? 'Banner_span2' : 'Banner_span22'" @click="xiajia(scope.row)"><i class="el-icon-sort"></i>{{scope.row.state !== 1 ? '上架' : '下架'}}</span>
             </template>
           </el-table-column>
         </el-table>
@@ -189,8 +197,12 @@
             </el-form-item>
             <el-form-item label="所属类目：">
               <el-select v-model="form.categoryId" placeholder="请选择活动区域">
-                <el-option label="区域一" value="1"></el-option>
-                <el-option label="区域二" value="2"></el-option>
+                <el-option
+                  v-for="item in ShopStyle"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id">
+                </el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="销售价：">
@@ -211,7 +223,8 @@
 </template>
 
 <script>
-import { InterfaceAddshopdetails, InterfaceshopSohp, InterfaceGoodsShelves, Interfaceshopdetails, InterfaceGoodsUpdate } from '../../api/shop'
+// import Vue from 'vue'
+import { InterfaceAddshopdetails, InterfaceshopSohp, InterfaceGoodsShelves, Interfaceshopdetails, InterfaceGoodsUpdate, InterfaceGoodsStyle } from '../../api/shop'
 export default {
   data () {
     return {
@@ -252,16 +265,18 @@ export default {
       ],
       urls: [],
       total: 0,
-      list: ''
+      list: '',
+      ShopStyle: []
     }
   },
   mounted () {
+    this.getStyle()
     this.getlist()
   },
   methods: {
     // dialog关闭回调
     jdhigjheirg () {
-      console.log('清除')
+      // console.log('清除')
       this.form = {
         title: '',
         mainPic: '', // 商品主图
@@ -277,12 +292,21 @@ export default {
       this.dialogImageUrl = []
       this.shopShow = !this.shopShow
     },
+    // 获取类目下拉列表
+    getStyle () {
+      InterfaceGoodsStyle({}).then(data => {
+        this.ShopStyle = data
+        // const data = data.data
+        console.log(data)
+      })
+    },
     // 获取列表
     getlist () {
       InterfaceshopSohp(this.getform).then(data => {
         this.tableData = data.records
         this.total = data.total
-        console.log(data)
+
+        // console.log(data)
       })
     },
     // 搜索操作
@@ -319,7 +343,7 @@ export default {
         this.imageUrl = data.mainPic
         data.imageContent.forEach(item => { item.url = item.imageUrl })
         this.dialogImageUrl = data.imageContent
-        console.log('1111', this.dialogImageUrl)
+        // console.log('1111', this.dialogImageUrl)
         // console.log('1111', imgs)
       })
     },
@@ -339,13 +363,14 @@ export default {
           this.form.imageContent.push({ sort: index, imageUrl: item.imageUrl })
         })
         InterfaceAddshopdetails(this.form).then(data => {
-          console.log(data)
+          // console.log(data)
           this.$message({
             message: '创建商品成功',
             type: 'success'
           })
           this.getlist()
           this.jdhigjheirg()
+          this.shopShow = !this.shopShow
         })
       } else {
         // 编辑操作
@@ -357,6 +382,7 @@ export default {
           })
           this.getlist()
           this.jdhigjheirg()
+          this.shopShow = !this.shopShow
         })
       }
     },
@@ -378,11 +404,11 @@ export default {
       return isJPG && isLt2M
     },
     handleRemove (file, fileList) {
-      console.log(file, fileList)
+      // console.log(file, fileList)
     },
     handlePictureCardPreview (file) {
       this.dialogImageUrl = file.url
-      console.log('1', this.dialogImageUrl)
+      // console.log('1', this.dialogImageUrl)
       this.dialogVisible = true
     },
     dbfbiebibkfjbrgdfg (res, file) {
@@ -645,6 +671,10 @@ export default {
         font-size: 13px;
       }
       .Banner_span2 {
+        color: #2B80FD;
+        font-size: 13px;
+      }
+      .Banner_span22 {
         color: #FF8C14;
         font-size: 13px;
       }

@@ -67,7 +67,7 @@
     </div>
     <!-- 分页 -->
     <div class="bottom_bottom">
-      <span class="bottom_q" @click="news"><i class="el-icon-circle-plus-outline"></i>新增网点</span>
+      <span class="bottom_q" @click="news"><i class="el-icon-circle-plus-outline"></i>新增中心仓</span>
       <span class="bottom_q"><i class="el-icon-download"></i>批量导出</span>
       <span class="bottom_q"><i class="el-icon-upload2"></i>批量导入</span>
       <div class="block">
@@ -210,13 +210,13 @@ export default {
     },
     // 编辑按钮
     bianji (item) {
-      this.biaotiname = '编辑网点'
+      this.biaotiname = '编辑中心仓'
       this.dialogVisible = !this.dialogVisible
       this.from = item
     },
     // 提交操作
     over () {
-      if (this.biaotiname === '新增网点') {
+      if (this.biaotiname === '新增中心仓') {
         InterfaceAddShop(this.from).then(data => {
           console.log(data)
           this.dialogVisible = !this.dialogVisible
@@ -245,7 +245,7 @@ export default {
     // 新增按钮
     news () {
       this.dkjfg()
-      this.biaotiname = '新增网点'
+      this.biaotiname = '新增中心仓'
       this.dialogVisible = !this.dialogVisible
     }
   }
