@@ -51,7 +51,7 @@
             label="操作">
             <template slot-scope="scope">
               <span class="Banner_span1" @click="bianji(scope.row)"><i class="el-icon-edit"></i>编辑</span>
-              <span class="Banner_span2" @click="xiajia(scope.row)"><i class="el-icon-delete"></i>{{scope.row.state === 1 ? '下架' : '上架'}}</span>
+              <span :class="scope.row.state === 1 ? 'Banner_span2' : 'Banner_span22'" @click="xiajia(scope.row)"><i class="el-icon-sort"></i>{{scope.row.state === 1 ? '下架' : '上架'}}</span>
             </template>
           </el-table-column>
         </el-table>
@@ -245,16 +245,16 @@ export default {
       this.form.imageUrl = res.data
     },
     beforeAvatarUpload (file) {
-      const isJPG = file.type === 'image/jpeg'
-      const isLt2M = file.size / 1024 / 1024 < 2
+      // const isJPG = file.type === 'image/jpeg'
+      // const isLt2M = file.size / 1024 / 1024 < 2
 
-      if (!isJPG) {
-        this.$message.error('上传头像图片只能是 JPG 格式!')
-      }
-      if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 2MB!')
-      }
-      return isJPG && isLt2M
+      // if (!isJPG) {
+      //   this.$message.error('上传头像图片只能是 JPG 格式!')
+      // }
+      // if (!isLt2M) {
+      //   this.$message.error('上传头像图片大小不能超过 2MB!')
+      // }
+      // return isJPG && isLt2M
     }
   }
 }
@@ -389,6 +389,10 @@ export default {
       }
       .Banner_span2 {
         color: #FF8C14;
+        font-size: 13px;
+      }
+      .Banner_span22 {
+        color: #2B80FD;
         font-size: 13px;
       }
     }
