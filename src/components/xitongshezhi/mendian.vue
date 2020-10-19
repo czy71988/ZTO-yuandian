@@ -178,7 +178,7 @@
               <el-form-item label="纬度：">
                 <el-input v-model="form.latitude"></el-input>
               </el-form-item>
-              <el-form-item label="所属中心：">
+              <el-form-item label="所属网点：">
                 <el-select v-model="form.parentId">
                   <el-option v-for="item in sjdh" :key="item.id" :label="item.title" :value="item.id"></el-option>
                 </el-select>
