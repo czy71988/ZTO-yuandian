@@ -67,6 +67,11 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: Login
+  },
+  {
+    path: '/changeEnv',
+    name: 'ChangeEnv',
+    component: () => import('@/views/changeEnv/index.vue')
   }
 ]
 
