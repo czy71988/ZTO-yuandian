@@ -58,7 +58,7 @@
     <!-- 分页 -->
     <div class="bottom_bottom">
       <div @click="shujudaochu" class="bottom_chuangjian"><i class="el-icon-circle-plus-outline"></i>导出数据</div>
-      <div @click="chuanjianshagpin" class="bottom_chuangjian"><i class="el-icon-circle-plus-outline"></i>添加商品</div>
+      <div @click="chuanjianshagpin" class="bottom_chuangjian"><i class="el-icon-circle-plus-outline"></i>添加类目</div>
       <div class="block">
         <el-pagination
           @size-change="handleSizeChange"

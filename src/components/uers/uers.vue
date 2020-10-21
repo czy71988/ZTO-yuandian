@@ -41,7 +41,7 @@
           <el-table-column
             align="center"
             label="注册时间"
-            width="120">
+            width="240">
             <template slot-scope="scope">
               {{scope.row.gmtCreate | outtiame}}
             </template>
@@ -49,24 +49,23 @@
           <el-table-column
             prop="orderNum"
             align="center"
-            width="120"
+            width="200"
             label="购买单数">
           </el-table-column>
           <el-table-column
             prop="totalPrice"
             align="center"
-            width="120"
+            width="200"
             label="购买总金额">
           </el-table-column>
-          <el-table-column
+          <!-- <el-table-column
             prop="shopName"
             align="center"
             label="所属门店">
-          </el-table-column>
+          </el-table-column> -->
           <el-table-column
             align="center"
-            label="禁用/启用"
-            width="100">
+            label="禁用/启用">
             <template slot-scope="scope">
               <el-switch
                 v-model="scope.row.enable"

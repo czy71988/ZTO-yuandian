@@ -95,10 +95,14 @@
         </el-main>
       </el-container>
     </el-container>
+    <div class="right-top-fix">
+      <el-button type="text" @click="onLogout">退出</el-button>
+    </div>
   </div>
 </template>
 
 <script>
+import { removeToken } from '../utils/auth'
 export default {
   data () {
     return {
@@ -111,6 +115,10 @@ export default {
       console.log(this.index)
     },
     handleClose (key, keyPath) {
+    },
+    onLogout () {
+      removeToken()
+      this.$router.replace('/login')
     }
   }
 }
@@ -186,5 +194,11 @@ export default {
 }
 .sdawe {
   color: #FFFFFF;
+}
+.right-top-fix {
+  position: fixed;
+  right: 0px;
+  top: 0px;
+  padding-right: 20px;
 }
 </style>

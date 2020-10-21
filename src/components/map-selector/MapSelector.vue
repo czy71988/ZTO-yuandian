@@ -118,6 +118,7 @@ export default {
     },
     onSure () {
       this.showDrawer = false
+      this.$emit('input', false)
       this.$emit('ok', this.selectedAddress)
     },
     // 重新定位，更新地图

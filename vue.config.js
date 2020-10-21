@@ -1,7 +1,8 @@
 
 // import { baseURL } from './src/utils/khg'
 // console.log(baseURL)
-const baseURL = 'http://test.bee.zk020.cn'
+// const baseURL = 'http://test.bee.zk020.cn'
+const baseURL = 'http://bee.zk020.cn'
 module.exports = {
   devServer: {
     proxy: {

@@ -115,9 +115,9 @@
             <span>订单信息</span>
           </p>
           <p class="uers_p1">
-            <span>收货人姓名：{{Content.userName}}</span>
-            <span>手机号：{{Content.takeMobile}}</span>
-            <span>详细地址：{{Content.takeAddress}}</span>
+            <span>订货人姓名：{{Content.shopName}}</span>
+            <span>手机号：{{Content.shopMobile}}</span>
+            <span style="width:100%">详细地址：{{Content.shopAddress}}</span>
           </p>
           <p class="uers_p">
             <span></span>
