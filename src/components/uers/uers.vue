@@ -132,7 +132,8 @@ export default {
   },
   methods: {
     jinyongqiyong (item) {
-      if (item.enable === 0) {
+      if (item.enable !== 0) {
+        console.log('开启')
         UserListDisable({
           id: item.id,
           enable: 1
@@ -140,6 +141,7 @@ export default {
           this.getList()
         })
       } else {
+        console.log('关闭')
         UserListDisable({
           id: item.id,
           enable: 0

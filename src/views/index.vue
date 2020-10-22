@@ -53,6 +53,7 @@
                   <el-menu-item-group>
                     <el-menu-item index="/shopList">商品列表</el-menu-item>
                     <el-menu-item index="/shopType">商品类目创建</el-menu-item>
+                    <el-menu-item index="/Commodi">商品管理</el-menu-item>
                   </el-menu-item-group>
                 </el-submenu>
 

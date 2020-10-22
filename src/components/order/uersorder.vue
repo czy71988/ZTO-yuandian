@@ -31,7 +31,7 @@
           stripe
           style="width: 100%">
           <el-table-column
-            prop="id"
+            prop="tradeParentId"
             align="center"
             label="订单编号">
           </el-table-column>

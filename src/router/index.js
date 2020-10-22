@@ -5,6 +5,7 @@ import Login from '../views/Login.vue'
 import BANNER from '../components/AdvertisingSettings/banner.vue'
 import advertising from '../components/AdvertisingSettings/advertising.vue'
 import shopList from '../components/shop/shopList.vue'
+import Commodi from '../components/shop/Commodi.vue'
 import shopType from '@/components/shop/shopType.vue'
 import uers from '@/components/uers/uers.vue'
 import mendian from '@/components/xitongshezhi/mendian.vue'
@@ -60,6 +61,10 @@ const routes = [
       {
         path: '/advertising',
         component: advertising
+      },
+      {
+        path: '/Commodi',
+        component: Commodi
       }
     ]
   },

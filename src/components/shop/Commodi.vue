@@ -3,7 +3,40 @@
     <!-- 商品类目创建头部 -->
     <div class="shopType_top">
       <span>· 商品管理</span>
-      <span>商品类目创建</span>
+      <span>商品列表</span>
+    </div>
+    <div class="top">
+      <span>选择中心仓</span>
+      <el-select v-model="value" placeholder="请选择">
+        <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value">
+        </el-option>
+      </el-select>
+
+      <span>选择网点</span>
+      <el-select v-model="value" placeholder="请选择">
+        <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value">
+        </el-option>
+      </el-select>
+
+      <span>选择门店</span>
+      <el-select v-model="value" placeholder="请选择">
+        <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value">
+        </el-option>
+      </el-select>
+
+      <span>搜索</span>
     </div>
     <!-- 表格部分 -->
     <div class="shopType_content">
@@ -11,26 +44,20 @@
         <el-table
           :data="list"
           stripe
-          style="width: 100%"
-          @selection-change="handleSelectionChange">
-          <el-table-column
-            type="selection"
-            width="55"
-            label="选择">
-          </el-table-column>
+          style="width: 100%">
           <el-table-column
             prop="name"
             align="center"
-            label="类目名称">
+            label="商品ID">
           </el-table-column>
           <el-table-column
             prop="id"
             align="center"
-            label="类目ID">
+            label="商品编号">
           </el-table-column>
           <el-table-column
             align="center"
-            label="类目图标">
+            label="主图">
             <template slot-scope="scope">
             <!-- <template> -->
               <img class="sdfsgerg" :src="scope.row.imageUrl" alt="">
@@ -38,7 +65,35 @@
           </el-table-column>
           <el-table-column
             align="center"
-            label="添加日期">
+            label="详情图">
+            <template slot-scope="scope">
+              <span>{{scope.row.gmtCreate | outtiame}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            align="center"
+            label="商品标题">
+            <template slot-scope="scope">
+              <span>{{scope.row.gmtCreate | outtiame}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            align="center"
+            label="所属类目">
+            <template slot-scope="scope">
+              <span>{{scope.row.gmtCreate | outtiame}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            align="center"
+            label="销售价">
+            <template slot-scope="scope">
+              <span>{{scope.row.gmtCreate | outtiame}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            align="center"
+            label="门店库存">
             <template slot-scope="scope">
               <span>{{scope.row.gmtCreate | outtiame}}</span>
             </template>
@@ -46,10 +101,9 @@
           <el-table-column
             align="center"
             label="操作"
-            width="300">
+            width="100">
             <template slot-scope="scope">
               <span class="shopType_span1" @click="bianji(scope.row)"><i class="el-icon-edit"></i>编辑</span>
-              <span :class="scope.row.state !== 1 ? 'shopType_span2' : 'shopType_span22'" @click="xiajia(scope.row)"><i class="el-icon-sort"></i>{{scope.row.state !== 1 ? '上架' : '下架'}}</span>
             </template>
           </el-table-column>
         </el-table>
@@ -57,8 +111,6 @@
     </div>
     <!-- 分页 -->
     <div class="bottom_bottom">
-      <div @click="shujudaochu" class="bottom_chuangjian"><i class="el-icon-circle-plus-outline"></i>导出数据</div>
-      <div @click="chuanjianshagpin" class="bottom_chuangjian"><i class="el-icon-circle-plus-outline"></i>添加商品</div>
       <div class="block">
         <el-pagination
           @size-change="handleSizeChange"
@@ -76,22 +128,51 @@
     <div class="shopType_diagio">
       <el-dialog
         :visible.sync="shopShow">
-        <p class="sdsd">{{biaotiname}}</p>
+        <p class="sdsd">库存编辑</p>
         <div class="chuangjian_shop_dialog">
           <el-form ref="form" :model="form" label-width="100px">
-            <el-form-item label="类目名称：">
-              <el-input v-model="form.name"></el-input>
+            <el-form-item label="商品编号：">
+              <el-input :disabled="true" v-model="form.name"></el-input>
             </el-form-item>
-            <el-form-item label="类目图标：">
-              <el-upload
-                class="avatar-uploader"
-                action="https://bee.zk020.cn/bee-admin/admin/systemIndex/doUploadFile"
-                :show-file-list="false"
-                :on-success="handleAvatarSuccess"
-                :before-upload="beforeAvatarUpload">
-                <img v-if="imageUrl" :src="imageUrl" class="avatar">
-                <i v-else class="el-icon-circle-plus-outline avatar-uploader-icon"></i>
-              </el-upload>
+            <el-form-item label="商品主图：">
+              <ul>
+                <li><img src="../../assets/编组 3@2x.png" alt=""></li>
+              </ul>
+            </el-form-item>
+            <el-form-item label="详情图：">
+              <ul>
+                <li><img src="../../assets/编组 3@2x.png" alt=""></li>
+                <li><img src="../../assets/编组 3@2x.png" alt=""></li>
+                <li><img src="../../assets/编组 3@2x.png" alt=""></li>
+                <li><img src="../../assets/编组 3@2x.png" alt=""></li>
+              </ul>
+            </el-form-item>
+            <el-form-item label="商品标题：">
+              <el-input :disabled="true" v-model="form.name"></el-input>
+            </el-form-item>
+            <el-form-item label="商品标签：">
+              <el-select disabled v-model="form.region" placeholder="请选择活动区域">
+                <el-option label="区域一" value="shanghai"></el-option>
+                <el-option label="区域二" value="beijing"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="所在仓位置：">
+              <el-select disabled v-model="form.region" placeholder="请选择活动区域">
+                <el-option label="区域一" value="shanghai"></el-option>
+                <el-option label="区域二" value="beijing"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="所属类目：">
+              <el-select disabled v-model="form.region" placeholder="请选择活动区域">
+                <el-option label="区域一" value="shanghai"></el-option>
+                <el-option label="区域二" value="beijing"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="销售价：">
+              <el-input :disabled="true" v-model="form.name"></el-input>
+            </el-form-item>
+            <el-form-item label="库存数量：">
+              <el-input v-model="form.name"></el-input>
             </el-form-item>
             <div class="chuangjian_dialog">
               <span @click="shopShow = !shopShow">取消</span>
@@ -105,7 +186,7 @@
 </template>
 
 <script>
-import { InterfaceCommodity, InterfaceAddCategory, InterfaceUpCategory } from '../../api/shop'
+import { } from '../../api/shop'
 export default {
   data () {
     return {
@@ -115,7 +196,6 @@ export default {
       },
       currentPage1: 1,
       shopShow: false,
-      biaotiname: '',
       sdbgg: '',
       page: '1',
       size: '10',
@@ -130,23 +210,6 @@ export default {
   methods: {
     // 获取列表
     getlist () {
-      InterfaceCommodity({
-        pageNo: this.page,
-        pageSize: this.size
-      }).then(data => {
-        this.total = data.total
-        this.list = data.records
-        console.log(data)
-      })
-    },
-
-    // 表格选择框
-    handleSelectionChange (val) {
-      const multipleSelection = val
-      console.log(multipleSelection)
-      multipleSelection.forEach(item => {
-        this.ids.push(item.id)
-      })
     },
 
     // 分页
@@ -163,81 +226,16 @@ export default {
     // 编辑按钮
     bianji (row) {
       this.shopShow = !this.shopShow
-      this.biaotiname = '类目编辑'
       this.sdbgg = '确定'
       this.form = row
       this.imageUrl = this.form.imageUrl
     },
 
-    // 添加商品按钮
-    chuanjianshagpin () {
-      this.form = {}
-      this.imageUrl = ''
-      this.shopShow = !this.shopShow
-      this.biaotiname = '类目创建'
-      this.sdbgg = '添加'
-    },
-
     // 确定添加商品或是编辑商品
     chuangjianOver () {
-      if (this.biaotiname === '类目创建') {
-        InterfaceAddCategory(this.form).then(data => {
-          this.$message({
-            showClose: true,
-            message: '添加成功',
-            type: 'success'
-          })
-          this.getlist()
-          this.shopShow = !this.shopShow
-        })
-      } else {
-        InterfaceUpCategory(this.form).then(data => {
-          this.$message({
-            showClose: true,
-            message: '修改成功',
-            type: 'success'
-          })
-          this.getlist()
-          this.shopShow = !this.shopShow
-        })
-      }
     },
 
-    // 下架按纽
-    xiajia (item) {
-      console.log(item.state)
-      console.log(item)
-      if (item.state === 1) {
-        InterfaceUpCategory({
-          id: item.id,
-          state: 2
-        }).then(data => {
-          this.$message({
-            showClose: true,
-            message: '下架成功',
-            type: 'success'
-          })
-          this.getlist()
-        })
-      } else {
-        InterfaceUpCategory({
-          id: item.id,
-          state: 1
-        }).then(data => {
-          this.$message({
-            showClose: true,
-            message: '上架成功',
-            type: 'success'
-          })
-          this.getlist()
-        })
-      }
-    },
-
-    // 导出按钮
-    shujudaochu () {},
-
-    // 分页
+    // 图像上传
     handleAvatarSuccess (res, file) {
       this.form.imageUrl = res.data
       this.imageUrl = URL.createObjectURL(file.raw)
@@ -325,54 +323,11 @@ export default {
               height: 100%;
             }
           }
-          .sdhfhogerg {
-            width: 60px;
-            font-size: 12px;
-            font-family: MicrosoftYaHei;
-            color: #999999;
-            line-height: 16px;
-            position: absolute;
-            top: 70px;
-            left: 0;
-          }
           .el-form-item__content {
             .el-input {
               width: 200px;
             }
           }
-            .avatar-uploader {
-              width: 60px;
-              height: 60px;
-              .el-upload {
-                border: 1px dashed #d9d9d9;
-                border-radius: 6px;
-                cursor: pointer;
-                position: relative;
-                overflow: hidden;
-              }
-            }
-            .avatar-uploader .el-upload:hover {
-              border-color: #409EFF;
-            }
-            .avatar-uploader-icon {
-              font-size: 28px;
-              color: #8c939d;
-              width: 60px;
-              height: 60px;
-              line-height: 60px;
-              i {
-                margin-top: 30px;
-              }
-            }
-
-            .el-upload--picture-card {
-              line-height: 0;
-            }
-            .avatar {
-              width: 60px;
-              height: 60px;
-              display: block;
-            }
         }
       }
       .el-form {
@@ -455,19 +410,6 @@ export default {
       background: #D7E5FB;
       border-radius: 0px 0px 6px 6px;
       box-sizing: border-box;
-      .bottom_chuangjian {
-        display: inline-block;
-        font-size: 13px;
-        font-family: MicrosoftYaHei;
-        color: #2B80FD;
-        line-height: 17px;
-        float: left;
-        margin-right: 20px;
-        line-height: 40px;
-        i {
-          margin-right: 10px;
-        }
-      }
       .block {
         display: inline-block;
         float: right;
@@ -492,6 +434,38 @@ export default {
           margin-left: 40px;
           background: #2B80FD;
           color: #FFFFFF;
+        }
+      }
+    }
+  }
+  .top {
+    span {
+      margin: 0 20px 20px 50px;
+    }
+    span:last-child {
+      display: inline-block;
+      width: 100px;
+      height: 35px;
+      background: #2B80FD;
+      border-radius: 18px;
+      font-size: 12px;
+      font-family: MicrosoftYaHei;
+      color: #FFFFFF;
+      line-height: 35px;
+      text-align: center;
+    }
+  }
+  .chuangjian_shop_dialog {
+    ul {
+      list-style: none;
+      li {
+        display: inline-block;
+        width: 50px;
+        height: 50px;
+        margin: 5px;
+        img {
+          width: 50px;
+          height: 50px;
         }
       }
     }

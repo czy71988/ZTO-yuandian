@@ -225,9 +225,11 @@
 <script>
 // import Vue from 'vue'
 import { InterfaceAddshopdetails, InterfaceshopSohp, InterfaceGoodsShelves, Interfaceshopdetails, InterfaceGoodsUpdate, InterfaceGoodsStyle } from '../../api/shop'
+import { deleteElementByValue } from '../../utils/khg'
 export default {
   data () {
     return {
+      deleteElementByValue,
       tableData: [],
       dialogVisible: false,
       shopShow: false,
@@ -235,7 +237,7 @@ export default {
       currentPage1: 1,
       sdbgg: '',
       imageUrl: '',
-      dialogImageUrl: '',
+      dialogImageUrl: [],
       form: {
         title: '',
         mainPic: '', // 商品主图
@@ -292,46 +294,48 @@ export default {
       this.dialogImageUrl = []
       this.shopShow = !this.shopShow
     },
+
     // 获取类目下拉列表
     getStyle () {
       InterfaceGoodsStyle({}).then(data => {
         this.ShopStyle = data
-        // const data = data.data
         console.log(data)
       })
     },
+
     // 获取列表
     getlist () {
       InterfaceshopSohp(this.getform).then(data => {
         this.tableData = data.records
         this.total = data.total
-
-        // console.log(data)
       })
     },
+
     // 搜索操作
     sousuo () {
       this.getlist()
     },
+
     // 查看详情
     chakanxiangqing (row) {
       const id = row.id
-      this.dialogVisible = !this.dialogVisible
       Interfaceshopdetails({
         id: id
       }).then(data => {
         this.list = data
+        this.dialogVisible = !this.dialogVisible
       })
     },
+
     // 添加商品
     chuanjianshagpin () {
       this.shopShow = !this.shopShow
       this.biaotiname = '创建商品'
       this.sdbgg = '添加'
     },
+
     // 商品编辑
     bianji (item) {
-      // this.shopShow = !this.shopShow
       this.biaotiname = '商品编辑'
       this.sdbgg = '确定'
       const id = item.id
@@ -343,10 +347,10 @@ export default {
         this.imageUrl = data.mainPic
         data.imageContent.forEach(item => { item.url = item.imageUrl })
         this.dialogImageUrl = data.imageContent
-        // console.log('1111', this.dialogImageUrl)
-        // console.log('1111', imgs)
+        console.log('获取的图片', this.dialogImageUrl)
       })
     },
+
     // 分页
     handleSizeChange (val) {
       this.getform.pageSize = val
@@ -356,6 +360,7 @@ export default {
       this.getform.pageNo = val
       this.getlist()
     },
+
     // 添加按钮
     onSubmit () {
       if (this.biaotiname === '创建商品') {
@@ -363,57 +368,51 @@ export default {
           this.form.imageContent.push({ sort: index, imageUrl: item.imageUrl })
         })
         InterfaceAddshopdetails(this.form).then(data => {
-          // console.log(data)
           this.$message({
             message: '创建商品成功',
             type: 'success'
           })
           this.getlist()
           this.jdhigjheirg()
-          this.shopShow = !this.shopShow
         })
       } else {
         // 编辑操作
         InterfaceGoodsUpdate(this.form).then(data => {
-          this.shopShow = !this.shopShow
           this.$message({
             message: '修改商品成功',
             type: 'success'
           })
           this.getlist()
           this.jdhigjheirg()
-          this.shopShow = !this.shopShow
         })
       }
     },
+
     // 图片上传
     handleAvatarSuccess (res, file) {
       this.form.mainPic = res.data
       this.imageUrl = URL.createObjectURL(file.raw)
     },
-    beforeAvatarUpload (file) {
-      // const isJPG = file.type === 'image/jpeg' || file.type === 'image/png'
-      // const isLt2M = file.size / 1024 / 1024 < 2
 
-      // if (!isJPG) {
-      //   this.$message.error('上传头像图片只能是 JPG 格式!')
-      // }
-      // if (!isLt2M) {
-      //   this.$message.error('上传头像图片大小不能超过 2MB!')
-      // }
-      // return isJPG && isLt2M
+    beforeAvatarUpload (file) {
     },
+
+    // 图片删除
     handleRemove (file, fileList) {
-      // console.log(file, fileList)
+      const url = file.url
+      this.form.imageContent = deleteElementByValue(this.form.imageContent, url)
+      console.log('图片删除', this.form.imageContent)
     },
+
     handlePictureCardPreview (file) {
       this.dialogImageUrl = file.url
-      // console.log('1', this.dialogImageUrl)
       this.dialogVisible = true
     },
+
     dbfbiebibkfjbrgdfg (res, file) {
       this.urls.push({ imageUrl: res.data })
     },
+
     // 上下架操作
     xiajia (item) {
       if (item.state === 1) {
