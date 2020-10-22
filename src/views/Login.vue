@@ -19,6 +19,7 @@
 </template>
 
 <script>
+import { setToken } from '../utils/auth'
 export default {
   data () {
     return {
@@ -30,6 +31,7 @@ export default {
   },
   methods: {
     login () {
+      setToken(this.from.phone || Date.now())
       this.$router.push({ name: 'index' })
     }
   }

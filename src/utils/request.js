@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { Message } from 'element-ui'
-import baseURL from './khg'
+import { reqConfig } from './config'
 // import baseURL from '../../vue.config'
 // import { MessageBox } from 'element-ui'
 
@@ -13,9 +13,7 @@ const service = axios.create({
 
 // 请求拦截
 service.interceptors.request.use(config => {
-  if (process.env.NODE_ENV === 'production') {
-    config.baseURL = baseURL
-  }
+  config.baseURL = reqConfig.baseUrl
   return config
 }, err => {
   return Promise.reject(err)
