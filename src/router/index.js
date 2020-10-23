@@ -13,6 +13,7 @@ import wangidan from '@/components/xitongshezhi/wangidan.vue'
 import zhongxin from '@/components/xitongshezhi/zhongxin.vue'
 import uersorder from '@/components/order/uersorder.vue'
 import ordergoods from '@/components/order/ordergoods.vue'
+import orderList from '@/components/order/orderList.vue'
 
 Vue.use(VueRouter)
 
@@ -55,6 +56,10 @@ const routes = [
         component: uersorder
       },
       {
+        path: '/orderList',
+        component: orderList
+      },
+      {
         path: '/ordergoods',
         component: ordergoods
       },
@@ -64,6 +69,7 @@ const routes = [
       },
       {
         path: '/Commodi',
+        name: 'Commodi',
         component: Commodi
       }
     ]

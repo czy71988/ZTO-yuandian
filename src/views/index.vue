@@ -23,7 +23,6 @@
 
                 <el-submenu index="1">
                   <template slot="title">
-                    <!-- <i class="el-icon-location"></i> -->
                     <img class="dsfg" src="../assets/编组 3@2x(1).png" alt="">
                     <span :class="index === '1' ? 'sdawe' : ''">用户管理</span>
                   </template>
@@ -34,7 +33,6 @@
 
                 <el-submenu index="2">
                   <template slot="title">
-                    <!-- <i class="el-icon-location"></i> -->
                     <img class="dsfg" src="../assets/编组 4@2x.png" alt="">
                     <span :class="index === '2' ? 'sdawe' : ''">广告配置</span>
                   </template>
@@ -46,43 +44,36 @@
 
                 <el-submenu index="3">
                   <template slot="title">
-                    <!-- <i class="el-icon-location"></i> -->
                     <img class="dsfg" src="../assets/编组 5@2x.png" alt="">
                     <span :class="index === '3' ? 'sdawe' : ''">商品管理</span>
                   </template>
                   <el-menu-item-group>
                     <el-menu-item index="/shopList">商品列表</el-menu-item>
                     <el-menu-item index="/shopType">商品类目创建</el-menu-item>
-                    <el-menu-item index="/Commodi">商品管理</el-menu-item>
+                    <!-- <el-menu-item index="/Commodi">门店商品管理</el-menu-item> -->
                   </el-menu-item-group>
                 </el-submenu>
 
-                <!-- <el-menu-item index="4">
-                  <i class="el-icon-setting"></i>
-                  <span slot="title">后台角色</span>
-                </el-menu-item> -->
-
                 <el-submenu index="4">
                   <template slot="title">
-                    <!-- <i class="el-icon-location"></i> -->
                     <img class="dsfg" src="../assets/编组 7@2x.png" alt="">
                     <span :class="index === '4' ? 'sdawe' : ''">订单管理</span>
                   </template>
                   <el-menu-item-group>
                     <el-menu-item index="/uersorder">用户订单</el-menu-item>
                     <el-menu-item index="/ordergoods">订货订单</el-menu-item>
+                    <el-menu-item index="/orderList">拨货订单</el-menu-item>
                   </el-menu-item-group>
                 </el-submenu>
 
                 <el-submenu index="5">
                   <template slot="title">
-                    <!-- <i class="el-icon-location"></i> -->
                     <img class="dsfg" src="../assets/编组 8@2x.png" alt="">
                     <span :class="index === '5' ? 'sdawe' : ''">系统设置</span>
                   </template>
                   <el-menu-item-group>
                     <el-menu-item index="/mendian">门店管理</el-menu-item>
-                    <el-menu-item index="/wangidan">网点管理</el-menu-item>
+                    <!-- <el-menu-item index="/wangidan">网点管理</el-menu-item> -->
                     <el-menu-item index="/zhongxin">中心仓管理</el-menu-item>
                   </el-menu-item-group>
                 </el-submenu>

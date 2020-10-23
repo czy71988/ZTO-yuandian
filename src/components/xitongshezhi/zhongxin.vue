@@ -57,9 +57,10 @@
           <el-table-column
             align="center"
             label="操作"
-            width="80">
+            width="150">
             <template slot-scope="scope">
               <span class="sdreg" @click="bianji(scope.row)"><i class="el-icon-edit"></i>编辑</span>
+              <span class="sdreg" @click="CommodityManagement(scope.row.id, scope.row.parentId, scope.row.type)"><i class=""></i>商品管理</span>
             </template>
           </el-table-column>
         </el-table>
@@ -174,6 +175,10 @@ export default {
     this.getlist()
   },
   methods: {
+    // 商品管理
+    CommodityManagement (id, parentId, type) {
+      this.$router.push({ name: 'Commodi', query: { id: id, parentId: parentId, shopType: type } })
+    },
     // 清空
     dkjfg () {
       this.from = {
@@ -418,6 +423,7 @@ export default {
         font-family: MicrosoftYaHei;
         color: #2B80FD;
         line-height: 17px;
+        margin-right: 10px;
       }
     }
     .bottom_bottom {

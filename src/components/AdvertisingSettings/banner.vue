@@ -44,7 +44,7 @@
           </el-table-column>
           <el-table-column
             align="center"
-            label="所属网点">
+            label="所属中心仓">
             <template slot-scope="scope">
               <span>{{capitalize(scope.row.shopId)}}</span>
             </template>
@@ -82,8 +82,8 @@
               <el-option v-for="item in banner" :key="item.id" :label="item.label" :value="item.value"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="选择网点">
-            <el-select v-model="form.shopId" placeholder="请选择选择网点">
+          <el-form-item label="选择中心仓">
+            <el-select v-model="form.shopId" placeholder="请选择选择中心仓">
               <el-option v-for="item in wangdianype" :key="item.id" :label="item.title" :value="item.id"></el-option>
             </el-select>
           </el-form-item>
@@ -161,28 +161,14 @@ export default {
       }
     }
   },
-  // filters: {
-  //   capitalize: function (value) {
-  //     const sdgerg = this.wangdianype
-  //     if (!value) return ''
-  //     const label = ''
-  //     value = value.toString()
-  //     sdgerg.some(val => {
-  //       if (val.id === value) {
-  //         val.title = label
-  //       }
-  //     })
-  //     return label
-  //   }
-  // },
   methods: {
     // 获取网点
     getwangdian () {
       InterfaceDropdownList({
-        type: 2
+        type: 1
       }).then(data => {
+        console.log('中心仓', data)
         this.wangdianype = data
-        console.log('获取的网点列表', data)
       })
     },
     // 获取列表

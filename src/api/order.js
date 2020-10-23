@@ -20,3 +20,23 @@ export function InterfaceQueryOrderList (data, catchConfig) {
   }, catchConfig)
   return req
 }
+
+// 创建拨货订单
+export function InterfaceNewOrderList (data, catchConfig) {
+  const req = request({
+    method: 'post',
+    url: '/youmi-fresh/admin/order/confirmDeliveryOrder',
+    data
+  }, catchConfig)
+  return req
+}
+
+// 删除
+export function InterfaceShopRemove (data, catchConfig) {
+  const req = request({
+    method: 'post',
+    url: '/youmi-fresh/admin/purchase/remove',
+    data
+  }, catchConfig)
+  return req
+}

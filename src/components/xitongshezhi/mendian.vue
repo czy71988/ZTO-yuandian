@@ -9,7 +9,7 @@
         <el-input v-model="from.title" placeholder="请输入内容"></el-input>
         <span>手机号：</span>
         <el-input v-model="from.phone" placeholder="请输入内容"></el-input>
-        <span>所属网点：</span>
+        <span>所属中心仓：</span>
         <el-select v-model="from.parentId" placeholder="请选择">
           <el-option
             label="全部"
@@ -80,12 +80,6 @@
             align="center"
             label="门店地址">
           </el-table-column>
-          <!-- <el-table-column
-            prop="weizhi"
-            align="center"
-            width="90"
-            label="门店配送费">
-          </el-table-column> -->
           <el-table-column
             prop="shopH"
             align="center"
@@ -108,14 +102,15 @@
             prop="parentTitle"
             align="center"
             width="100"
-            label="所属网点">
+            label="所属中心仓">
           </el-table-column>
           <el-table-column
             align="center"
             label="操作"
-            width="80">
+            width="150">
             <template slot-scope="scope">
-              <span class="sdreg" @click="bianji(scope.row)"><i class="el-icon-edit"></i>编辑</span>
+              <span class="sdreg aefsdgf" @click="bianji(scope.row)"><i class="el-icon-edit"></i>编辑</span>
+              <span class="sdreg" @click="CommodityManagement(scope.row.id, scope.row.parentId)"><i class=""></i>商品管理</span>
             </template>
           </el-table-column>
         </el-table>
@@ -178,7 +173,7 @@
               <el-form-item label="纬度：">
                 <el-input v-model="form.latitude"></el-input>
               </el-form-item>
-              <el-form-item label="所属网点：">
+              <el-form-item label="所属中心仓：">
                 <el-select v-model="form.parentId">
                   <el-option v-for="item in sjdh" :key="item.id" :label="item.title" :value="item.id"></el-option>
                 </el-select>
@@ -229,13 +224,13 @@ export default {
         state: '',
         longitude: '',
         latitude: '',
-        parentId: '',
-        type: 3
+        // parentId: '',
+        type: 2
       },
       from: {
         pageNo: '1',
         pageSize: '10',
-        type: 3,
+        type: 2,
         title: '',
         id: '',
         phone: '',
@@ -270,8 +265,12 @@ export default {
         longitude: '',
         latitude: '',
         parentId: '',
-        type: 3
+        type: 2
       }
+    },
+    // 商品管理
+    CommodityManagement (id, parentId) {
+      this.$router.push({ name: 'Commodi', query: { id: id, parentId: parentId } })
     },
     // 列表
     getlist () {
@@ -294,8 +293,9 @@ export default {
     // 获取下拉列表所属网点选项
     getType () {
       InterfaceDropdownList({
-        type: 2
+        type: 1
       }).then(data => {
+        console.log('中心仓', data)
         this.sjdh = data
       })
     },
@@ -517,6 +517,9 @@ export default {
         font-family: MicrosoftYaHei;
         color: #2B80FD;
         line-height: 17px;
+      }
+      .aefsdgf {
+        margin-right: 5px;
       }
     }
     .bottom_bottom {

@@ -2,41 +2,12 @@
   <div class="shopType">
     <!-- 商品类目创建头部 -->
     <div class="shopType_top">
-      <span>· 商品管理</span>
-      <span>商品列表</span>
+      <span v-on:click="back"><i class="el-icon-back"></i>返回</span>
+      <span>商品管理</span>
     </div>
     <div class="top">
-      <span>选择中心仓</span>
-      <el-select v-model="value" placeholder="请选择">
-        <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value">
-        </el-option>
-      </el-select>
 
-      <span>选择网点</span>
-      <el-select v-model="value" placeholder="请选择">
-        <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value">
-        </el-option>
-      </el-select>
-
-      <span>选择门店</span>
-      <el-select v-model="value" placeholder="请选择">
-        <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value">
-        </el-option>
-      </el-select>
-
-      <span>搜索</span>
+      <span @click="sousuo">新增商品</span>
     </div>
     <!-- 表格部分 -->
     <div class="shopType_content">
@@ -44,14 +15,19 @@
         <el-table
           :data="list"
           stripe
-          style="width: 100%">
+          style="width: 100%"
+          @selection-change="shanchuList">
           <el-table-column
-            prop="name"
+            type="selection"
+            width="55">
+          </el-table-column>
+          <el-table-column
+            prop="id"
             align="center"
             label="商品ID">
           </el-table-column>
           <el-table-column
-            prop="id"
+            prop="itemId"
             align="center"
             label="商品编号">
           </el-table-column>
@@ -59,51 +35,36 @@
             align="center"
             label="主图">
             <template slot-scope="scope">
-            <!-- <template> -->
-              <img class="sdfsgerg" :src="scope.row.imageUrl" alt="">
+              <img class="sdfsgerg" :src="scope.row.mainPic" alt="">
             </template>
           </el-table-column>
           <el-table-column
-            align="center"
-            label="详情图">
-            <template slot-scope="scope">
-              <span>{{scope.row.gmtCreate | outtiame}}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
+            prop="title"
             align="center"
             label="商品标题">
-            <template slot-scope="scope">
-              <span>{{scope.row.gmtCreate | outtiame}}</span>
-            </template>
           </el-table-column>
           <el-table-column
+            prop="categoryName"
             align="center"
             label="所属类目">
-            <template slot-scope="scope">
-              <span>{{scope.row.gmtCreate | outtiame}}</span>
-            </template>
           </el-table-column>
           <el-table-column
+            prop="price"
             align="center"
             label="销售价">
+          </el-table-column>
+          <el-table-column
+            align="center"
+            label="库存">
             <template slot-scope="scope">
-              <span>{{scope.row.gmtCreate | outtiame}}</span>
+              {{scope.row.shopAmount || '0'}}
             </template>
           </el-table-column>
           <el-table-column
             align="center"
-            label="门店库存">
+            label="操作">
             <template slot-scope="scope">
-              <span>{{scope.row.gmtCreate | outtiame}}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            align="center"
-            label="操作"
-            width="100">
-            <template slot-scope="scope">
-              <span class="shopType_span1" @click="bianji(scope.row)"><i class="el-icon-edit"></i>编辑</span>
+              <span @click="remove(scope.row)">删除</span>
             </template>
           </el-table-column>
         </el-table>
@@ -127,58 +88,64 @@
     <!-- 弹窗部分 -- 商品创建编辑 -->
     <div class="shopType_diagio">
       <el-dialog
-        :visible.sync="shopShow">
-        <p class="sdsd">库存编辑</p>
-        <div class="chuangjian_shop_dialog">
-          <el-form ref="form" :model="form" label-width="100px">
-            <el-form-item label="商品编号：">
-              <el-input :disabled="true" v-model="form.name"></el-input>
-            </el-form-item>
-            <el-form-item label="商品主图：">
-              <ul>
-                <li><img src="../../assets/编组 3@2x.png" alt=""></li>
-              </ul>
-            </el-form-item>
-            <el-form-item label="详情图：">
-              <ul>
-                <li><img src="../../assets/编组 3@2x.png" alt=""></li>
-                <li><img src="../../assets/编组 3@2x.png" alt=""></li>
-                <li><img src="../../assets/编组 3@2x.png" alt=""></li>
-                <li><img src="../../assets/编组 3@2x.png" alt=""></li>
-              </ul>
-            </el-form-item>
-            <el-form-item label="商品标题：">
-              <el-input :disabled="true" v-model="form.name"></el-input>
-            </el-form-item>
-            <el-form-item label="商品标签：">
-              <el-select disabled v-model="form.region" placeholder="请选择活动区域">
-                <el-option label="区域一" value="shanghai"></el-option>
-                <el-option label="区域二" value="beijing"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="所在仓位置：">
-              <el-select disabled v-model="form.region" placeholder="请选择活动区域">
-                <el-option label="区域一" value="shanghai"></el-option>
-                <el-option label="区域二" value="beijing"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="所属类目：">
-              <el-select disabled v-model="form.region" placeholder="请选择活动区域">
-                <el-option label="区域一" value="shanghai"></el-option>
-                <el-option label="区域二" value="beijing"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="销售价：">
-              <el-input :disabled="true" v-model="form.name"></el-input>
-            </el-form-item>
-            <el-form-item label="库存数量：">
-              <el-input v-model="form.name"></el-input>
-            </el-form-item>
-            <div class="chuangjian_dialog">
-              <span @click="shopShow = !shopShow">取消</span>
-              <span @click="chuangjianOver">{{sdbgg}}</span>
-            </div>
-          </el-form>
+        :visible.sync="shopShow"
+        width="90vw">
+        <p class="sdsd">新增商品</p>
+        <template>
+          <el-table
+            :data="addlist"
+            stripe
+            style="width: 100%">
+            <el-table-column
+              prop="id"
+              align="center"
+              label="商品ID">
+            </el-table-column>
+            <el-table-column
+              align="center"
+              label="主图">
+              <template slot-scope="scope">
+                <img class="sdfsgerg" :src="scope.row.mainPic" alt="">
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="title"
+              align="center"
+              label="商品标题">
+            </el-table-column>
+            <el-table-column
+              prop="price"
+              align="center"
+              label="销售价">
+            </el-table-column>
+            <el-table-column
+              align="center"
+              label="库存">
+              <template slot-scope="scope">
+                {{scope.row.amount || '0'}}
+              </template>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              label="操作">
+              <template slot-scope="scope">
+                <el-input class="djrgthnfsedsd" v-model="scope.row.buyNum" placeholder="数量"></el-input>
+                <span class="dlfgoerrt" @click="tijaaao(scope.row)">提交</span>
+              </template>
+            </el-table-column>
+          </el-table>
+        </template>
+        <div class="bottom_bottom">
+          <div class="block">
+            <el-pagination
+              @size-change="handleSizeChange"
+              @current-change="handleCurrentChange"
+              :current-page.sync="currentPage1"
+              :page-size="100"
+              layout="total, prev, pager, next"
+              :total="total">
+            </el-pagination>
+          </div>
         </div>
       </el-dialog>
     </div>
@@ -186,30 +153,85 @@
 </template>
 
 <script>
-import { } from '../../api/shop'
+import { InterfaceshopSohp } from '../../api/shop'
+import { InterfaceNewOrderList, InterfaceShopRemove } from '../../api/order'
 export default {
   data () {
     return {
-      form: {
-        name: '',
-        imageUrl: ''
-      },
       currentPage1: 1,
       shopShow: false,
-      sdbgg: '',
       page: '1',
       size: '10',
       total: 0,
       list: [],
-      imageUrl: ''
+      addlist: [],
+      id: this.$route.query.id,
+      parentId: this.$route.query.parentId,
+      shopType: this.$route.query.shopType,
+      add: false,
+      xuanzejihe: [],
+      sghadf: '',
+      shanchuaddS: []
     }
   },
   mounted () {
     this.getlist()
   },
   methods: {
+    // 返回上一页
+    back () {
+      this.$router.go(-1)// 返回上一层
+    },
+    // 删除
+    remove (val) {
+      if (!this.shanchuaddS) {
+        InterfaceShopRemove(this.shanchuaddS).then(data => {
+          this.$message({
+            message: '删除成功',
+            type: 'success'
+          })
+          this.getlist()
+          console.log(data)
+        })
+      } else {
+        this.shanchuaddS = [
+          {
+            productId: val.id,
+            shopId: this.id
+          }
+        ]
+        InterfaceShopRemove(this.shanchuaddS).then(data => {
+          this.$message({
+            message: '删除成功',
+            type: 'success'
+          })
+          this.add = false
+          this.getlist()
+          console.log(data)
+        })
+      }
+    },
+    // 新增按钮
+    sousuo () {
+      this.shopShow = !this.shopShow
+      this.add = true
+      this.getlist()
+    },
     // 获取列表
     getlist () {
+      InterfaceshopSohp({
+        pageNo: this.page,
+        pageSize: this.size,
+        shopId: this.id,
+        parentShopId: this.parentId,
+        add: this.add
+      }).then(data => {
+        if (this.add === false) {
+          this.list = data.records
+        } else {
+          this.addlist = data.records
+        }
+      })
     },
 
     // 分页
@@ -222,25 +244,56 @@ export default {
       this.page = val
       this.getlist()
     },
-
-    // 编辑按钮
-    bianji (row) {
-      this.shopShow = !this.shopShow
-      this.sdbgg = '确定'
-      this.form = row
-      this.imageUrl = this.form.imageUrl
+    // 删除商品多选操作
+    shanchuList (val) {
+      this.shanchuaddS = val.map(item => {
+        return {
+          productId: item.id,
+          shopId: this.id
+        }
+      })
+      console.log(this.shanchuaddS)
     },
-
-    // 确定添加商品或是编辑商品
-    chuangjianOver () {
+    // 新建商品多选操作
+    handleSelectionChange (val) {
+      this.xuanzejihe = val.map(item => {
+        return {
+          id: item.id,
+          buyNum: item.buyNum,
+          itemPrice: item.price,
+          itemName: item.title,
+          itemImg: item.mainPic,
+          label: item.label
+        }
+      })
+      console.log(this.xuanzejihe)
     },
-
-    // 图像上传
-    handleAvatarSuccess (res, file) {
-      this.form.imageUrl = res.data
-      this.imageUrl = URL.createObjectURL(file.raw)
-    },
-    beforeAvatarUpload (file) {
+    // 提交操作
+    tijaaao (val) {
+      this.xuanzejihe = [
+        {
+          id: val.id,
+          buyNum: val.buyNum,
+          itemPrice: val.price,
+          itemName: val.title,
+          itemImg: val.mainPic,
+          label: val.label
+        }
+      ]
+      InterfaceNewOrderList({
+        shopId: this.id,
+        remarks: '',
+        shopType: this.shopType,
+        items: this.xuanzejihe
+      }).then(data => {
+        this.$message({
+          message: '恭喜你，新建成功',
+          type: 'success'
+        })
+        this.add = false
+        this.getlist()
+        this.shopShow = !this.shopShow
+      })
     }
   }
 }
@@ -285,6 +338,14 @@ export default {
       }
     }
     .shopType_diagio {
+      .el-input {
+        width: 50%;
+        margin-right: 10px;
+        .el-input__inner {
+          height: 30px;
+          line-height: 30px;
+        }
+      }
       .el-dialog {
         width: 500px;
         // height: 430px;
@@ -310,23 +371,6 @@ export default {
             padding-left: 24px;
             box-sizing: border-box;
             text-align: left;
-          }
-        }
-      }
-      .chuangjian_shop_dialog {
-        .el-form {
-          padding: 30px 30px;
-          box-sizing: border-box;
-          .el-form-item {
-            height: 100%;
-            .el-form-item__content {
-              height: 100%;
-            }
-          }
-          .el-form-item__content {
-            .el-input {
-              width: 200px;
-            }
           }
         }
       }
@@ -360,6 +404,13 @@ export default {
 </style>
 
 <style lang="less" scoped>
+  .dlfgoerrt {
+    line-height: 40px;
+  }
+  .sdfsgerg {
+    width: 30px;
+    height: 30px;
+  }
   .shopType {
     padding: 0 15px;
     box-sizing: border-box;
@@ -389,7 +440,6 @@ export default {
         font-family: MicrosoftYaHei;
         color: #2B80FD;
         line-height: 17px;
-        margin-right: 30px;
       }
       .shopType_span2 {
         font-size: 13px;
@@ -453,21 +503,6 @@ export default {
       color: #FFFFFF;
       line-height: 35px;
       text-align: center;
-    }
-  }
-  .chuangjian_shop_dialog {
-    ul {
-      list-style: none;
-      li {
-        display: inline-block;
-        width: 50px;
-        height: 50px;
-        margin: 5px;
-        img {
-          width: 50px;
-          height: 50px;
-        }
-      }
     }
   }
 </style>

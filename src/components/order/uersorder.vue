@@ -2,7 +2,7 @@
   <div class="shopList">
     <!-- 头部部分 -->
     <div class="BanNer_top">
-      <p>· 订单管理  订单列表</p>
+      <p>· 订单管理  用户订单列表</p>
       <!-- <div @click="chuangjian">创建Banner</div> -->
       <div class="BanNer_top_p">
         <span>创建时间：</span>
@@ -46,9 +46,11 @@
             label="收件人信息">
           </el-table-column>
           <el-table-column
-            prop="logisticsType"
             align="center"
             label="物流方式">
+            <template slot-scope="scope">
+              <span>{{scope.row.logisticsType == 1 ? '自提' : '配送'}}</span>
+            </template>
           </el-table-column>
           <el-table-column
             prop="totalGoodsPrice"
@@ -61,14 +63,14 @@
             label="订单状态">
           </el-table-column>
           <el-table-column
-            prop="utletsoName"
-            align="center"
-            label="所属网点">
-          </el-table-column>
-          <el-table-column
             prop="coreName"
             align="center"
             label="所属中心">
+          </el-table-column>
+          <el-table-column
+            prop="shopName"
+            align="center"
+            label="所属门店">
           </el-table-column>
           <el-table-column
             prop="buyMobile"
@@ -116,17 +118,17 @@
           </p>
           <p class="uers_p">
             <span></span>
-            <span>订单信息</span>
+            <span>订货信息</span>
           </p>
           <p class="uers_p1">
             <span>收货人姓名：{{Content.userName}}</span>
-            <span>手机号：{{Content.takeMobile}}</span>
+            <span>手机号：{{Content.buyMobile}}</span>
             <span>详细地址：{{Content.takeAddress}}</span>
-            <span>物流方式：{{Content.takeAddress == 1 ? '自提' : '配送'}}</span>
+            <span>物流方式：{{Content.logisticsType == 1 ? '自提' : '配送'}}</span>
           </p>
           <p class="uers_p">
             <span></span>
-            <span>订单信息</span>
+            <span>商品信息</span>
           </p>
           <div>
             <ul class="uers_log">
@@ -228,7 +230,6 @@ export default {
       }).then(data => {
         this.Content = data[0]
         this.shopxContent = this.Content.adminGoodsList
-        console.log('555', this.shopxContent)
       })
       this.dialogVisible = !this.dialogVisible
     }
@@ -476,6 +477,10 @@ export default {
               box-sizing: border-box;
               margin-bottom: 5px;
               span {
+                display:block;
+                white-space:nowrap;
+                overflow:hidden;
+                text-overflow:ellipsis;
                 flex: 1;
                 text-align: center;
                 font-size: 13px;

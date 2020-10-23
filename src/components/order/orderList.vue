@@ -1,32 +1,38 @@
 <template>
-  <div class="shopList">
-    <!-- 头部部分 -->
-    <div class="BanNer_top">
-      <p>· 订单管理  订货订单列表</p>
-      <!-- <div @click="chuangjian">创建Banner</div> -->
-      <div class="BanNer_top_p">
-        <span>创建时间：</span>
-        <el-date-picker
-          v-model="dkjfg"
-          type="daterange"
-          range-separator="至"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期">
-        </el-date-picker>
-        <span>订单号：</span>
-        <el-input v-model="form.orderId" placeholder="请输入内容"></el-input>
-        <div>
-          <span @click="qingkong">重置</span>
-          <span @click="sousuo">搜索</span>
-          <span @click="Eexport">批量导出</span>
-        </div>
-      </div>
+  <div class="shopType">
+    <!-- 商品类目创建头部 -->
+    <div class="shopType_top">
+      <span>· 订单管理</span>
+      <span>拨货订单</span>
     </div>
-    <!-- 内容部分 -->
-    <div class="BanNer_content">
+    <div class="top">
+      <span>选择中心仓</span>
+      <el-select v-model="zhogxinID" placeholder="请选择" @change="skjferg">
+        <el-option
+          v-for="item in zhongxinList"
+          :key="item.id"
+          :label="item.title"
+          :value="item.id">
+        </el-option>
+      </el-select>
+
+      <span>选择门店</span>
+      <el-select v-model="mwndianID" placeholder="请选择">
+        <el-option
+          v-for="item in mwndianList"
+          :key="item.id"
+          :label="item.title"
+          :value="item.id">
+        </el-option>
+      </el-select>
+
+      <span @click="sousuo">搜索</span>
+    </div>
+    <!-- 表格部分 -->
+    <div class="shopType_content">
       <template>
         <el-table
-          :data="tableData"
+          :data="list"
           stripe
           style="width: 100%">
           <el-table-column
@@ -37,25 +43,17 @@
           <el-table-column
             prop="gmtCreate"
             align="center"
-            label="下单时间">
+            label="操作时间">
           </el-table-column>
           <el-table-column
-            prop="userName"
+            prop="totalGoodsNum"
             align="center"
-            label="收件人信息">
+            label="拨货数量">
           </el-table-column>
           <el-table-column
             prop="shopName"
             align="center"
-            label="门店名称">
-          </el-table-column>
-          <el-table-column
-            prop="orderStatus"
-            align="center"
-            label="订单状态">
-            <template slot-scope="scope">
-              <span class="sdreg">{{scope.row.orderStatus | orderStatusFilter}}</span>
-            </template>
+            label="所属门店">
           </el-table-column>
           <el-table-column
             prop="coreName"
@@ -63,16 +61,11 @@
             label="所属中心">
           </el-table-column>
           <el-table-column
-            prop="shopMobile"
-            align="center"
-            label="门店手机号">
-          </el-table-column>
-          <el-table-column
             align="center"
             label="查看详情"
-            width="80">
+            width="100">
             <template slot-scope="scope">
-              <span class="sdreg" @click="bianji(scope.row.tradeParentId)"><i class="el-icon-edit"></i>详情</span>
+              <span class="shopType_span1" @click="bianji(scope.row.tradeParentId)"><i class="el-icon-edit"></i>订单详情</span>
             </template>
           </el-table-column>
         </el-table>
@@ -91,10 +84,12 @@
         </el-pagination>
       </div>
     </div>
-    <!-- 弹窗部分 -- 编辑/创建 -->
-    <div class="mendian_diagio">
+    <!-- dialog弹窗 -->
+
+    <!-- 弹窗部分 -- 商品创建编辑 -->
+    <div class="shopType_diagio">
       <el-dialog
-        :visible.sync="dialogVisible">
+        :visible.sync="shopShow">
         <p class="sdsd">订单详情</p>
         <div class="uers_dialog">
           <p class="uers_p">
@@ -103,16 +98,10 @@
           </p>
           <p class="uers_p1">
             <span>订单号：{{Content.tradeParentId}}</span>
-            <span>订单状态：{{Content.orderStatus | orderStatusFilter}}</span>
-          </p>
-          <p class="uers_p">
-            <span></span>
-            <span>订货信息</span>
-          </p>
-          <p class="uers_p1">
-            <span>订货人姓名：{{Content.shopUserName}}</span>
-            <span>手机号：{{Content.shopMobile}}</span>
-            <span style="width:100%">详细地址：{{Content.shopAddress}}</span>
+            <span>门店名称：{{Content.shopName}}</span>
+            <span>负责人姓名：{{Content.shopUserName}}</span>
+            <span>负责人手机号：{{Content.shopMobile}}</span>
+            <span class="dkjfgt">门店详细地址：{{Content.shopAddress}}</span>
           </p>
           <p class="uers_p">
             <span></span>
@@ -143,107 +132,99 @@
 </template>
 
 <script>
+import { InterfaceDropdownList, InterfaceDropdownlastList } from '../../api/system'
+// import { InterfaceQueryOrderList } from '../../api/shop'
 import { InterfaceOrderList, InterfaceQueryOrderList } from '../../api/order'
 export default {
   data () {
     return {
-      tableData: [],
-      dialogVisible: false,
-      dialogVisible1: false,
       currentPage1: 1,
-
-      form: {
-        orderType: 1,
-        orderId: '',
-        orderStatus: '',
-        beginCreTime: '',
-        endCreTime: '',
-        pageNo: '1',
-        pageSize: '10'
-      },
-      dkjfg: [],
+      shopShow: false,
+      page: '1',
+      size: '10',
+      total: 0,
+      list: [],
+      imageUrl: '',
+      zhongxinList: [],
+      mwndianList: [],
+      zhogxinID: '',
+      mwndianID: '',
       Content: {},
-      shopxContent: [],
-      total: 0
+      details: {},
+      shopxContent: []
     }
   },
   mounted () {
+    this.gettypeList()
     this.getlist()
   },
   methods: {
-    // 导出
-    Eexport () {},
-    // 清空
-    qingkong () {
-      this.form = {
-        orderType: 1,
-        orderId: '',
-        orderStatus: '',
-        beginCreTime: '',
-        endCreTime: '',
-        pageNo: '1',
-        pageSize: '10'
-      }
+    // 获取下拉数据
+    gettypeList () {
+      InterfaceDropdownList({
+        type: 1
+      }).then(data => {
+        this.zhongxinList = data
+      })
+    },
+    // 获取子级列表
+    skjferg () {
+      InterfaceDropdownlastList({
+        parentId: this.zhogxinID
+      }).then(data => {
+        this.mwndianList = data
+      })
+    },
+    sousuo () {
       this.getlist()
     },
     // 获取列表
     getlist () {
-      InterfaceOrderList(this.form).then(data => {
-        this.tableData = data
+      InterfaceOrderList({
+        orderType: 3,
+        pageNo: this.page,
+        pageSize: this.size,
+        storeShopId: this.mwndianID
+      }).then(data => {
         console.log(data)
+        this.list = data
       })
     },
+
     // 分页
     handleSizeChange (val) {
-      this.form.pageSize = val
+      this.size = val
       this.getlist()
     },
+
     handleCurrentChange (val) {
-      this.form.pageNo = val
+      this.page = val
       this.getlist()
     },
+
     // 编辑按钮
     bianji (id) {
-      const orderId = id
+      this.shopShow = !this.shopShow
       InterfaceQueryOrderList({
-        orderId: orderId
+        orderId: id
       }).then(data => {
         this.Content = data[0]
         this.shopxContent = this.Content.adminGoodsList
         console.log('555', this.shopxContent)
       })
-      this.dialogVisible = !this.dialogVisible
     },
-    // 搜索
-    sousuo () {
-      this.form.beginCreTime = this.dkjfg[0]
-      this.form.endCreTime = this.dkjfg[1]
-      this.getlist()
+
+    // 确定添加商品或是编辑商品
+    chuangjianOver () {
+
     }
   }
 }
 </script>
 
 <style lang="less">
-  .shopList {
-    .BanNer_top_p {
-      line-height: 20px;
-      text-align: left;
-      .el-input {
-        height: 30px;
-        display: inline-block;
-        width: 200px;
-        margin-right: 20px;
-        .el-input__icon {
-          line-height: 30px;
-        }
-      }
-      .el-input__inner {
-        height: 30px;
-        line-height: 30px;
-      }
-    }
-    .BanNer_content {
+  .shopType {
+    .shopType_content {
       .el-table {
         line-height: 40px !important;
         border-radius: 6px 6px 0px 0px;
@@ -279,8 +260,7 @@ export default {
         background-color: #D7E5FB;
       }
     }
-
-    .mendian_diagio {
+    .shopType_diagio {
       .el-dialog {
         width: 500px;
         // height: 430px;
@@ -336,65 +316,46 @@ export default {
 </style>
 
 <style lang="less" scoped>
-  .shopList {
+  .shopType {
     padding: 0 15px;
     box-sizing: border-box;
-    // ---------------------------
-    .BanNer_top {
-      position: relative;
-      // height: 90px;
-      .BanNer_top_p {
-        div {
-          margin-bottom: 40px;
-          text-align: center;
-          span {
-            display: inline-block;
-            width: 100px;
-            height: 35px;
-            background: #2B80FD;
-            border-radius: 18px;
-            font-size: 12px;
-            font-family: MicrosoftYaHei;
-            color: #FFFFFF;
-            line-height: 35px;
-            text-align: center;
-          }
-          span:last-child {
-            background: #FF8C14;
-            margin-left: 40px;
-          }
-          span:first-child {
-            background: #ffffff;
-            color: #2B80FD;
-            border: 1px solid #2B80FD;
-            margin-right: 40px;
-          }
-        }
-      }
-      p {
-        text-align: left;
-        line-height: 90px;
+    .shopType_top {
+      line-height: 92px;
+      span {
         font-size: 18px;
         font-family: MicrosoftYaHei-Bold, MicrosoftYaHei;
         font-weight: bold;
         color: #2B80FD;
-        span {
-          display: inline-block;
-          width: 7px;
-          height: 7px;
-          border-radius: 4px;
-          background: #2B80FD;
-          margin: 0 10px;
-        }
+      }
+      span:last-child {
+        font-size: 18px;
+        font-family: MicrosoftYaHei;
+        color: #2B80FD;
+        font-weight: 400;
+        margin-left: 30px;
       }
     }
-    // -----------------------------
-    .BanNer_content {
-      margin-top: 10px;
-      .sdreg {
+    .shopType_content {
+      .sdfsgerg {
+        width: 30px;
+        height: 30px;
+      }
+      .shopType_span1 {
         font-size: 13px;
         font-family: MicrosoftYaHei;
         color: #2B80FD;
+        line-height: 17px;
+      }
+      .shopType_span2 {
+        font-size: 13px;
+        font-family: MicrosoftYaHei;
+        color: #2B80FD;
+        line-height: 17px;
+      }
+      .shopType_span22 {
+        font-size: 13px;
+        font-family: MicrosoftYaHei;
+        color: #FF8C14;
         line-height: 17px;
       }
     }
@@ -409,7 +370,7 @@ export default {
         float: right;
       }
     }
-    .mendian_diagio {
+    .shopType_diagio {
       .uers_dialog {
         padding: 10px;
         box-sizing: border-box;
@@ -433,6 +394,11 @@ export default {
         .uers_p1 {
           padding: 0 10px;
           box-sizing: border-box;
+          .dkjfgt {
+            // display: block;
+            width: 100%;
+            line-height: 25px;
+          }
           span {
             display: inline-block;
             width: 50%;
@@ -459,7 +425,10 @@ export default {
             li {
               display: flex;
               background: #F2F6FF;
-              height: 30px;
+              align-items: center;
+              padding: 5px 0;
+              box-sizing: border-box;
+              margin-bottom: 5px;
               span {
                 display:block;
                 white-space:nowrap;
@@ -467,7 +436,6 @@ export default {
                 text-overflow:ellipsis;
                 flex: 1;
                 text-align: center;
-                line-height: 30px;
                 font-size: 13px;
                 font-family: MicrosoftYaHei;
                 color: #333333;
@@ -478,6 +446,38 @@ export default {
               }
             }
           }
+        }
+      }
+    }
+  }
+  .top {
+    span {
+      margin: 0 20px 20px 50px;
+    }
+    span:last-child {
+      display: inline-block;
+      width: 100px;
+      height: 35px;
+      background: #2B80FD;
+      border-radius: 18px;
+      font-size: 12px;
+      font-family: MicrosoftYaHei;
+      color: #FFFFFF;
+      line-height: 35px;
+      text-align: center;
+    }
+  }
+  .chuangjian_shop_dialog {
+    ul {
+      list-style: none;
+      li {
+        display: inline-block;
+        width: 50px;
+        height: 50px;
+        margin: 5px;
+        img {
+          width: 50px;
+          height: 50px;
         }
       }
     }

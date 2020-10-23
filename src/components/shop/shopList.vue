@@ -62,7 +62,7 @@
             align="center"
             label="所在仓位置">
             <template slot-scope="scope">
-              <span>{{scope.row.storeHouse === 1 ? '门店' : (scope.row.storeHouse === 2 ? '网点' : '中心仓库')}}</span>
+              <span>{{scope.row.storeHouse === 1 ? '门店' : (scope.row.storeHouse === 2 ? '中心仓库' : '')}}</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -256,14 +256,12 @@ export default {
         label: ''
       },
       dfgsdf: [
-        { value: '三日达', label: '三日达' },
         { value: '隔日达', label: '隔日达' },
         { value: '当日达', label: '当日达' }
       ],
       fghty: [
         { value: '1', label: '门店' },
-        { value: '2', label: '网点' },
-        { value: '3', label: '中心仓库' }
+        { value: '2', label: '中心仓库' }
       ],
       urls: [],
       total: 0,
