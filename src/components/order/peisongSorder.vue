@@ -63,9 +63,11 @@
             label="订单编号">
           </el-table-column>
           <el-table-column
-            prop="gmtCreate"
             align="center"
             label="下单时间">
+            <template slot-scope="scope">
+              <span>{{scope.row.gmtCreate.substring(0, 10)}}</span>
+            </template>
           </el-table-column>
           <!-- <el-table-column
             prop="userName"
@@ -147,9 +149,9 @@
             <span>订单号：{{Content.tradeParentId}}</span>
             <span>订单状态：{{Content.orderStatus | orderStatusFilter}}</span>
             <span>实付金额：{{Content.totalGoodsPrice}}元</span>
-            <span>收货人姓名：{{Content.gmtCreate}}</span>
-            <span>收货人手机号：{{Content.takeMobile}}</span>
-            <span>收货人地址：{{Content.takeAddress}}</span>
+            <span>收货人姓名：{{ContentS.receiverName}}</span>
+            <span>收货人手机号：{{ContentS.receiverPhone}}</span>
+            <span style="width:100%">收货人地址：{{ContentS.receiverAddress}}</span>
             <span>所属门店：{{Content.shopName}}</span>
             <span>所属网点：{{Content.utletsoName}}</span>
             <span>所属中心：{{Content.coreName}}</span>
@@ -213,11 +215,13 @@ export default {
         pageSize: '10',
         coreShopId: '',
         outletsShopId: '',
-        storeShopId: ''
+        storeShopId: '',
+        logisticsType: 2
       },
       dkjfg: [],
       Content: {},
       shopxContent: [],
+      ContentS: [],
       total: 0,
       zhongxinList: [],
       wangdianList: [],
@@ -256,10 +260,10 @@ export default {
     // 获取列表
     getlist () {
       InterfaceOrderList(this.form).then(data => {
-        console.log(data)
+        // console.log(data)
         this.tableData = data
         this.total = data.length
-        console.log(data)
+        // console.log(data)
       })
     },
     // 分页
@@ -278,6 +282,7 @@ export default {
         orderId: orderId
       }).then(data => {
         this.Content = data[0]
+        this.ContentS = this.Content.addressList[0]
         this.shopxContent = this.Content.adminGoodsList
       })
       this.dialogVisible = !this.dialogVisible
@@ -298,7 +303,7 @@ export default {
         if (b === 1) {
           this.wangdianList = data
         } else {
-          console.log(data)
+          // console.log(data)
           this.mwndianList = data
         }
       })

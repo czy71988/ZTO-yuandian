@@ -63,9 +63,11 @@
             label="订单编号">
           </el-table-column>
           <el-table-column
-            prop="gmtCreate"
             align="center"
             label="下单时间">
+            <template slot-scope="scope">
+              <span>{{scope.row.gmtCreate.substring(0, 10)}}</span>
+            </template>
           </el-table-column>
           <el-table-column
             prop="pickNum"
@@ -147,7 +149,7 @@
             <span>订单号：{{Content.tradeParentId}}</span>
             <span>订单状态：{{Content.orderStatus | orderStatusFilter}}</span>
             <span>实付金额：{{Content.totalGoodsPrice}}元</span>
-            <span>下单时间：{{Content.gmtCreate}}</span>
+            <span>下单时间：{{time.substring(0, 10)}}</span>
             <span>取货码：{{Content.pickNum}}</span>
             <span>买家手机号：{{Content.buyMobile}}</span>
             <span>所属门店：{{Content.shopName}}</span>
@@ -213,7 +215,8 @@ export default {
         pageSize: '10',
         coreShopId: '',
         outletsShopId: '',
-        storeShopId: ''
+        storeShopId: '',
+        logisticsType: 1
       },
       dkjfg: [],
       Content: {},
@@ -221,7 +224,8 @@ export default {
       total: 0,
       zhongxinList: [],
       wangdianList: [],
-      mwndianList: []
+      mwndianList: [],
+      time: ''
     }
   },
   mounted () {
@@ -278,6 +282,7 @@ export default {
         orderId: orderId
       }).then(data => {
         this.Content = data[0]
+        this.time = this.Content.gmtCreate
         this.shopxContent = this.Content.adminGoodsList
       })
       this.dialogVisible = !this.dialogVisible

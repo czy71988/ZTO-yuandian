@@ -49,9 +49,11 @@
             label="订单编号">
           </el-table-column>
           <el-table-column
-            prop="gmtCreate"
             align="center"
             label="操作时间">
+            <template slot-scope="scope">
+              <span>{{scope.row.gmtCreate.substring(0, 10)}}</span>
+            </template>
           </el-table-column>
           <el-table-column
             prop="totalGoodsNum"
