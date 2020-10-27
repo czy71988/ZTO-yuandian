@@ -50,7 +50,6 @@
                   <el-menu-item-group>
                     <el-menu-item index="/shopList">商品列表</el-menu-item>
                     <el-menu-item index="/shopType">商品类目创建</el-menu-item>
-                    <!-- <el-menu-item index="/Commodi">门店商品管理</el-menu-item> -->
                   </el-menu-item-group>
                 </el-submenu>
 
@@ -59,11 +58,10 @@
                     <img class="dsfg" src="../assets/编组 7@2x.png" alt="">
                     <span :class="index === '4' ? 'sdawe' : ''">订单管理</span>
                   </template>
-                  <el-menu-item-group>
-                    <el-menu-item index="/uersorder">用户订单</el-menu-item>
-                    <el-menu-item index="/ordergoods">订货订单</el-menu-item>
-                    <el-menu-item index="/orderList">拨货订单</el-menu-item>
-                  </el-menu-item-group>
+                  <el-menu-item index="/uersorder">自提订单</el-menu-item>
+                  <el-menu-item index="/peisongSorder">配送订单</el-menu-item>
+                  <el-menu-item index="/ordergoods">订货订单</el-menu-item>
+                  <el-menu-item index="/orderList">拨货订单</el-menu-item>
                 </el-submenu>
 
                 <el-submenu index="5">
@@ -73,7 +71,7 @@
                   </template>
                   <el-menu-item-group>
                     <el-menu-item index="/mendian">门店管理</el-menu-item>
-                    <!-- <el-menu-item index="/wangidan">网点管理</el-menu-item> -->
+                    <el-menu-item index="/wangidan">网点管理</el-menu-item>
                     <el-menu-item index="/zhongxin">中心仓管理</el-menu-item>
                   </el-menu-item-group>
                 </el-submenu>

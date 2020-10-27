@@ -10,7 +10,7 @@
         <span>手机号：</span>
         <el-input v-model="from.phone" placeholder="请输入内容"></el-input>
         <span>所属中心仓：</span>
-        <el-select v-model="from.parentId" placeholder="请选择">
+        <el-select v-model="dkjgbkebr" placeholder="请选择" @change="sjferg">
           <el-option
             label="全部"
             value="">
@@ -22,7 +22,20 @@
             :value="item.id">
           </el-option>
         </el-select>
-        <span>门店状态：</span>
+        <span>所属网点：</span>
+        <el-select v-model="from.parentId" placeholder="请选择">
+          <el-option
+            label="全部"
+            value="">
+          </el-option>
+          <el-option
+            v-for="item in djjgierig"
+            :key="item.id"
+            :label="item.title"
+            :value="item.id">
+          </el-option>
+        </el-select>
+        <span>配送方式：</span>
         <el-select v-model="from.state" placeholder="请选择">
           <el-option
             v-for="item in options"
@@ -47,7 +60,8 @@
           <el-table-column
             prop="id"
             align="center"
-            label="店铺编号">
+            label="店铺编号"
+            width="100">
           </el-table-column>
           <el-table-column
             prop="title"
@@ -102,15 +116,24 @@
             prop="parentTitle"
             align="center"
             width="100"
-            label="所属中心仓">
+            label="所属网点">
+          </el-table-column>
+          <el-table-column
+            align="center"
+            width="100"
+            label="配送方式">
+            <template slot-scope="scope">
+              <p>{{scope.row.eleme === 1 ? '蜂鸟配送' : '门店配送'}}</p>
+            </template>
           </el-table-column>
           <el-table-column
             align="center"
             label="操作"
-            width="150">
+            width="200">
             <template slot-scope="scope">
               <span class="sdreg aefsdgf" @click="bianji(scope.row)"><i class="el-icon-edit"></i>编辑</span>
-              <span class="sdreg" @click="CommodityManagement(scope.row.id, scope.row.parentId)"><i class=""></i>商品管理</span>
+              <span class="sdreg aefsdgf" @click="CommodityManagement(scope.row.id, scope.row.parentId)"><i class=""></i>商品管理</span>
+              <span class="sdreg"><i class="el-icon-sort"></i>上架</span>
             </template>
           </el-table-column>
         </el-table>
@@ -147,17 +170,16 @@
                 <el-input v-model="form.managerName"></el-input>
               </el-form-item>
               <el-form-item label="手机号码：">
-                <el-input v-model="form.phone"></el-input>
+                <el-input v-if="biaotiname !== '新增门店'" v-model="form.phone" :disabled="true"></el-input>
+                <el-input v-else v-model="form.phone"></el-input>
               </el-form-item>
               <el-form-item label="门店地址：">
-                <!-- <el-input v-model="form.address"></el-input> -->
                 <el-input v-model="form.address" class="input-with-select">
                   <el-button @click="ditu" slot="append" icon="el-icon-location-information"></el-button>
                 </el-input>
               </el-form-item>
               <el-form-item label="状态：">
-                <!-- <el-switch active-value='1' inactive-value="0"  v-model="form.state"></el-switch> -->
-                <el-tooltip :content="'Switch value: ' + form.state" placement="top">
+                <el-tooltip :content="form.state === 1 ? '开启' : '关闭'" placement="top">
                   <el-switch
                     v-model="form.state"
                     active-color="#13ce66"
@@ -173,9 +195,20 @@
               <el-form-item label="纬度：">
                 <el-input v-model="form.latitude"></el-input>
               </el-form-item>
-              <el-form-item label="所属中心仓：">
+              <el-form-item label="蜂鸟配送：">
+                <el-tooltip :content="form.eleme === 1 ? '蜂鸟配送' : '门店自提'" placement="top">
+                  <el-switch
+                    v-model="form.eleme"
+                    active-color="#13ce66"
+                    inactive-color="#ff4949"
+                    :active-value="1"
+                    :inactive-value="0">
+                  </el-switch>
+                </el-tooltip>
+              </el-form-item>
+              <el-form-item label="所属网点：">
                 <el-select v-model="form.parentId">
-                  <el-option v-for="item in sjdh" :key="item.id" :label="item.title" :value="item.id"></el-option>
+                  <el-option v-for="item in sdfswfsdd" :key="item.id" :label="item.title" :value="item.id"></el-option>
                 </el-select>
               </el-form-item>
               <p class="sdferg">
@@ -201,7 +234,7 @@
 </template>
 
 <script>
-import { InterfaceShop, InterfaceDropdownList, InterfaceAddShop, InterfaceUpShop } from '../../api/system'
+import { InterfaceShop, InterfaceDropdownList, InterfaceAddShop, InterfaceUpShop, InterfaceDropdownlastList } from '../../api/system'
 import MapSelector from '../../components/map-selector/MapSelector'
 export default {
   components: {
@@ -224,9 +257,11 @@ export default {
         state: '',
         longitude: '',
         latitude: '',
-        // parentId: '',
-        type: 2
+        parentId: '',
+        type: 2,
+        eleme: ''
       },
+      dkjgbkebr: '',
       from: {
         pageNo: '1',
         pageSize: '10',
@@ -238,10 +273,12 @@ export default {
         state: ''
       },
       sjdh: [],
+      sdfswfsdd: [],
+      djjgierig: [],
       options: [
         { value: '', label: '全部' },
-        { value: '1', label: '启用' },
-        { value: '0', label: '禁用' }
+        { value: '1', label: '自提' },
+        { value: '2', label: '配送' }
       ],
       total: 0
     }
@@ -249,6 +286,7 @@ export default {
   mounted () {
     this.getlist()
     this.getType()
+    this.sgeugb()
   },
   methods: {
     sousupo () {
@@ -265,7 +303,8 @@ export default {
         longitude: '',
         latitude: '',
         parentId: '',
-        type: 2
+        type: 2,
+        eleme: ''
       }
     },
     // 商品管理
@@ -295,8 +334,21 @@ export default {
       InterfaceDropdownList({
         type: 1
       }).then(data => {
-        console.log('中心仓', data)
         this.sjdh = data
+      })
+    },
+    sgeugb () {
+      InterfaceDropdownList({
+        type: 3
+      }).then(data => {
+        this.sdfswfsdd = data
+      })
+    },
+    sjferg () {
+      InterfaceDropdownlastList({
+        parentId: this.dkjgbkebr
+      }).then(data => {
+        this.djjgierig = data
       })
     },
     // 分页

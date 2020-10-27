@@ -40,3 +40,13 @@ export function InterfaceShopRemove (data, catchConfig) {
   }, catchConfig)
   return req
 }
+
+// 订单导出
+export function Interfaceorderexport (data, catchConfig) {
+  const req = request({
+    method: 'get',
+    url: '/youmi-fresh/admin/order/adminExcelOrderInfo',
+    data
+  }, catchConfig)
+  return req
+}

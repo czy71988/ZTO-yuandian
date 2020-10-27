@@ -14,6 +14,7 @@ import zhongxin from '@/components/xitongshezhi/zhongxin.vue'
 import uersorder from '@/components/order/uersorder.vue'
 import ordergoods from '@/components/order/ordergoods.vue'
 import orderList from '@/components/order/orderList.vue'
+import peisongSorder from '@/components/order/peisongSorder.vue'
 
 Vue.use(VueRouter)
 
@@ -54,6 +55,11 @@ const routes = [
       {
         path: '/uersorder',
         component: uersorder
+      },
+
+      {
+        path: '/peisongSorder',
+        component: peisongSorder
       },
       {
         path: '/orderList',

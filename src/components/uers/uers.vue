@@ -6,6 +6,15 @@
       <div class="BanNer_top_p">
         <span>手机号：</span>
         <el-input v-model="denglufrom.dengluphone" placeholder="请输入内容"></el-input>
+        <span>是否商家：</span>
+        <el-select v-model="value" placeholder="请选择">
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
         <div>
           <span>搜索</span>
           <span>批量导出</span>
@@ -23,6 +32,11 @@
             prop="id"
             align="center"
             label="ID">
+          </el-table-column>
+          <el-table-column
+            prop="id"
+            align="center"
+            label="微信号">
           </el-table-column>
           <el-table-column
             align="center"
@@ -58,11 +72,26 @@
             width="200"
             label="购买总金额">
           </el-table-column>
-          <!-- <el-table-column
+          <el-table-column
             prop="shopName"
             align="center"
             label="所属门店">
-          </el-table-column> -->
+          </el-table-column>
+          <el-table-column
+            prop="shopName"
+            align="center"
+            label="所属网点">
+          </el-table-column>
+          <el-table-column
+            prop="shopName"
+            align="center"
+            label="所属中心">
+          </el-table-column>
+          <el-table-column
+            prop="shopName"
+            align="center"
+            label="用户地址">
+          </el-table-column>
           <el-table-column
             align="center"
             label="禁用/启用">
@@ -123,6 +152,10 @@ export default {
         pageNo: '1',
         pageSize: '10'
       },
+      options: [
+        { value: 1, label: '是' },
+        { value: 2, label: '否' }
+      ],
       total: 0
     }
   },

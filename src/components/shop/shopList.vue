@@ -71,12 +71,14 @@
             label="销售价">
           </el-table-column>
           <el-table-column
-            prop="price"
+            prop="categoryName"
             align="center"
             label="商品类目">
-            <template slot-scope="scope">
-              <span>{{scope.row.categoryName}}</span>
-            </template>
+          </el-table-column>
+          <el-table-column
+            prop="amount"
+            align="center"
+            label="库存数量">
           </el-table-column>
           <el-table-column
             align="center"
@@ -175,7 +177,7 @@
                 <img width="100%" :src="dialogImageUrl.url" alt="">
               </el-dialog>
             </el-form-item>
-            <el-form-item label="商品标签：">
+            <!-- <el-form-item label="商品标签：">
               <el-select v-model="form.label" placeholder="请选择">
                 <el-option
                   v-for="item in dfgsdf"
@@ -184,7 +186,7 @@
                   :value="item.value">
                 </el-option>
               </el-select>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item label="所在仓位置：">
               <el-select v-model="form.storeHouse" placeholder="请选择活动区域">
                 <el-option

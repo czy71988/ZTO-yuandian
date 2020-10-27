@@ -15,6 +15,33 @@
         </el-date-picker>
         <span>订单号：</span>
         <el-input v-model="form.orderId" placeholder="请输入内容"></el-input>
+        <span>选择中心仓：</span>
+        <el-select v-model="form.coreShopId" placeholder="请选择" @change="skjfergs(form.coreShopId, 1)">
+          <el-option
+            v-for="item in zhongxinList"
+            :key="item.id"
+            :label="item.title"
+            :value="item.id">
+          </el-option>
+        </el-select>
+        <span>选择网点：</span>
+        <el-select v-model="form.outletsShopId" placeholder="请选择" @change="skjfergs(form.outletsShopId, 2)">
+          <el-option
+            v-for="item in wangdianList"
+            :key="item.id"
+            :label="item.title"
+            :value="item.id">
+          </el-option>
+        </el-select>
+        <span>选择门店：</span>
+        <el-select v-model="form.storeShopId" placeholder="请选择">
+          <el-option
+            v-for="item in mwndianList"
+            :key="item.id"
+            :label="item.title"
+            :value="item.id">
+          </el-option>
+        </el-select>
         <div>
           <span @click="qingkong">重置</span>
           <span @click="sousuo">搜索</span>
@@ -56,6 +83,11 @@
             <template slot-scope="scope">
               <span class="sdreg">{{scope.row.orderStatus | orderStatusFilter}}</span>
             </template>
+          </el-table-column>
+          <el-table-column
+            prop="utletsoName"
+            align="center"
+            label="所属网点">
           </el-table-column>
           <el-table-column
             prop="coreName"
@@ -107,12 +139,13 @@
           </p>
           <p class="uers_p">
             <span></span>
-            <span>订货信息</span>
+            <span>门店信息</span>
           </p>
           <p class="uers_p1">
-            <span>订货人姓名：{{Content.shopUserName}}</span>
+            <span>门店名称：{{Content.shopName}}</span>
+            <span>店主姓名：{{Content.shopUserName}}</span>
             <span>手机号：{{Content.shopMobile}}</span>
-            <span style="width:100%">详细地址：{{Content.shopAddress}}</span>
+            <span style="width:100%">门店地址：{{Content.shopAddress}}</span>
           </p>
           <p class="uers_p">
             <span></span>
@@ -143,7 +176,8 @@
 </template>
 
 <script>
-import { InterfaceOrderList, InterfaceQueryOrderList } from '../../api/order'
+import { InterfaceOrderList, InterfaceQueryOrderList, Interfaceorderexport } from '../../api/order'
+import { InterfaceDropdownList, InterfaceDropdownlastList } from '../../api/system'
 export default {
   data () {
     return {
@@ -159,20 +193,42 @@ export default {
         beginCreTime: '',
         endCreTime: '',
         pageNo: '1',
-        pageSize: '10'
+        pageSize: '10',
+        coreShopId: '',
+        outletsShopId: '',
+        storeShopId: ''
       },
       dkjfg: [],
       Content: {},
       shopxContent: [],
-      total: 0
+      total: 0,
+      zhongxincang: '',
+      wangdain: '',
+      mendian: '',
+      zhongxinList: [],
+      wangdianList: [],
+      mwndianList: []
     }
   },
   mounted () {
     this.getlist()
+    this.getzhongxincangList()
   },
   methods: {
     // 导出
-    Eexport () {},
+    Eexport () {
+      Interfaceorderexport({
+        orderType: 1,
+        orderId: '',
+        orderStatus: '',
+        beginCreTime: '',
+        endCreTime: '',
+        pageNo: '',
+        pageSize: ''
+      }).then(data => {
+        alert('导出')
+      })
+    },
     // 清空
     qingkong () {
       this.form = {
@@ -182,7 +238,10 @@ export default {
         beginCreTime: '',
         endCreTime: '',
         pageNo: '1',
-        pageSize: '10'
+        pageSize: '10',
+        coreShopId: '',
+        outletsShopId: '',
+        storeShopId: ''
       }
       this.getlist()
     },
@@ -193,6 +252,28 @@ export default {
         console.log(data)
       })
     },
+    // 获取筛选中心仓
+    getzhongxincangList () {
+      InterfaceDropdownList({
+        type: 1
+      }).then(data => {
+        this.zhongxinList = data
+      })
+    },
+    // 获取筛选网点
+    skjfergs (a, b) {
+      InterfaceDropdownlastList({
+        parentId: a
+      }).then(data => {
+        if (b === 1) {
+          this.wangdianList = data
+        } else {
+          console.log(data)
+          this.mwndianList = data
+        }
+      })
+    },
+    skjferg () {},
     // 分页
     handleSizeChange (val) {
       this.form.pageSize = val

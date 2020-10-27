@@ -164,13 +164,13 @@ export default {
         longitude: '',
         latitude: '',
         parentTitle: '',
-        type: 2
+        type: 3
       },
       // 获取列表表单
       listform: {
         pageNo: '1',
         pageSize: '10',
-        type: 2,
+        type: 3,
         title: '',
         id: '',
         phone: '',
@@ -197,7 +197,7 @@ export default {
         longitude: '',
         latitude: '',
         parentTitle: '',
-        type: 2
+        type: 3
       }
     },
     // 获取列表
