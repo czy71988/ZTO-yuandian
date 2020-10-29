@@ -35,6 +35,7 @@
       </el-select>
 
       <span @click="sousuo">搜索</span>
+      <span @click="Eexport">导出</span>
     </div>
     <!-- 表格部分 -->
     <div class="shopType_content">
@@ -171,6 +172,12 @@ export default {
     this.getlist()
   },
   methods: {
+    // 导出
+    Eexport () {
+      const api = 'https://test.zk020.cn/youmi-fresh/admin/order/adminExcelOrderInfo?'
+      const url = api + 'orderType=3' + '&logisticsType=' + '&orderId=' + '&orderStatus=' + '&beginCreTime=' + '&endCreTime=' + '&coreShopId=' + this.zhongxincang + '&outletsShopId=' + this.wangdain + '&storeShopId=' + this.mendian
+      window.location.href = url
+    },
     sousuo () {
       this.getlist()
     },

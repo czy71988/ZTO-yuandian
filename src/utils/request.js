@@ -9,6 +9,9 @@ import { reqConfig } from './config'
 // 创建axios实例
 const service = axios.create({
   timeout: 60000
+  // headers: {
+  //   'content-type': 'application/json;charset=UTF-8'
+  // }
 })
 
 // 请求拦截

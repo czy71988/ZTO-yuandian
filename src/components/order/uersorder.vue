@@ -234,7 +234,11 @@ export default {
   },
   methods: {
     // 批量操作按钮弹出选择框
-    Eexport () {},
+    Eexport () {
+      const api = 'https://test.zk020.cn/youmi-fresh/admin/order/adminExcelOrderInfo?'
+      const url = api + 'orderType=2' + '&logisticsType=1' + '&orderId=' + this.form.orderId + '&orderStatus=' + '&beginCreTime=' + this.form.beginCreTime + '&endCreTime=' + this.form.endCreTime + '&coreShopId=' + this.form.coreShopId + '&outletsShopId=' + this.form.outletsShopId + '&storeShopId=' + this.form.storeShopId
+      window.location.href = url
+    },
     // 清除
     qingkong () {
       this.form = {

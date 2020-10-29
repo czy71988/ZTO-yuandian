@@ -7,7 +7,7 @@
         <span>手机号：</span>
         <el-input v-model="denglufrom.dengluphone" placeholder="请输入内容"></el-input>
         <span>是否商家：</span>
-        <el-select v-model="value" placeholder="请选择">
+        <el-select v-model="denglufrom.role" placeholder="请选择">
           <el-option
             v-for="item in options"
             :key="item.value"
@@ -15,8 +15,14 @@
             :value="item.value">
           </el-option>
         </el-select>
+        <span>选择中心仓：</span>
+        <el-input v-model="denglufrom.centreName" placeholder="请输入内容"></el-input>
+        <span>选择网点：</span>
+        <el-input v-model="denglufrom.outletsName" placeholder="请输入内容"></el-input>
+        <span>选择门店：</span>
+        <el-input v-model="denglufrom.storeName" placeholder="请输入内容"></el-input>
         <div>
-          <span>搜索</span>
+          <span @click="sousuo">搜索</span>
           <span>批量导出</span>
         </div>
       </div>
@@ -33,11 +39,11 @@
             align="center"
             label="ID">
           </el-table-column>
-          <el-table-column
+          <!-- <el-table-column
             prop="id"
             align="center"
             label="微信号">
-          </el-table-column>
+          </el-table-column> -->
           <el-table-column
             align="center"
             width="100"
@@ -73,17 +79,17 @@
             label="购买总金额">
           </el-table-column>
           <el-table-column
-            prop="shopName"
+            prop="storeName"
             align="center"
             label="所属门店">
           </el-table-column>
           <el-table-column
-            prop="shopName"
+            prop="outletsName"
             align="center"
             label="所属网点">
           </el-table-column>
           <el-table-column
-            prop="shopName"
+            prop="centreName"
             align="center"
             label="所属中心">
           </el-table-column>
@@ -150,11 +156,16 @@ export default {
       denglufrom: {
         dengluphone: '',
         pageNo: '1',
-        pageSize: '10'
+        pageSize: '10',
+        storeName: '',
+        outletsName: '',
+        centreName: '',
+        role: ''
       },
       options: [
-        { value: 1, label: '是' },
-        { value: 2, label: '否' }
+        { value: '', label: '全部' },
+        { value: 0, label: '否' },
+        { value: 1, label: '是' }
       ],
       total: 0
     }
@@ -163,6 +174,11 @@ export default {
     this.getList()
   },
   methods: {
+    // 搜索
+    sousuo () {
+      this.getList()
+    },
+    // 启用禁用
     jinyongqiyong (item) {
       if (item.enable !== 0) {
         console.log('开启')

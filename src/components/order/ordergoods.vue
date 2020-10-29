@@ -95,6 +95,7 @@
             prop="coreName"
             align="center"
             label="所属中心">
+
           </el-table-column>
           <el-table-column
             prop="shopMobile"
@@ -178,7 +179,7 @@
 </template>
 
 <script>
-import { InterfaceOrderList, InterfaceQueryOrderList, Interfaceorderexport } from '../../api/order'
+import { InterfaceOrderList, InterfaceQueryOrderList } from '../../api/order'
 import { InterfaceDropdownList, InterfaceDropdownlastList } from '../../api/system'
 export default {
   data () {
@@ -219,17 +220,9 @@ export default {
   methods: {
     // 导出
     Eexport () {
-      Interfaceorderexport({
-        orderType: 1,
-        orderId: '',
-        orderStatus: '',
-        beginCreTime: '',
-        endCreTime: '',
-        pageNo: '',
-        pageSize: ''
-      }).then(data => {
-        alert('导出')
-      })
+      const api = 'https://test.zk020.cn/youmi-fresh/admin/order/adminExcelOrderInfo?'
+      const url = api + 'orderType=1' + '&logisticsType=' + '&orderId=' + this.form.orderId + '&orderStatus=' + '&beginCreTime=' + this.form.beginCreTime + '&endCreTime=' + this.form.endCreTime + '&coreShopId=' + this.form.coreShopId + '&outletsShopId=' + this.form.outletsShopId + '&storeShopId=' + this.form.storeShopId
+      window.location.href = url
     },
     // 清空
     qingkong () {

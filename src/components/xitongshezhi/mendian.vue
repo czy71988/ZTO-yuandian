@@ -36,7 +36,7 @@
           </el-option>
         </el-select>
         <span>配送方式：</span>
-        <el-select v-model="from.state" placeholder="请选择">
+        <el-select v-model="from.eleme" placeholder="请选择">
           <el-option
             v-for="item in options"
             :key="item.value"
@@ -60,8 +60,7 @@
           <el-table-column
             prop="id"
             align="center"
-            label="店铺编号"
-            width="100">
+            label="店铺编号">
           </el-table-column>
           <el-table-column
             prop="title"
@@ -71,19 +70,16 @@
           <el-table-column
             prop="managerName"
             align="center"
-            label="店主姓名"
-            width="100">
+            label="店主姓名">
           </el-table-column>
           <el-table-column
             prop="phone"
             align="center"
-            label="手机号码"
-            width="120">
+            label="手机号码">
           </el-table-column>
           <el-table-column
             prop="state"
             align="center"
-            width="50"
             label="状态">
             <template slot-scope="scope">
               <span>{{scope.row.state == 0 ? '停用' : '启用'}}</span>
@@ -97,7 +93,6 @@
           <el-table-column
             prop="shopH"
             align="center"
-            width="150"
             label="经纬度">
             <template slot-scope="scope">
               <p>经度：{{scope.row.longitude}}</p>
@@ -106,7 +101,6 @@
           </el-table-column>
           <el-table-column
             align="center"
-            width="100"
             label="创建时间">
             <template slot-scope="scope">
               <p>{{scope.row.gmtCreate | outtiame}}</p>
@@ -115,16 +109,19 @@
           <el-table-column
             prop="parentTitle"
             align="center"
-            width="100"
             label="所属网点">
           </el-table-column>
           <el-table-column
             align="center"
-            width="100"
             label="配送方式">
             <template slot-scope="scope">
               <p>{{scope.row.eleme === 1 ? '蜂鸟配送' : '门店配送'}}</p>
             </template>
+          </el-table-column>
+          <el-table-column
+            prop="deliveryCost"
+            align="center"
+            label="配送费">
           </el-table-column>
           <el-table-column
             align="center"
@@ -133,7 +130,8 @@
             <template slot-scope="scope">
               <span class="sdreg aefsdgf" @click="bianji(scope.row)"><i class="el-icon-edit"></i>编辑</span>
               <span class="sdreg aefsdgf" @click="CommodityManagement(scope.row.id, scope.row.parentId)"><i class=""></i>商品管理</span>
-              <span class="sdreg"><i class="el-icon-sort"></i>上架</span>
+              <span class="sdreg" v-if="scope.row.state === 0" @click="shangjia(1, scope.row)"><i class="el-icon-sort"></i>上架</span>
+              <span class="sdreg djfruhgiio" v-else @click="shangjia(0, scope.row)"><i class="el-icon-sort"></i>下架</span>
             </template>
           </el-table-column>
         </el-table>
@@ -196,7 +194,7 @@
                 <el-input v-model="form.latitude"></el-input>
               </el-form-item>
               <el-form-item label="蜂鸟配送：">
-                <el-tooltip :content="form.eleme === 1 ? '蜂鸟配送' : '门店自提'" placement="top">
+                <el-tooltip :content="form.eleme === 1 ? '蜂鸟配送' : '门店配送'" placement="top">
                   <el-switch
                     v-model="form.eleme"
                     active-color="#13ce66"
@@ -205,6 +203,9 @@
                     :inactive-value="0">
                   </el-switch>
                 </el-tooltip>
+              </el-form-item>
+              <el-form-item v-if="form.eleme !== 1" label="配送费：">
+                <el-input v-model="form.deliveryCost"></el-input>
               </el-form-item>
               <el-form-item label="所属网点：">
                 <el-select v-model="form.parentId">
@@ -259,7 +260,8 @@ export default {
         latitude: '',
         parentId: '',
         type: 2,
-        eleme: ''
+        eleme: 0,
+        deliveryCost: ''
       },
       dkjgbkebr: '',
       from: {
@@ -277,8 +279,8 @@ export default {
       djjgierig: [],
       options: [
         { value: '', label: '全部' },
-        { value: '1', label: '自提' },
-        { value: '2', label: '配送' }
+        { value: '0', label: '门店配送' },
+        { value: '1', label: '蜂鸟配送' }
       ],
       total: 0
     }
@@ -304,7 +306,8 @@ export default {
         latitude: '',
         parentId: '',
         type: 2,
-        eleme: ''
+        eleme: '',
+        deliveryCost: ''
       }
     },
     // 商品管理
@@ -314,9 +317,9 @@ export default {
     // 列表
     getlist () {
       InterfaceShop(this.from).then(data => {
+        console.log(data)
         this.tableData = data.records
         this.total = data.total
-        console.log(data)
       })
     },
     // 拉取地图
@@ -324,7 +327,6 @@ export default {
       this.showMapSelector = true
     },
     sdfgf (val) {
-      console.log(val)
       this.form.address = val.address
       this.form.longitude = val.location.lng
       this.form.latitude = val.location.lat
@@ -381,6 +383,24 @@ export default {
       } else {
         this.dialogVisible1 = !this.dialogVisible1
       }
+    },
+    // 上下架操作
+    shangjia (a, b) {
+      b.state = a
+      InterfaceUpShop(b).then(data => {
+        if (a === 1) {
+          this.$message({
+            message: '上架成功',
+            type: 'success'
+          })
+        } else {
+          this.$message({
+            message: '下架成功',
+            type: 'success'
+          })
+        }
+        this.getlist()
+      })
     },
     tijiao () {
       InterfaceUpShop(this.form).then(data => {
@@ -569,6 +589,9 @@ export default {
         font-family: MicrosoftYaHei;
         color: #2B80FD;
         line-height: 17px;
+      }
+      .djfruhgiio {
+        color: #FF8C14;
       }
       .aefsdgf {
         margin-right: 5px;
