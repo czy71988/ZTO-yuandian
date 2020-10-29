@@ -53,7 +53,7 @@
             align="center"
             label="操作时间">
             <template slot-scope="scope">
-              <span>{{scope.row.gmtCreate.substring(0, 10)}}</span>
+              <span>{{scope.row.gmtCreate.substring(0, 19)}}</span>
             </template>
           </el-table-column>
           <el-table-column

@@ -66,25 +66,18 @@
             align="center"
             label="下单时间">
             <template slot-scope="scope">
-              <span>{{scope.row.gmtCreate.substring(0, 10)}}</span>
+              <span>{{scope.row.gmtCreate.substring(0, 19)}}</span>
             </template>
           </el-table-column>
-          <!-- <el-table-column
-            prop="userName"
-            align="center"
-            label="取货码">
-          </el-table-column> -->
-          <!-- <el-table-column
-            align="center"
-            label="物流方式">
-            <template slot-scope="scope">
-              <span>{{scope.row.logisticsType == 1 ? '自提' : '配送'}}</span>
-            </template>
-          </el-table-column> -->
           <el-table-column
             prop="totalGoodsPrice"
             align="center"
-            label="实付金额">
+            label="商品金额">
+          </el-table-column>
+          <el-table-column
+            prop="deliveryFee"
+            align="center"
+            label="配送费">
           </el-table-column>
           <el-table-column
             prop="orderStatusName"
@@ -106,11 +99,6 @@
             align="center"
             label="所属门店">
           </el-table-column>
-          <!-- <el-table-column
-            prop="buyMobile"
-            align="center"
-            label="买家手机号">
-          </el-table-column> -->
           <el-table-column
             align="center"
             label="查看详情"
@@ -156,16 +144,6 @@
             <span>所属网点：{{Content.utletsoName}}</span>
             <span>所属中心：{{Content.coreName}}</span>
           </p>
-          <!-- <p class="uers_p">
-            <span></span>
-            <span>订货信息</span>
-          </p>
-          <p class="uers_p1">
-            <span>收货人姓名：{{Content.userName}}</span>
-            <span>手机号：{{Content.buyMobile}}</span>
-            <span>详细地址：{{Content.takeAddress}}</span>
-            <span>物流方式：{{Content.logisticsType == 1 ? '自提' : '配送'}}</span>
-          </p> -->
           <p class="uers_p">
             <span></span>
             <span>商品信息</span>
@@ -307,7 +285,6 @@ export default {
         if (b === 1) {
           this.wangdianList = data
         } else {
-          // console.log(data)
           this.mwndianList = data
         }
       })

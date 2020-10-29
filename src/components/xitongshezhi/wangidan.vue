@@ -472,7 +472,8 @@ export default {
       }
       .sdferg {
         text-align: center;
-        margin-bottom: 30px;
+        padding-bottom: 30px;
+        box-sizing: border-box;
         span {
           display: inline-block;
           width: 100px;

@@ -3,7 +3,7 @@ export const mapConfig = {
   baseUrl: 'https://apis.map.qq.com'
 }
 
-let env = 'pre'
+let env = 'pro'
 if (process.env.NODE_ENV !== 'development') {
   env = (localStorage.getItem('ym_env') === 'pre' ? 'pre' : 'pro')
 }

@@ -110,30 +110,31 @@
     <!-- 弹窗部分 -- 查看详情 -->
     <div class="BanNer_diagio">
       <el-dialog
-        :visible.sync="dialogVisible">
+        :visible.sync="dialogVisiblessss">
         <p class="sdsd">查看详情</p>
         <div class="chuangjian_dialog">
           <div class="gialog_tu">
             <span>主图：</span>
             <ul>
               <li>
-                <img :src="list.mainPic" alt="">
+                <big-img v-if="showImg" @clickit="viewImg" :imgSrc="imgSrc"></big-img>
+                <img  id="smallImg" :src="list.mainPic" alt="" @click="clickImg($event)">
               </li>
             </ul>
             <span>详情图：</span>
             <ul>
               <li v-for="item in list.imageContent" :key="item.sort">
-                <img :src="item.imageUrl" alt="">
+                <big-img v-if="showImgq" @clickit="viewImg1" :imgSrc="imgSrc1"></big-img>
+                <img :src="item.imageUrl" alt="" @click="clickImg1($event)">
               </li>
             </ul>
             <p>
-              <span>销售价：<i>{{list.price}}</i></span>
+              <span>销售价：<div>{{list.price}}</div></span>
             </p>
             <p>
-              <span>库存数量：<i>{{list.amount}}</i></span>
+              <span>库存数量：<div>{{list.amount}}</div></span>
             </p>
           </div>
-          <div class="gialog_XX"></div>
         </div>
       </el-dialog>
     </div>
@@ -177,16 +178,6 @@
                 <img width="100%" :src="dialogImageUrl.url" alt="">
               </el-dialog>
             </el-form-item>
-            <!-- <el-form-item label="商品标签：">
-              <el-select v-model="form.label" placeholder="请选择">
-                <el-option
-                  v-for="item in dfgsdf"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-                </el-option>
-              </el-select>
-            </el-form-item> -->
             <el-form-item label="所在仓位置：">
               <el-select v-model="form.storeHouse" placeholder="请选择活动区域">
                 <el-option
@@ -225,15 +216,20 @@
 </template>
 
 <script>
-// import Vue from 'vue'
+import BigImg from './BigImg'
 import { InterfaceAddshopdetails, InterfaceshopSohp, InterfaceGoodsShelves, Interfaceshopdetails, InterfaceGoodsUpdate, InterfaceGoodsStyle } from '../../api/shop'
 import { deleteElementByValue } from '../../utils/khg'
 export default {
   data () {
     return {
+      showImg: false,
+      showImgq: false,
+      imgSrc: '',
+      imgSrc1: '',
       deleteElementByValue,
       tableData: [],
       dialogVisible: false,
+      dialogVisiblessss: false,
       shopShow: false,
       biaotiname: '',
       currentPage1: 1,
@@ -271,14 +267,31 @@ export default {
       ShopStyle: []
     }
   },
+  props: ['pagedata'],
+  components: { 'big-img': BigImg },
   mounted () {
     this.getStyle()
     this.getlist()
   },
   methods: {
+    clickImg (e) {
+      this.showImg = true
+      // 获取当前图片地址
+      this.imgSrc = e.currentTarget.src
+    },
+    clickImg1 (e) {
+      this.showImgq = true
+      // 获取当前图片地址
+      this.imgSrc1 = e.currentTarget.src
+    },
+    viewImg () {
+      this.showImg = false
+    },
+    viewImg1 () {
+      this.showImgq = false
+    },
     // dialog关闭回调
     jdhigjheirg () {
-      // console.log('清除')
       this.form = {
         title: '',
         mainPic: '', // 商品主图
@@ -323,7 +336,8 @@ export default {
         id: id
       }).then(data => {
         this.list = data
-        this.dialogVisible = !this.dialogVisible
+        this.dialogVisiblessss = !this.dialogVisiblessss
+        this.shopShow = false
       })
     },
 
@@ -347,7 +361,6 @@ export default {
         this.imageUrl = data.mainPic
         data.imageContent.forEach(item => { item.url = item.imageUrl })
         this.dialogImageUrl = data.imageContent
-        console.log('获取的图片', this.dialogImageUrl)
       })
     },
 
@@ -401,7 +414,6 @@ export default {
     handleRemove (file, fileList) {
       const url = file.url
       this.form.imageContent = deleteElementByValue(this.form.imageContent, url)
-      console.log('图片删除', this.form.imageContent)
     },
 
     handlePictureCardPreview (file) {
@@ -714,7 +726,8 @@ export default {
               font-weight: bold;
               color: #333333;
               line-height: 17px;
-              i {
+              div {
+                display: inline-block;
                 color: #666666;
               }
             }
