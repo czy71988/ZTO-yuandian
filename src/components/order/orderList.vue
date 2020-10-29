@@ -34,8 +34,8 @@
         </el-option>
       </el-select>
 
-      <span @click="sousuo">搜索</span>
-      <span @click="Eexport">导出</span>
+      <span class="skdjfrr" @click="sousuo">搜索</span>
+      <span class="skdjfrr1" @click="Eexport">导出</span>
     </div>
     <!-- 表格部分 -->
     <div class="shopType_content">
@@ -250,6 +250,23 @@ export default {
 
 <style lang="less">
   .shopType {
+    .top {
+      .el-select {
+        height: 30px !important;
+        margin-bottom: 30px;
+        margin-right: 20px;
+        .el-input {
+          height: 30px;
+          .el-input__inner {
+            height: 30px;
+            line-height: 30px;
+          }
+          .el-input__icon {
+            line-height: 30px;
+          }
+        }
+      }
+    }
     .shopType_content {
       .el-table {
         line-height: 40px !important;
@@ -478,13 +495,25 @@ export default {
   }
   .top {
     span {
-      margin: 0 20px 20px 50px;
+      margin-right: 10px;
     }
-    span:last-child {
+    .skdjfrr {
       display: inline-block;
       width: 100px;
       height: 35px;
-      background: #2B80FD;
+      background:#2B80FD;
+      border-radius: 18px;
+      font-size: 12px;
+      font-family: MicrosoftYaHei;
+      color: #FFFFFF;
+      line-height: 35px;
+      text-align: center;
+    }
+    .skdjfrr1 {
+      display: inline-block;
+      width: 100px;
+      height: 35px;
+      background: #FF8C14;
       border-radius: 18px;
       font-size: 12px;
       font-family: MicrosoftYaHei;

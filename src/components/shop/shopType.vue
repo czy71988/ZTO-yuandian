@@ -477,6 +477,7 @@ export default {
       .chuangjian_dialog {
         line-height: 0;
         text-align: center;
+        margin-top: 50px;
         span {
           display: inline-block;
           width: 100px;

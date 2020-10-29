@@ -321,6 +321,15 @@ export default {
     .BanNer_top_p {
       line-height: 20px;
       text-align: left;
+      .el-date-editor {
+        margin-right: 20px;
+      }
+      .el-date-editor .el-range__icon {
+        line-height: 22px;
+      }
+      .el-date-editor .el-range-separator {
+        line-height: 22px;
+      }
       .el-input {
         height: 30px;
         display: inline-block;
@@ -434,7 +443,6 @@ export default {
     // ---------------------------
     .BanNer_top {
       position: relative;
-      // height: 90px;
       .BanNer_top_p {
         div {
           margin-bottom: 40px;

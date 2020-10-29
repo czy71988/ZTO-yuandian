@@ -1,12 +1,12 @@
 <template>
 <transition name="fade">
-<div class="img-view" @click="bigImg">
-<!-- 遮罩层 -->
-  <div class="img-layer"></div>
-  <div class="img">
-    <img :src="imgSrc">
+  <div class="img-view" @click="bigImg">
+  <!-- 遮罩层 -->
+    <div class="img-layer"></div>
+    <div class="img">
+      <img :src="imgSrc">
+    </div>
   </div>
-</div>
 </transition>
 </template>
 
