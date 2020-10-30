@@ -92,9 +92,9 @@
             label="订单状态">
           </el-table-column>
           <el-table-column
-            prop="coreName"
+            prop="shopName"
             align="center"
-            label="所属中心">
+            label="所属门店">
           </el-table-column>
           <el-table-column
             prop="utletsoName"
@@ -102,9 +102,9 @@
             label="所属网点">
           </el-table-column>
           <el-table-column
-            prop="shopName"
+            prop="coreName"
             align="center"
-            label="所属门店">
+            label="所属中心">
           </el-table-column>
           <el-table-column
             prop="buyMobile"

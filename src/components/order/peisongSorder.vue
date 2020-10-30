@@ -85,9 +85,9 @@
             label="订单状态">
           </el-table-column>
           <el-table-column
-            prop="coreName"
+            prop="shopName"
             align="center"
-            label="所属中心">
+            label="所属门店">
           </el-table-column>
           <el-table-column
             prop="utletsoName"
@@ -95,9 +95,9 @@
             label="所属网点">
           </el-table-column>
           <el-table-column
-            prop="shopName"
+            prop="coreName"
             align="center"
-            label="所属门店">
+            label="所属中心">
           </el-table-column>
           <el-table-column
             align="center"
@@ -134,15 +134,15 @@
             <span>订单信息</span>
           </p>
           <p class="uers_p1">
-            <span>订单号：{{Content.tradeParentId}}</span>
-            <span>订单状态：{{Content.orderStatus | orderStatusFilter}}</span>
-            <span>实付金额：{{Content.totalGoodsPrice}}元</span>
-            <span>收货人姓名：{{ContentS.receiverName}}</span>
-            <span>收货人手机号：{{ContentS.receiverPhone}}</span>
-            <span style="width:100%">收货人地址：{{ContentS.receiverAddress}}</span>
-            <span>所属门店：{{Content.shopName}}</span>
-            <span>所属网点：{{Content.utletsoName}}</span>
-            <span>所属中心：{{Content.coreName}}</span>
+            <span style="width:100%">订单号：{{Content.tradeParentId}}</span>
+            <span style="width:100%">订单状态：{{Content.orderStatus | orderStatusFilter}}</span>
+            <span style="width:100%">实付金额：{{Content.totalGoodsPrice}}元</span>
+            <span style="width:100%">收货人姓名：{{ContentS.receiverName}}</span>
+            <span style="width:100%">收货人手机号：{{ContentS.receiverPhone}}</span>
+            <span style="width:100%">收货人地址：{{ContentS.receiverAddress}}{{ContentS.houseNumber}}</span>
+            <span style="width:100%">所属门店：{{Content.shopName}}</span>
+            <span style="width:100%">所属网点：{{Content.utletsoName}}</span>
+            <span style="width:100%">所属中心：{{Content.coreName}}</span>
           </p>
           <p class="uers_p">
             <span></span>
@@ -266,6 +266,7 @@ export default {
         this.Content = data[0]
         this.ContentS = this.Content.addressList[0]
         this.shopxContent = this.Content.adminGoodsList
+        console.log(this.ContentS)
       })
       this.dialogVisible = !this.dialogVisible
     },
