@@ -80,6 +80,13 @@
             label="配送费">
           </el-table-column>
           <el-table-column
+            align="center"
+            label="商品总重">
+            <template slot-scope="scope">
+              <span>{{scope.row.deliveryFee}}/g</span>
+            </template>
+          </el-table-column>
+          <el-table-column
             prop="orderStatusName"
             align="center"
             label="订单状态">
@@ -143,6 +150,7 @@
             <span style="width:100%">所属门店：{{Content.shopName}}</span>
             <span style="width:100%">所属网点：{{Content.utletsoName}}</span>
             <span style="width:100%">所属中心：{{Content.coreName}}</span>
+            <span style="width:100%">商品总重：{{Content.coreName}}/g</span>
           </p>
           <p class="uers_p">
             <span></span>

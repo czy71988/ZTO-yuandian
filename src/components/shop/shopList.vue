@@ -81,6 +81,11 @@
             label="库存数量">
           </el-table-column>
           <el-table-column
+            prop="weight"
+            align="center"
+            label="商品重量">
+          </el-table-column>
+          <el-table-column
             align="center"
             label="操作"
             width="300">
@@ -204,6 +209,9 @@
             <el-form-item label="库存数量：">
               <el-input v-model="form.amount"></el-input>
             </el-form-item>
+            <el-form-item label="商品重量：">
+              <el-input v-model="form.weight"></el-input>
+            </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="onSubmit">{{sdbgg}}</el-button>
               <el-button @click="jdhigjheirg">取消</el-button>
@@ -244,7 +252,8 @@ export default {
         storeHouse: '',
         categoryId: '',
         price: '',
-        amount: ''
+        amount: '',
+        weight: ''
       },
       // 请求列表参数
       getform: {
@@ -300,7 +309,8 @@ export default {
         storeHouse: '',
         categoryId: '',
         price: '',
-        amount: ''
+        amount: '',
+        weight: ''
       }
       this.urls = []
       this.imageUrl = ''

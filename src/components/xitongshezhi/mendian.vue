@@ -124,6 +124,30 @@
             label="配送费">
           </el-table-column>
           <el-table-column
+            prop="idcard"
+            align="center"
+            label="身份证号">
+          </el-table-column>
+          <el-table-column
+            align="center"
+            label="身份证照片">
+            <template slot-scope="scope">
+              <img class="djkhgergbjdv" :src="scope.row.idcardUrl" alt="">
+            </template>
+          </el-table-column>
+          <el-table-column
+            align="center"
+            label="营业执照照片">
+            <template slot-scope="scope">
+              <img class="djkhgergbjdv" :src="scope.row.licenseUrl" alt="">
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="tyshxyDm"
+            align="center"
+            label="统一社会信用代码">
+          </el-table-column>
+          <el-table-column
             align="center"
             label="操作"
             width="200">
@@ -154,13 +178,13 @@
       </div>
     </div>
     <!-- 弹窗部分 -- 编辑/创建 -->
-    <div class="mendian_diagio">
+    <div class="ffffmendian_diagio">
       <el-dialog
         :visible.sync="dialogVisible">
         <p class="sdsd">{{biaotiname}}</p>
         <div class="chuangjian_dialog">
           <div class="gialog_tu">
-            <el-form ref="form" :model="form" label-width="100px">
+            <el-form ref="form" :model="form" label-width="150px">
               <el-form-item label="门店名称：">
                 <el-input v-model="form.title"></el-input>
               </el-form-item>
@@ -212,6 +236,38 @@
                   <el-option v-for="item in sdfswfsdd" :key="item.id" :label="item.title" :value="item.id"></el-option>
                 </el-select>
               </el-form-item>
+              <el-form-item label="身份证号：">
+                <el-input v-model="form.idcard"></el-input>
+              </el-form-item>
+              <el-form-item label="身份证照片：">
+                <div class="kdjgiuerg">
+                  <el-upload
+                    class="avatar-uploader"
+                    :action="sdjdhui"
+                    :show-file-list="false"
+                    :on-success="handleAvatarSuccess"
+                    :before-upload="beforeAvatarUpload">
+                    <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                  </el-upload>
+                </div>
+              </el-form-item>
+              <el-form-item label="营业执照照片：">
+                <div class="kdjgiuerg">
+                  <el-upload
+                    class="avatar-uploader"
+                    action="https://test.zk020.cn/youmi-fresh/admin/eleme/uploadFile"
+                    :show-file-list="false"
+                    :on-success="handleAvatarSuccess1"
+                    :before-upload="beforeAvatarUpload">
+                    <img v-if="imageUrl1" :src="imageUrl1" class="avatar">
+                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                  </el-upload>
+                </div>
+              </el-form-item>
+              <el-form-item label="统一社会信用代码：">
+                <el-input v-model="form.tyshxyDm"></el-input>
+              </el-form-item>
               <p class="sdferg">
                 <span @click="dialogVisible = false">取消</span>
                 <span @click="over">提交</span>
@@ -261,7 +317,11 @@ export default {
         parentId: '',
         type: 2,
         eleme: 0,
-        deliveryCost: ''
+        deliveryCost: '',
+        idcard: '',
+        idcardUrl: '',
+        tyshxyDm: '',
+        licenseUrl: ''
       },
       dkjgbkebr: '',
       from: {
@@ -282,7 +342,10 @@ export default {
         { value: '0', label: '门店配送' },
         { value: '1', label: '蜂鸟配送' }
       ],
-      total: 0
+      total: 0,
+      sdjdhui: 'https://test.zk020.cn/youmi-fresh/admin/eleme/uploadFile',
+      imageUrl: '',
+      imageUrl1: ''
     }
   },
   mounted () {
@@ -309,6 +372,8 @@ export default {
         eleme: '',
         deliveryCost: ''
       }
+      this.imageUrl = ''
+      this.imageUrl1 = ''
     },
     // 商品管理
     CommodityManagement (id, parentId) {
@@ -366,6 +431,8 @@ export default {
     bianji (item) {
       this.sjkdhg()
       this.form = item
+      this.imageUrl = this.form.idcardUrl
+      this.imageUrl1 = this.form.licenseUrl
       this.biaotiname = '编辑门店'
       this.dialogVisible = !this.dialogVisible
     },
@@ -418,6 +485,27 @@ export default {
       this.sjkdhg()
       this.biaotiname = '新增门店'
       this.dialogVisible = !this.dialogVisible
+    },
+    // 上传身份证照片
+    handleAvatarSuccess (res, file) {
+      this.imageUrl = URL.createObjectURL(file.raw)
+      this.form.idcardUrl = res.data.url
+    },
+    // 上传营业照片
+    handleAvatarSuccess1 (res, file) {
+      this.imageUrl1 = URL.createObjectURL(file.raw)
+      this.form.licenseUrl = res.data.url
+    },
+    beforeAvatarUpload (file) {
+      const isJPG = file.type === 'image/jpeg'
+      const isLt2M = file.size / 1024 / 1024 < 2
+      if (!isJPG) {
+        this.$message.error('上传头像图片只能是 JPG 格式!')
+      }
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 2MB!')
+      }
+      return isJPG && isLt2M
     }
   }
 }
@@ -479,7 +567,36 @@ export default {
       }
     }
 
-    .mendian_diagio {
+    .ffffmendian_diagio {
+      .kdjgiuerg {
+        .avatar-uploader {
+          display: inline-block;
+          margin-right: 20px;
+          .el-upload {
+            border: 1px dashed #d9d9d9;
+            border-radius: 6px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+          }
+          .avatar-uploader .el-upload:hover {
+            border-color: #409EFF;
+          }
+          .avatar-uploader-icon {
+            font-size: 28px;
+            color: #8c939d;
+            width: 80px;
+            height: 80px;
+            line-height: 80px;
+            text-align: center;
+          }
+          .avatar {
+            width: 80px;
+            height: 80px;
+            display: block;
+          }
+        }
+      }
       .el-dialog {
         width: 500px;
         // height: 430px;
@@ -510,18 +627,18 @@ export default {
             box-sizing: border-box;
             .el-form-item {
               margin-bottom: 20px;
-              height: 30px;
-              line-height: 30px;
+              // height: 30px;
+              // line-height: 30px;
               .el-form-item__label {
-                line-height: 30px;
+                // line-height: 30px;
               }
               .el-form-item__content {
                 text-align: left;
-                height: 30px;
-                line-height: 30px;
+                // height: 30px;
+                // line-height: 30px;
                   width: 300px;
                 .el-input__inner {
-                  line-height: 30px;
+                  // line-height: 30px;
                   height: 30px;
                   background: #F4F4F4;
                 }
@@ -535,6 +652,10 @@ export default {
 </style>
 
 <style lang="less" scoped>
+.djkhgergbjdv {
+  width: 100%;
+  height: 100%;
+}
   .shopList {
     padding: 0 15px;
     box-sizing: border-box;
@@ -619,7 +740,7 @@ export default {
         }
       }
     }
-    .mendian_diagio {
+    .ffffmendian_diagio {
       .dkfber {
         font-size: 14px;
         font-family: MicrosoftYaHei;
